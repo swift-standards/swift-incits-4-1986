@@ -1,0 +1,111 @@
+# swift-incits-4-1986
+
+Pure Swift implementation of **INCITS 4-1986 (R2022)**: Coded Character Sets - 7-Bit American Standard Code for Information Interchange (US-ASCII).
+
+## Standard References
+
+- **Current designation**: INCITS 4-1986 (Reaffirmed 2022)
+- **Historical names**: ANSI X3.4-1986, ANSI X3.4-1968, ASA X3.4-1963
+- **IANA charset**: US-ASCII
+- **Character set**: 7-bit ASCII (0x00-0x7F / 0-127)
+
+## Features
+
+- ✅ Pure Swift with no Foundation dependencies
+- ✅ Swift Embedded compatible (no existentials, no runtime features)
+- ✅ Comprehensive ASCII character classification
+- ✅ ASCII string validation and manipulation
+- ✅ Optimized byte-level operations
+
+## API Overview
+
+### Byte-Level Operations (`UInt8`)
+
+```swift
+// Character classification predicates
+byte.isASCIIWhitespace    // space, tab, LF, CR
+byte.isASCIIDigit         // '0'...'9'
+byte.isASCIILetter        // 'A'...'Z', 'a'...'z'
+byte.isASCIIAlphanumeric  // digits or letters
+byte.isASCIIHexDigit      // '0'...'9', 'A'...'F', 'a'...'f'
+byte.isASCIIUppercase     // 'A'...'Z'
+byte.isASCIILowercase     // 'a'...'z'
+
+// Case conversion
+byte.ascii(case: .upper)  // Convert to uppercase
+byte.ascii(case: .lower)  // Convert to lowercase
+
+// Canonical whitespace definition
+UInt8.asciiWhitespaceBytes  // {0x20, 0x09, 0x0A, 0x0D}
+```
+
+### Character-Level Operations
+
+```swift
+// Character classification
+char.isASCIIWhitespace
+char.isASCIIDigit
+char.isASCIILetter
+char.isASCIIAlphanumeric
+char.isASCIIHexDigit
+char.isASCIIUppercase
+char.isASCIILowercase
+```
+
+### String Operations
+
+```swift
+// ASCII validation
+let bytes: [UInt8]? = "hello".asciiBytes  // [104, 101, 108, 108, 111]
+let bytes: [UInt8]? = "hello🌍".asciiBytes // nil
+
+let string = String(ascii: [104, 101, 108, 108, 111])  // "hello"
+let string = String(ascii: [255])  // nil
+
+// String trimming (with ASCII whitespace optimization)
+"  hello  ".trimming(.whitespaces)  // "hello"
+"***text***".trimming(["*"])        // "text"
+
+// ASCII whitespace character set
+Set<Character>.whitespaces  // {' ', '\t', '\n', '\r'}
+```
+
+## Architecture
+
+This package follows a three-tier architecture:
+
+**Tier 0: swift-standards** (Foundation)
+- Truly generic, standard-agnostic utilities
+- Collection safety, clamping, endianness, etc.
+
+**Tier 1: swift-incits-4-1986** (This package - Standard implementation)
+- Implements US-ASCII standard
+- Depends on swift-standards
+
+**Tier 2: Integration packages** (e.g., swift-uri-standard)
+- Combine multiple standards
+- Still pure Swift
+
+**Tier 3: Application packages** (e.g., coenttb/swift-uri)
+- Foundation integration
+- Production-ready
+
+## Installation
+
+### Swift Package Manager
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/coenttb/swift-incits-4-1986.git", from: "0.1.0")
+]
+```
+
+## License
+
+Licensed under Apache 2.0.
+
+## Related Packages
+
+- [swift-standards](../swift-standards) - Foundation utilities
+- [swift-rfc-3986](../swift-rfc-3986) - URI parsing (depends on ASCII)
+- [swift-rfc-9110](../swift-rfc-9110) - HTTP semantics (depends on ASCII)
