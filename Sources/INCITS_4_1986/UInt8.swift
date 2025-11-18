@@ -6,6 +6,49 @@
 import Standards
 
 extension UInt8 {
+    // MARK: - ASCII Control Character Constants (INCITS 4-1986 Section 4)
+
+    /// NULL character (0x00)
+    public static let nul: UInt8 = 0x00
+
+    /// HORIZONTAL TAB (0x09)
+    public static let htab: UInt8 = 0x09
+
+    /// LINE FEED (0x0A)
+    public static let lf: UInt8 = 0x0A
+
+    /// CARRIAGE RETURN (0x0D)
+    public static let cr: UInt8 = 0x0D
+
+    /// SPACE (0x20)
+    public static let sp: UInt8 = 0x20
+    public static let space: UInt8 = sp
+
+    /// DELETE (0x7F)
+    public static let del: UInt8 = 0x7F
+
+    // MARK: - ASCII Punctuation and Symbols
+
+    /// QUOTATION MARK / DOUBLE QUOTE (0x22) - "
+    public static let dquote: UInt8 = 0x22
+    public static let quotationMark: UInt8 = dquote
+
+    /// LESS-THAN SIGN (0x3C) - <
+    public static let lt: UInt8 = 0x3C
+    public static let lessThan: UInt8 = lt
+
+    /// GREATER-THAN SIGN (0x3E) - >
+    public static let gt: UInt8 = 0x3E
+    public static let greaterThan: UInt8 = gt
+
+    /// COLON (0x3A) - :
+    public static let colon: UInt8 = 0x3A
+
+    /// COMMERCIAL AT (0x40) - @
+    public static let at: UInt8 = 0x40
+
+    // MARK: - ASCII Whitespace
+
     /// Canonical definition of ASCII whitespace bytes
     ///
     /// Single source of truth for ASCII whitespace per INCITS 4-1986:
@@ -15,14 +58,37 @@ extension UInt8 {
     /// - 0x0D (CARRIAGE RETURN)
     ///
     /// These are the only four whitespace characters defined in US-ASCII.
-    public static let asciiWhitespaceBytes: Set<UInt8> = [0x20, 0x09, 0x0A, 0x0D]
+    public static let asciiWhitespaceBytes: Set<UInt8> = [.space, .htab, .lf, .cr]
 
     /// Tests if byte is ASCII whitespace (0x20, 0x09, 0x0A, 0x0D)
     @inlinable
     public var isASCIIWhitespace: Bool {
         // Inline comparison for performance (4 equality checks < Set lookup)
-        self == 0x20 || self == 0x09 || self == 0x0A || self == 0x0D
+        self == .space || self == .htab || self == .lf || self == .cr
     }
+
+    /// Tests if byte is ASCII control character (0x00-0x1F or 0x7F)
+    ///
+    /// Control characters per INCITS 4-1986 Section 4:
+    /// - C0 controls: 0x00-0x1F (includes NULL, TAB, LF, CR, etc.)
+    /// - DELETE: 0x7F
+    @inlinable
+    public var isASCIIControl: Bool {
+        self <= 0x1F || self == 0x7F
+    }
+
+    /// Tests if byte is ASCII visible/printable character (0x21-0x7E)
+    ///
+    /// Visible characters per INCITS 4-1986 Section 4:
+    /// - Printable characters excluding SPACE: 0x21 ('!') through 0x7E ('~')
+    /// - Includes digits, letters, and punctuation
+    /// - Excludes control characters (0x00-0x1F), SPACE (0x20), and DELETE (0x7F)
+    @inlinable
+    public var isASCIIVisible: Bool {
+        self >= 0x21 && self <= 0x7E
+    }
+
+    // MARK: - Character Classification
 
     /// Tests if byte is ASCII digit ('0'...'9')
     @inlinable
@@ -81,18 +147,4 @@ extension UInt8 {
     }
 }
 
-extension [UInt8] {
-    /// Converts all ASCII letters in the array to specified case
-    /// - Parameter case: The target case (upper or lower)
-    /// - Returns: New array with ASCII letters converted
-    ///
-    /// Example:
-    /// ```swift
-    /// Array("Hello".utf8).ascii(case: .upper)  // "HELLO"
-    /// Array("World".utf8).ascii(case: .lower)  // "world"
-    /// ```
-    @inlinable
-    public func ascii(case: Character.Case) -> [UInt8] {
-        map { $0.ascii(case: `case`) }
-    }
-}
+
