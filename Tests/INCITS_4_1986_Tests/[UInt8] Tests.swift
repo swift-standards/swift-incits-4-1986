@@ -1,373 +1,163 @@
 import Testing
 @testable import INCITS_4_1986
 
-// MARK: - Base64 Decoding
+// MARK: - ASCII Control Character Constants
 
 @Suite
-struct `[UInt8] - init(base64Encoded:)` {
+struct `UInt8 - ASCII control character constants` {
 
     @Test
-    func `Decode empty string`() {
-        let bytes = [UInt8](base64Encoded: "")
-        #expect(bytes == [])
+    func `NULL constant is correct`() {
+        #expect(UInt8.nul == 0x00)
     }
 
     @Test
-    func `Decode single character`() {
-        let bytes = [UInt8](base64Encoded: "YQ==")  // "a"
-        #expect(bytes == [0x61])
+    func `HORIZONTAL TAB constant is correct`() {
+        #expect(UInt8.htab == 0x09)
     }
 
     @Test
-    func `Decode two characters`() {
-        let bytes = [UInt8](base64Encoded: "YWI=")  // "ab"
-        #expect(bytes == [0x61, 0x62])
+    func `LINE FEED constant is correct`() {
+        #expect(UInt8.lf == 0x0A)
     }
 
     @Test
-    func `Decode three characters`() {
-        let bytes = [UInt8](base64Encoded: "YWJj")  // "abc"
-        #expect(bytes == [0x61, 0x62, 0x63])
+    func `CARRIAGE RETURN constant is correct`() {
+        #expect(UInt8.cr == 0x0D)
     }
 
     @Test
-    func `Decode standard Base64 string`() {
-        let bytes = [UInt8](base64Encoded: "SGVsbG8gV29ybGQh")  // "Hello World!"
-        let expected = Array("Hello World!".utf8)
-        #expect(bytes == expected)
+    func `SPACE constant is correct`() {
+        #expect(UInt8.sp == 0x20)
     }
 
     @Test
-    func `Decode with padding`() {
-        let bytes = [UInt8](base64Encoded: "YQ==")
-        #expect(bytes != nil)
-    }
-
-    @Test
-    func `Decode with single padding`() {
-        let bytes = [UInt8](base64Encoded: "YWI=")
-        #expect(bytes != nil)
-    }
-
-    @Test
-    func `Decode with whitespace`() {
-        let bytes = [UInt8](base64Encoded: "SGVs bG8g V29y bGQh")
-        let expected = Array("Hello World!".utf8)
-        #expect(bytes == expected)
-    }
-
-    @Test
-    func `Decode with newlines and tabs`() {
-        let bytes = [UInt8](base64Encoded: "SGVs\nbG8g\tV29y\rbGQh")
-        let expected = Array("Hello World!".utf8)
-        #expect(bytes == expected)
-    }
-
-    @Test
-    func `Decode returns nil for invalid characters`() {
-        let bytes = [UInt8](base64Encoded: "SGVs!bG8h")
-        #expect(bytes == nil)
-    }
-
-    @Test
-    func `Decode returns nil for incomplete sequence`() {
-        let bytes = [UInt8](base64Encoded: "YWJ")  // Missing padding or fourth character
-        #expect(bytes == nil)
-    }
-
-    @Test
-    func `Decode with plus and slash`() {
-        let bytes = [UInt8](base64Encoded: "YWJj+/==")  // Contains + and /
-        #expect(bytes != nil)
-    }
-
-    @Test
-    func `Decode all zeros`() {
-        let bytes = [UInt8](base64Encoded: "AAAA")
-        #expect(bytes == [0x00, 0x00, 0x00])
-    }
-
-    @Test
-    func `Decode all ones`() {
-        let bytes = [UInt8](base64Encoded: "////")
-        #expect(bytes != nil)
-        #expect(bytes?.count == 3)
+    func `DELETE constant is correct`() {
+        #expect(UInt8.del == 0x7F)
     }
 }
 
+// MARK: - ASCII Control and Visible Character Classification
+
 @Suite
-struct `[UInt8] - init(hexEncoded:)` {
+struct `UInt8 - isASCIIControl` {
 
     @Test
-    func `Decode empty string`() {
-        let bytes = [UInt8](hexEncoded: "")
-        #expect(bytes == [])
-    }
-
-    @Test
-    func `Decode single byte lowercase`() {
-        let bytes = [UInt8](hexEncoded: "ff")
-        #expect(bytes == [0xFF])
-    }
-
-    @Test
-    func `Decode single byte uppercase`() {
-        let bytes = [UInt8](hexEncoded: "FF")
-        #expect(bytes == [0xFF])
-    }
-
-    @Test
-    func `Decode mixed case`() {
-        let bytes = [UInt8](hexEncoded: "aBcDeF")
-        #expect(bytes == [0xAB, 0xCD, 0xEF])
-    }
-
-    @Test
-    func `Decode multiple bytes`() {
-        let bytes = [UInt8](hexEncoded: "0123456789abcdef")
-        #expect(bytes == [0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF])
-    }
-
-    @Test
-    func `Decode with 0x prefix lowercase`() {
-        let bytes = [UInt8](hexEncoded: "0x48656c6c6f")
-        #expect(bytes == Array("Hello".utf8))
-    }
-
-    @Test
-    func `Decode with 0X prefix uppercase`() {
-        let bytes = [UInt8](hexEncoded: "0X48656C6C6F")
-        #expect(bytes == Array("Hello".utf8))
-    }
-
-    @Test
-    func `Decode with whitespace`() {
-        let bytes = [UInt8](hexEncoded: "48 65 6c 6c 6f")
-        #expect(bytes == Array("Hello".utf8))
-    }
-
-    @Test
-    func `Decode with tabs and newlines`() {
-        let bytes = [UInt8](hexEncoded: "48\t65\n6c\r6c 6f")
-        #expect(bytes == Array("Hello".utf8))
-    }
-
-    @Test
-    func `Decode zero byte`() {
-        let bytes = [UInt8](hexEncoded: "00")
-        #expect(bytes == [0x00])
-    }
-
-    @Test
-    func `Decode returns nil for odd length`() {
-        let bytes = [UInt8](hexEncoded: "abc")
-        #expect(bytes == nil)
-    }
-
-    @Test
-    func `Decode returns nil for invalid characters`() {
-        let bytes = [UInt8](hexEncoded: "gg")
-        #expect(bytes == nil)
-    }
-
-    @Test
-    func `Decode returns nil for non-hex characters`() {
-        let bytes = [UInt8](hexEncoded: "xyz")
-        #expect(bytes == nil)
-    }
-
-    @Test
-    func `Decode all valid hex pairs`() {
-        let hexString = "0123456789abcdefABCDEF"
-        for i in stride(from: 0, to: hexString.count - 1, by: 2) {
-            let start = hexString.index(hexString.startIndex, offsetBy: i)
-            let end = hexString.index(start, offsetBy: 2)
-            let pair = String(hexString[start..<end])
-            let bytes = [UInt8](hexEncoded: pair)
-            #expect(bytes != nil, "Failed to decode hex pair: \(pair)")
+    func `All C0 control characters (0x00-0x1F) are recognized`() {
+        for byte: UInt8 in 0x00...0x1F {
+            #expect(byte.isASCIIControl, "Byte 0x\(String(byte, radix: 16, uppercase: true)) should be a control character")
         }
     }
 
     @Test
-    func `Decode with mixed whitespace types`() {
-        let bytes = [UInt8](hexEncoded: "  48\t65\n6c\r6c  6f  ")
-        #expect(bytes == Array("Hello".utf8))
-    }
-}
-
-// MARK: - Round Trip Tests
-
-@Suite
-struct `[UInt8] - Base64 round trip` {
-
-    @Test
-    func `Round trip empty data`() {
-        let original: [UInt8] = []
-        let encoded = String(base64Encoding: original)
-        let decoded = [UInt8](base64Encoded: encoded)
-        #expect(decoded == original)
+    func `DELETE (0x7F) is a control character`() {
+        #expect(UInt8(0x7F).isASCIIControl)
+        #expect(UInt8.del.isASCIIControl)
     }
 
     @Test
-    func `Round trip single byte`() {
-        let original: [UInt8] = [0x42]
-        let encoded = String(base64Encoding: original)
-        let decoded = [UInt8](base64Encoded: encoded)
-        #expect(decoded == original)
+    func `Visible characters are not control characters`() {
+        for byte: UInt8 in 0x21...0x7E {
+            #expect(!byte.isASCIIControl, "Byte 0x\(String(byte, radix: 16, uppercase: true)) should not be a control character")
+        }
     }
 
     @Test
-    func `Round trip ASCII text`() {
-        let original = Array("Hello, World!".utf8)
-        let encoded = String(base64Encoding: original)
-        let decoded = [UInt8](base64Encoded: encoded)
-        #expect(decoded == original)
+    func `SPACE (0x20) is not a control character`() {
+        #expect(!UInt8(0x20).isASCIIControl)
+        #expect(!UInt8.sp.isASCIIControl)
     }
 
     @Test
-    func `Round trip binary data`() {
-        let original: [UInt8] = [0x00, 0xFF, 0x01, 0xFE, 0x80, 0x7F]
-        let encoded = String(base64Encoding: original)
-        let decoded = [UInt8](base64Encoded: encoded)
-        #expect(decoded == original)
-    }
-
-    @Test
-    func `Round trip all byte values`() {
-        let original = Array(UInt8(0)...UInt8(255))
-        let encoded = String(base64Encoding: original)
-        let decoded = [UInt8](base64Encoded: encoded)
-        #expect(decoded == original)
-    }
-
-    @Test
-    func `Round trip with unicode source`() {
-        let original = Array("Hello 世界 🌍".utf8)
-        let encoded = String(base64Encoding: original)
-        let decoded = [UInt8](base64Encoded: encoded)
-        #expect(decoded == original)
+    func `Common control characters are recognized`() {
+        #expect(UInt8.nul.isASCIIControl)   // NULL
+        #expect(UInt8.htab.isASCIIControl)  // TAB
+        #expect(UInt8.lf.isASCIIControl)    // LINE FEED
+        #expect(UInt8.cr.isASCIIControl)    // CARRIAGE RETURN
     }
 }
 
 @Suite
-struct `[UInt8] - Hex round trip` {
+struct `UInt8 - isASCIIVisible` {
 
     @Test
-    func `Round trip empty data`() {
-        let original: [UInt8] = []
-        let encoded = String(hexEncoding: original)
-        let decoded = [UInt8](hexEncoded: encoded)
-        #expect(decoded == original)
+    func `All visible characters (0x21-0x7E) are recognized`() {
+        for byte: UInt8 in 0x21...0x7E {
+            #expect(byte.isASCIIVisible, "Byte 0x\(String(byte, radix: 16, uppercase: true)) ('\(Character(UnicodeScalar(byte)))') should be visible")
+        }
     }
 
     @Test
-    func `Round trip single byte`() {
-        let original: [UInt8] = [0x42]
-        let encoded = String(hexEncoding: original)
-        let decoded = [UInt8](hexEncoded: encoded)
-        #expect(decoded == original)
+    func `Control characters are not visible`() {
+        for byte: UInt8 in 0x00...0x1F {
+            #expect(!byte.isASCIIVisible, "Byte 0x\(String(byte, radix: 16, uppercase: true)) should not be visible")
+        }
     }
 
     @Test
-    func `Round trip ASCII text`() {
-        let original = Array("Hello, World!".utf8)
-        let encoded = String(hexEncoding: original)
-        let decoded = [UInt8](hexEncoded: encoded)
-        #expect(decoded == original)
+    func `SPACE (0x20) is not visible`() {
+        #expect(!UInt8(0x20).isASCIIVisible)
+        #expect(!UInt8.sp.isASCIIVisible)
     }
 
     @Test
-    func `Round trip binary data`() {
-        let original: [UInt8] = [0x00, 0xFF, 0x01, 0xFE, 0x80, 0x7F]
-        let encoded = String(hexEncoding: original)
-        let decoded = [UInt8](hexEncoded: encoded)
-        #expect(decoded == original)
+    func `DELETE (0x7F) is not visible`() {
+        #expect(!UInt8(0x7F).isASCIIVisible)
+        #expect(!UInt8.del.isASCIIVisible)
     }
 
     @Test
-    func `Round trip all byte values`() {
-        let original = Array(UInt8(0)...UInt8(255))
-        let encoded = String(hexEncoding: original)
-        let decoded = [UInt8](hexEncoded: encoded)
-        #expect(decoded == original)
+    func `Common visible characters are recognized`() {
+        #expect(UInt8(ascii: "!").isASCIIVisible)  // 0x21
+        #expect(UInt8(ascii: "0").isASCIIVisible)  // digit
+        #expect(UInt8(ascii: "A").isASCIIVisible)  // uppercase
+        #expect(UInt8(ascii: "a").isASCIIVisible)  // lowercase
+        #expect(UInt8(ascii: "~").isASCIIVisible)  // 0x7E
     }
 
     @Test
-    func `Round trip with unicode source`() {
-        let original = Array("Hello 世界 🌍".utf8)
-        let encoded = String(hexEncoding: original)
-        let decoded = [UInt8](hexEncoded: encoded)
-        #expect(decoded == original)
+    func `Visible implies not control`() {
+        for byte: UInt8 in 0...255 {
+            if byte.isASCIIVisible {
+                #expect(!byte.isASCIIControl)
+            }
+        }
     }
 }
 
-// MARK: - Concrete Expected Outputs
+// MARK: - Byte Sequence Constants
 
 @Suite
-struct `[UInt8] - Base64 expected outputs` {
+struct `[UInt8] - Line ending constants` {
 
     @Test
-    func `Decode known Base64 string`() {
-        let bytes = [UInt8](base64Encoded: "SGVsbG8=")
-        #expect(bytes == [0x48, 0x65, 0x6c, 0x6c, 0x6f])  // "Hello"
+    func `CRLF constant is correct`() {
+        #expect([UInt8].crlf == [0x0D, 0x0A])
+        #expect([UInt8].crlf == [UInt8.cr, UInt8.lf])
     }
 
     @Test
-    func `Decode rejects invalid Base64 characters`() {
-        let bytes = [UInt8](base64Encoded: "SGVs!bG8=")  // Contains !
-        #expect(bytes == nil)
+    func `LF constant is correct`() {
+        #expect([UInt8].lf == [0x0A])
+        #expect([UInt8].lf == [UInt8.lf])
     }
 
     @Test
-    func `Encode produces expected Base64 output`() {
-        let result = String(base64Encoding: [0x48, 0x65, 0x6c, 0x6c, 0x6f])
-        #expect(result == "SGVsbG8=")
+    func `CR constant is correct`() {
+        #expect([UInt8].cr == [0x0D])
+        #expect([UInt8].cr == [UInt8.cr])
     }
 
     @Test
-    func `Decode Base64 with all padding scenarios`() {
-        // No padding (multiple of 3 bytes)
-        #expect([UInt8](base64Encoded: "YWJj") == [0x61, 0x62, 0x63])
-        // Single padding (2 bytes)
-        #expect([UInt8](base64Encoded: "YWI=") == [0x61, 0x62])
-        // Double padding (1 byte)
-        #expect([UInt8](base64Encoded: "YQ==") == [0x61])
-    }
-}
-
-@Suite
-struct `[UInt8] - Hex expected outputs` {
-
-    @Test
-    func `Decode known hex string lowercase`() {
-        let bytes = [UInt8](hexEncoded: "48656c6c6f")
-        #expect(bytes == [0x48, 0x65, 0x6c, 0x6c, 0x6f])  // "Hello"
+    func `Line ending constants are distinct`() {
+        #expect([UInt8].crlf != [UInt8].lf)
+        #expect([UInt8].crlf != [UInt8].cr)
+        #expect([UInt8].lf != [UInt8].cr)
     }
 
     @Test
-    func `Decode known hex string uppercase`() {
-        let bytes = [UInt8](hexEncoded: "48656C6C6F")
-        #expect(bytes == [0x48, 0x65, 0x6c, 0x6c, 0x6f])  // "Hello"
-    }
-
-    @Test
-    func `Decode rejects invalid hex characters`() {
-        let bytes = [UInt8](hexEncoded: "48GG")  // Contains G
-        #expect(bytes == nil)
-    }
-
-    @Test
-    func `Encode produces expected hex output`() {
-        let result = String(hexEncoding: [0x48, 0x65, 0x6c, 0x6c, 0x6f])
-        #expect(result == "48656c6c6f")  // lowercase
-    }
-
-    @Test
-    func `Decode hex boundary values`() {
-        #expect([UInt8](hexEncoded: "00") == [0x00])
-        #expect([UInt8](hexEncoded: "ff") == [0xFF])
-        #expect([UInt8](hexEncoded: "FF") == [0xFF])
-        #expect([UInt8](hexEncoded: "7f") == [0x7F])
-        #expect([UInt8](hexEncoded: "80") == [0x80])
+    func `CRLF can be constructed from individual constants`() {
+        let crlf = [UInt8.cr, UInt8.lf]
+        #expect(crlf == [UInt8].crlf)
     }
 }

@@ -14,25 +14,31 @@ import PackageDescription
 
 let package = Package(
     name: "swift-incits-4-1986",
+    platforms: [
+        .macOS(.v15),
+        .iOS(.v18),
+        .tvOS(.v18),
+        .watchOS(.v11)
+    ],
     products: [
         .library(
-            name: "INCITS_4_1986",
-            targets: ["INCITS_4_1986"]
+            name: "INCITS 4 1986",
+            targets: ["INCITS 4 1986"]
         )
     ],
     dependencies: [
-        .package(name: "swift-standards", path: "../swift-standards")
+        .package(url: "https://github.com/swift-standards/swift-standards.git", from: "0.1.0")
     ],
     targets: [
         .target(
-            name: "INCITS_4_1986",
+            name: "INCITS 4 1986",
             dependencies: [
                 .product(name: "Standards", package: "swift-standards")
             ]
         ),
         .testTarget(
-            name: "INCITS_4_1986_Tests",
-            dependencies: ["INCITS_4_1986"]
+            name: "INCITS 4 1986_Tests",
+            dependencies: ["INCITS 4 1986"]
         )
     ]
 )

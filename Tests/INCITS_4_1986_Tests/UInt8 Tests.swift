@@ -11,22 +11,22 @@ struct `UInt8 - isASCIIWhitespace` {
 
     @Test
     func `Space (0x20) is whitespace`() {
-        #expect(UInt8(0x20).isASCIIWhitespace)
+        #expect(UInt8.space.isASCIIWhitespace)
     }
 
     @Test
     func `Tab (0x09) is whitespace`() {
-        #expect(UInt8(0x09).isASCIIWhitespace)
+        #expect(UInt8.htab.isASCIIWhitespace)
     }
 
     @Test
     func `Line feed (0x0A) is whitespace`() {
-        #expect(UInt8(0x0A).isASCIIWhitespace)
+        #expect(UInt8.lf.isASCIIWhitespace)
     }
 
     @Test
     func `Carriage return (0x0D) is whitespace`() {
-        #expect(UInt8(0x0D).isASCIIWhitespace)
+        #expect(UInt8.cr.isASCIIWhitespace)
     }
 
     @Test(arguments: [0x00, 0x41, 0x61, 0x30, 0x21, 0xFF])
