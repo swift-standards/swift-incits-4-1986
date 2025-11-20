@@ -528,6 +528,39 @@ struct `Edge Cases - Constants` {
 
 // MARK: - Performance Edge Cases
 
+//Test Suite 'Selected tests' started at 2025-11-20 21:05:55.524.
+//Test Suite 'INCITS 4 1986 Tests.xctest' started at 2025-11-20 21:05:55.525.
+//Test Suite 'INCITS 4 1986 Tests.xctest' passed at 2025-11-20 21:05:55.525.
+//     Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+//Test Suite 'Selected tests' passed at 2025-11-20 21:05:55.525.
+//     Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+//􀟈 Test run started.
+//􀄵 Testing Library Version: 1400
+//􀄵 Target Platform: arm64e-apple-macos14.0
+//􀟈 Suite "Performance Tests" started.
+//􀟈 Suite "Edge Cases - Performance" started.
+//􀟈 Test "validate worst case - non-ASCII at end of 1M bytes" started.
+//⏱️ `validate worst case - non-ASCII at end of 1M bytes`()
+//   Iterations: 10
+//   Min:        62.18ms
+//   Median:     66.02ms
+//   Mean:       65.99ms
+//   p95:        73.57ms
+//   p99:        73.57ms
+//   Max:        73.57ms
+//   StdDev:     3.45ms
+//   Allocations:
+//     Min:      -544 bytes
+//     Median:   128 bytes
+//     Max:      128 bytes
+//     Avg:      22 bytes
+//   Peak Memory: 14.03 KB
+//􁁛 Test "validate worst case - non-ASCII at end of 1M bytes" passed after 0.660 seconds.
+//􁁛 Suite "Edge Cases - Performance" passed after 0.661 seconds.
+//􁁛 Suite "Performance Tests" passed after 0.661 seconds.
+//􁁛 Test run with 1 test in 2 suites passed after 0.661 seconds.
+//Program ended with exit code: 0
+
 extension `Performance Tests` {
     @Suite
     struct `Edge Cases - Performance` {

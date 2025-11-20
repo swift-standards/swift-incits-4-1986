@@ -70,7 +70,9 @@ extension `Performance Tests` {
             }
         }
 
-        @Test(.timed(threshold: .milliseconds(10000), maxAllocations: 1_000_000))
+        @Test(
+            .timed(threshold: .milliseconds(10000), maxAllocations: 1_000_000)
+        )
         func `byte array validation 10K arrays`() {
             let bytes: [UInt8] = Array(repeating: 0x41, count: 1000)
             for _ in 0..<10_000 {
