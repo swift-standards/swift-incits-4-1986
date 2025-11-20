@@ -62,7 +62,7 @@ extension UInt8.ASCII {
         self.uint8 <= .ascii.us || self.uint8 == .ascii.del
     }
 
-    /// Tests if byte is ASCII visible/printable character (0x21-0x7E)
+    /// Tests if byte is ASCII visible character (0x21-0x7E)
     ///
     /// Visible characters per INCITS 4-1986 Section 4:
     /// - Printable characters excluding SPACE: 0x21 ('!') through 0x7E ('~')
@@ -71,6 +71,19 @@ extension UInt8.ASCII {
     @inlinable
     public var isVisible: Bool {
         self.uint8 >= .ascii.exclamationPoint && self.uint8 <= .ascii.tilde
+    }
+
+    /// Tests if byte is ASCII printable character (0x20-0x7E)
+    ///
+    /// Printable characters per INCITS 4-1986 Section 4:
+    /// - All graphic characters including SPACE: 0x20 (' ') through 0x7E ('~')
+    /// - Includes SPACE, digits, letters, and punctuation
+    /// - Excludes control characters (0x00-0x1F) and DELETE (0x7F)
+    ///
+    /// Note: `isPrintable` includes SPACE, while `isVisible` excludes it.
+    @inlinable
+    public var isPrintable: Bool {
+        self.uint8 >= .ascii.sp && self.uint8 <= .ascii.tilde
     }
 
     // MARK: - Character Classification
@@ -111,9 +124,69 @@ extension UInt8.ASCII {
         self.uint8 >= .ascii.a && self.uint8 <= .ascii.z
     }
 
+    // MARK: - Value Extraction
+
+    /// Returns the numeric value of an ASCII digit (0-9), or nil if not a digit
+    ///
+    /// Inverse operation of the `isDigit` predicate.
+    /// Forms a Galois connection between predicates and values.
+    ///
+    /// Example:
+    /// ```swift
+    /// UInt8.ascii.`0`.ascii.digitValue  // 0
+    /// UInt8.ascii.`5`.ascii.digitValue  // 5
+    /// UInt8.ascii.`9`.ascii.digitValue  // 9
+    /// UInt8.ascii.A.ascii.digitValue    // nil
+    /// ```
+    @inlinable
+    public var digitValue: UInt8? {
+        guard isDigit else { return nil }
+        return self.uint8 - .ascii.0
+    }
+
+    /// Returns the numeric value of an ASCII hex digit (0-15), or nil if not a hex digit
+    ///
+    /// Inverse operation of the `isHexDigit` predicate.
+    /// Forms a Galois connection between predicates and values.
+    ///
+    /// Supports both uppercase and lowercase hex digits:
+    /// - '0'...'9' → 0...9
+    /// - 'A'...'F' → 10...15
+    /// - 'a'...'f' → 10...15
+    ///
+    /// Example:
+    /// ```swift
+    /// UInt8.ascii.`0`.ascii.hexValue  // 0
+    /// UInt8.ascii.`9`.ascii.hexValue  // 9
+    /// UInt8.ascii.A.ascii.hexValue    // 10
+    /// UInt8.ascii.F.ascii.hexValue    // 15
+    /// UInt8.ascii.a.ascii.hexValue    // 10
+    /// UInt8.ascii.f.ascii.hexValue    // 15
+    /// UInt8.ascii.G.ascii.hexValue    // nil
+    /// ```
+    @inlinable
+    public var hexValue: UInt8? {
+        switch self.uint8 {
+        case UInt8.ascii.0...UInt8.ascii.9:
+            return self.uint8 - UInt8.ascii.0
+        case UInt8.ascii.A...UInt8.ascii.F:
+            return self.uint8 - UInt8.ascii.A + 10
+        case UInt8.ascii.a...UInt8.ascii.f:
+            return self.uint8 - UInt8.ascii.a + 10
+        default:
+            return nil
+        }
+    }
+
+    // MARK: - Case Conversion
+
     /// Converts ASCII letter to specified case, returns unchanged if not an ASCII letter
     /// - Parameter case: The target case (upper or lower)
     /// - Returns: Converted byte if ASCII letter, unchanged otherwise
+    ///
+    /// Mathematical Properties:
+    /// - **Idempotence**: `b.ascii(case: c).ascii(case: c) == b.ascii(case: c)`
+    /// - **Involution** (for letters): `b.ascii(case: .upper).ascii(case: .lower) == b` (if `b.isLetter`)
     ///
     /// Example:
     /// ```swift

@@ -18,6 +18,10 @@ extension INCITS_4_1986 {
     /// - Small letters: a-z (0x61-0x7A)
     /// - Difference between cases: 32 (0x20)
     ///
+    /// Mathematical Properties:
+    /// - **Idempotence**: `ascii(ascii(b, case: c), case: c) == ascii(b, case: c)`
+    /// - **Functoriality**: Preserves array structure (maps over elements)
+    ///
     /// Example:
     /// ```swift
     /// INCITS_4_1986.ascii(Array("Hello".utf8), case: .upper)  // "HELLO" bytes

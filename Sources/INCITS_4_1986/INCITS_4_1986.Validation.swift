@@ -20,6 +20,6 @@ extension INCITS_4_1986 {
     /// INCITS_4_1986.isAllASCII([104, 255, 108])  // false
     /// ```
     public static func isAllASCII(_ bytes: [UInt8]) -> Bool {
-        bytes.allSatisfy { $0 <= 127 }
+        bytes.allSatisfy { $0 <= .ascii.del }
     }
 }

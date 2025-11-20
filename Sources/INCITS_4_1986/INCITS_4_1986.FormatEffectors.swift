@@ -18,6 +18,10 @@ extension INCITS_4_1986 {
     /// - LF (0x0A): LINE FEED - advances to next line
     /// - CRLF: Combination used by Internet protocols (RFC 9112, RFC 5322)
     ///
+    /// Mathematical Properties:
+    /// - **Idempotence**: `normalized(normalized(b, to: e), to: e) == normalized(b, to: e)`
+    /// - **Preservation**: If `b` contains no line endings, `normalized(b, to: any) == b`
+    ///
     /// Example:
     /// ```swift
     /// let bytes: [UInt8] = [0x6C, 0x0A, 0x6D]  // "l\nm"
