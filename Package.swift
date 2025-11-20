@@ -38,7 +38,10 @@ let package = Package(
         ),
         .testTarget(
             name: "INCITS 4 1986".tests,
-            dependencies: ["INCITS 4 1986"]
+            dependencies: [
+                "INCITS 4 1986",
+                .product(name: "StandardsTestSupport", package: "swift-standards")
+            ]
         )
     ],
     swiftLanguageModes: [.v6]
