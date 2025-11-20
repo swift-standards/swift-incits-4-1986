@@ -86,9 +86,9 @@ UInt8.ascii.sp     // 0x20 (SPACE)
 
 // Graphic characters (0x21-0x7E)
 UInt8.ascii.exclamationPoint  // 0x21 (!)
-UInt8.ascii.`0`    // 0x30 (digit 0)
-UInt8.ascii.`A`    // 0x41 (capital A)
-UInt8.ascii.`a`    // 0x61 (lowercase a)
+UInt8.ascii.0    // 0x30 (digit 0)
+UInt8.ascii.A    // 0x41 (capital A)
+UInt8.ascii.a    // 0x61 (lowercase a)
 UInt8.ascii.tilde  // 0x7E (~)
 
 // Common sequences
