@@ -24,19 +24,20 @@ Pure Swift implementation of **INCITS 4-1986 (R2022)**: Coded Character Sets - 7
 ```swift
 // Character classification predicates
 byte.ascii.isWhitespace    // space, tab, LF, CR
-byte.isASCIIDigit         // '0'...'9'
-byte.isASCIILetter        // 'A'...'Z', 'a'...'z'
-byte.isASCIIAlphanumeric  // digits or letters
-byte.isASCIIHexDigit      // '0'...'9', 'A'...'F', 'a'...'f'
-byte.isASCIIUppercase     // 'A'...'Z'
-byte.isASCIILowercase     // 'a'...'z'
+byte.ascii.isDigit         // '0'...'9'
+byte.ascii.isLetter        // 'A'...'Z', 'a'...'z'
+byte.ascii.isAlphanumeric  // digits or letters
+byte.ascii.isHexDigit      // '0'...'9', 'A'...'F', 'a'...'f'
+byte.ascii.isUppercase     // 'A'...'Z'
+byte.ascii.isLowercase     // 'a'...'z'
 
 // Case conversion
-byte.ascii(case: .upper)  // Convert to uppercase
-byte.ascii(case: .lower)  // Convert to lowercase
+byte.ascii.ascii(case: .upper)  // Convert to uppercase
+byte.ascii.ascii(case: .lower)  // Convert to lowercase
 
-// Canonical whitespace definition
-UInt8.asciiWhitespaceBytes  // {0x20, 0x09, 0x0A, 0x0D}
+// Access to ASCII constants
+UInt8.ascii.sp            // 0x20 (SPACE)
+UInt8.ascii.ht            // 0x09 (HORIZONTAL TAB)
 ```
 
 ### Character-Level Operations

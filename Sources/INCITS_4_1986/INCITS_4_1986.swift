@@ -28,8 +28,17 @@ extension INCITS_4_1986 {
         ControlCharacters.lf,
         ControlCharacters.cr
     ]
-    
-    
+
+    /// ASCII case conversion offset
+    ///
+    /// The numeric distance between uppercase and lowercase ASCII letters.
+    /// Per INCITS 4-1986, uppercase 'A'-'Z' (0x41-0x5A) and lowercase 'a'-'z' (0x61-0x7A)
+    /// differ by exactly 0x20 (32 decimal).
+    ///
+    /// Mathematical property: `'a' - 'A' = 0x20`
+    public static let caseConversionOffset: UInt8 = 0x20
+
+
     // MARK: - Common ASCII Byte Sequences
 
     /// CRLF line ending (0x0D 0x0A)

@@ -203,11 +203,12 @@ extension UInt8.ASCII {
     /// ```
     @inlinable
     public func ascii(case: Character.Case) -> UInt8 {
+        let offset = INCITS_4_1986.caseConversionOffset
         switch `case` {
         case .upper:
-            return isLowercase ? self.uint8 - 32 : self.uint8
+            return isLowercase ? self.uint8 - offset : self.uint8
         case .lower:
-            return isUppercase ? self.uint8 + 32 : self.uint8
+            return isUppercase ? self.uint8 + offset : self.uint8
         }
     }
 }
