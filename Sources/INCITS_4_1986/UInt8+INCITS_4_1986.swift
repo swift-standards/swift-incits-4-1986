@@ -124,28 +124,30 @@ extension UInt8.ASCII {
         self.uint8 >= .ascii.a && self.uint8 <= .ascii.z
     }
 
-    // MARK: - Value Extraction
+    // MARK: - Numeric Value Parsing (Static Transformations)
 
-    /// Returns the numeric value of an ASCII digit (0-9), or nil if not a digit
+    /// Parses an ASCII digit byte to its numeric value (0-9)
     ///
+    /// Pure function transformation from ASCII digit to numeric value.
     /// Inverse operation of the `isDigit` predicate.
     /// Forms a Galois connection between predicates and values.
     ///
     /// Example:
     /// ```swift
-    /// UInt8.ascii.`0`.ascii.digitValue  // 0
-    /// UInt8.ascii.`5`.ascii.digitValue  // 5
-    /// UInt8.ascii.`9`.ascii.digitValue  // 9
-    /// UInt8.ascii.A.ascii.digitValue    // nil
+    /// UInt8.ascii(digit: 0x30)  // 0 (character '0')
+    /// UInt8.ascii(digit: 0x35)  // 5 (character '5')
+    /// UInt8.ascii(digit: 0x39)  // 9 (character '9')
+    /// UInt8.ascii(digit: 0x41)  // nil (character 'A')
     /// ```
     @inlinable
-    public var digitValue: UInt8? {
-        guard isDigit else { return nil }
-        return self.uint8 - .ascii.0
+    public static func ascii(digit byte: UInt8) -> UInt8? {
+        guard byte.ascii.isDigit else { return nil }
+        return byte - UInt8.ascii.0
     }
 
-    /// Returns the numeric value of an ASCII hex digit (0-15), or nil if not a hex digit
+    /// Parses an ASCII hex digit byte to its numeric value (0-15)
     ///
+    /// Pure function transformation from ASCII hex digit to numeric value.
     /// Inverse operation of the `isHexDigit` predicate.
     /// Forms a Galois connection between predicates and values.
     ///
@@ -156,23 +158,23 @@ extension UInt8.ASCII {
     ///
     /// Example:
     /// ```swift
-    /// UInt8.ascii.`0`.ascii.hexValue  // 0
-    /// UInt8.ascii.`9`.ascii.hexValue  // 9
-    /// UInt8.ascii.A.ascii.hexValue    // 10
-    /// UInt8.ascii.F.ascii.hexValue    // 15
-    /// UInt8.ascii.a.ascii.hexValue    // 10
-    /// UInt8.ascii.f.ascii.hexValue    // 15
-    /// UInt8.ascii.G.ascii.hexValue    // nil
+    /// UInt8.ascii(hexDigit: 0x30)  // 0 (character '0')
+    /// UInt8.ascii(hexDigit: 0x39)  // 9 (character '9')
+    /// UInt8.ascii(hexDigit: 0x41)  // 10 (character 'A')
+    /// UInt8.ascii(hexDigit: 0x46)  // 15 (character 'F')
+    /// UInt8.ascii(hexDigit: 0x61)  // 10 (character 'a')
+    /// UInt8.ascii(hexDigit: 0x66)  // 15 (character 'f')
+    /// UInt8.ascii(hexDigit: 0x47)  // nil (character 'G')
     /// ```
     @inlinable
-    public var hexValue: UInt8? {
-        switch self.uint8 {
+    public static func ascii(hexDigit byte: UInt8) -> UInt8? {
+        switch byte {
         case UInt8.ascii.0...UInt8.ascii.9:
-            return self.uint8 - UInt8.ascii.0
+            return byte - UInt8.ascii.0
         case UInt8.ascii.A...UInt8.ascii.F:
-            return self.uint8 - UInt8.ascii.A + 10
+            return byte - UInt8.ascii.A + 10
         case UInt8.ascii.a...UInt8.ascii.f:
-            return self.uint8 - UInt8.ascii.a + 10
+            return byte - UInt8.ascii.a + 10
         default:
             return nil
         }
