@@ -104,6 +104,6 @@ extension String {
         lineEnding: LineEnding,
         as encoding: Encoding.Type = UTF8.self
     ) -> String where Encoding: _UnicodeEncoding, Encoding.CodeUnit == UInt8 {
-        String(decoding: [UInt8].ASCII.ascii(lineEnding: lineEnding), as: encoding)
+        String(decoding: [UInt8].ASCII.ascii(lineEnding), as: encoding)
     }
 }

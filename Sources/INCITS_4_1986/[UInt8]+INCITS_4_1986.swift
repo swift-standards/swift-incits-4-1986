@@ -75,17 +75,17 @@ extension [UInt8].ASCII {
 
 extension [UInt8].ASCII {
     // MARK: - ASCII Conversion (Static)
-    
+
     /// Creates ASCII bytes from a string, nil if string contains non-ASCII characters
     ///
     /// Validates that all characters are ASCII (U+0000 to U+007F) before conversion.
     ///
     /// Example:
     /// ```swift
-    /// [UInt8].ascii.ascii("hello")  // [104, 101, 108, 108, 111]
-    /// [UInt8].ascii.ascii("hello🌍")  // nil
+    /// [UInt8].ascii.from("hello")  // [104, 101, 108, 108, 111]
+    /// [UInt8].ascii.from("hello🌍")  // nil
     /// ```
-    public static func ascii(_ string: String) -> [UInt8]? {
+    public static func from(_ string: String) -> [UInt8]? {
         guard string.allSatisfy({ $0.isASCII }) else { return nil }
         return Array(string.utf8)
     }
@@ -97,9 +97,9 @@ extension [UInt8].ASCII {
     ///
     /// Example:
     /// ```swift
-    /// [UInt8].ascii.ascii(unchecked: "hello")  // [104, 101, 108, 108, 111]
+    /// [UInt8].ascii.from(unchecked: "hello")  // [104, 101, 108, 108, 111]
     /// ```
-    public static func ascii(unchecked string: String) -> [UInt8] {
+    public static func from(unchecked string: String) -> [UInt8] {
         Array(string.utf8)
     }
 }
@@ -130,8 +130,8 @@ extension [UInt8].ASCII {
     ///
     /// Example:
     /// ```swift
-    /// Array("Hello".utf8).ascii.ascii(case: .upper)  // "HELLO" bytes
-    /// Array("World".utf8).ascii.ascii(case: .lower)  // "world" bytes
+    /// [UInt8].ascii.from("Hello").ascii.ascii(case: .upper)  // "HELLO" bytes
+    /// [UInt8].ascii.from("World").ascii.ascii(case: .lower)  // "world" bytes
     /// ```
     @inlinable
     public func ascii(case: Character.Case) -> [UInt8] {
@@ -152,7 +152,7 @@ extension [UInt8].ASCII {
     /// [UInt8].ascii(lineEnding: .cr)    // [0x0D]
     /// [UInt8].ascii(lineEnding: .crlf)  // [0x0D, 0x0A]
     /// ```
-    public static func ascii(lineEnding: String.LineEnding) -> [UInt8] {
+    public static func ascii(_ lineEnding: String.LineEnding) -> [UInt8] {
         switch lineEnding {
         case .lf: return [UInt8.ascii.lf]
         case .cr: return [UInt8.ascii.cr]
