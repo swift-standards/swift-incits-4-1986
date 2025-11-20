@@ -30,15 +30,20 @@ extension UInt8 {
     }
 }
 
-extension UInt8.ASCII {
-    // MARK: - Value Access
+// MARK: - Conversions
 
-    /// Returns the underlying byte value
+extension UInt8 {
+    /// Creates ASCII byte from a character, nil if character is non-ASCII
     ///
-    /// Provides direct access to the UInt8 value for this ASCII byte.
-    @inlinable
-    public var value: UInt8 {
-        self.uint8
+    /// Validates that the character is ASCII (U+0000 to U+007F) before conversion.
+    ///
+    /// Example:
+    /// ```swift
+    /// UInt8.ascii("A")  // 65
+    /// UInt8.ascii("🌍")  // nil
+    /// ```
+    public static func ascii(_ character: Character) -> UInt8? {
+        character.asciiValue
     }
 }
 

@@ -75,31 +75,6 @@ extension [UInt8] {
 }
 
 extension [UInt8].ASCII {
-    // MARK: - Value Access
-
-    /// Returns the underlying byte array value
-    ///
-    /// Provides direct access to the [UInt8] value for this ASCII byte array.
-    @inlinable
-    public var value: [UInt8] {
-        self.bytes
-    }
-}
-
-extension [UInt8].ASCII {
-    // MARK: - Nested Namespaces
-
-    /// Access to SPACE constant
-    public typealias SPACE = INCITS_4_1986.SPACE
-
-    /// Access to Control Characters constants
-    public typealias ControlCharacters = INCITS_4_1986.ControlCharacters
-
-    /// Access to Graphic Characters constants
-    public typealias GraphicCharacters = INCITS_4_1986.GraphicCharacters
-}
-
-extension [UInt8].ASCII {
     // MARK: - Common Byte Sequences
 
     /// CRLF line ending (0x0D 0x0A)
@@ -135,7 +110,7 @@ extension [UInt8].ASCII {
     /// [104, 255, 108].ascii.isAllASCII  // false
     /// ```
     public var isAllASCII: Bool {
-        INCITS_4_1986.isAllASCII(self.value)
+        INCITS_4_1986.isAllASCII(self.bytes)
     }
 }
 
@@ -153,7 +128,7 @@ extension [UInt8].ASCII {
     /// ```
     @inlinable
     public func convertingCase(to case: Character.Case) -> [UInt8] {
-        INCITS_4_1986.ascii(self.value, case: `case`)
+        INCITS_4_1986.ascii(self.bytes, case: `case`)
     }
 }
 
