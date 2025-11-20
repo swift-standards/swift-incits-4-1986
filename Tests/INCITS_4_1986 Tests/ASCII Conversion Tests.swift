@@ -20,9 +20,8 @@ struct `ASCII Round-trip Conversions` {
     }
 
     @Test
-    func `String to bytes using initializer`() {
-        // Convenience initializer still works
-        let bytes = [UInt8](ascii: "hello")
+    func `String to bytes using static method with validation`() {
+        let bytes = [UInt8].ascii.ascii("hello")
         #expect(bytes == [104, 101, 108, 108, 111])
     }
 
@@ -36,7 +35,6 @@ struct `ASCII Round-trip Conversions` {
     @Test
     func `Non-ASCII string returns nil`() {
         #expect([UInt8].ascii.ascii("hello🌍") == nil)
-        #expect([UInt8](ascii: "hello🌍") == nil)
     }
 
     @Test
@@ -52,9 +50,9 @@ struct `ASCII Round-trip Conversions` {
     }
 
     @Test
-    func `Bytes to String using initializer`() {
+    func `Bytes to String using static method with validation`() {
         let bytes: [UInt8] = [104, 101, 108, 108, 111]
-        #expect(String(ascii: bytes) == "hello")
+        #expect(String.ascii(bytes) == "hello")
     }
 
     @Test
@@ -87,16 +85,16 @@ struct `ASCII Round-trip Conversions` {
     @Test
     func `Complete round-trip String → [UInt8] → String`() {
         let original = "Hello, World!"
-        let bytes = [UInt8](ascii: original)!
-        let restored = String(ascii: bytes)!
+        let bytes = [UInt8].ascii.ascii(original)!
+        let restored = String.ascii(bytes)!
         #expect(restored == original)
     }
 
     @Test
     func `Complete round-trip [UInt8] → String → [UInt8]`() {
         let original: [UInt8] = [104, 101, 108, 108, 111]
-        let string = String(ascii: original)!
-        let restored = [UInt8](ascii: string)!
+        let string = String.ascii(original)!
+        let restored = [UInt8].ascii.ascii(string)!
         #expect(restored == original)
     }
 }
@@ -189,11 +187,11 @@ struct `Performance Variants` {
     func `Checked and unchecked produce same result for valid ASCII`() {
         let str = "hello"
 
-        let checkedBytes = [UInt8](ascii: str)!
+        let checkedBytes = [UInt8].ascii.ascii(str)!
         let uncheckedBytes = [UInt8].ascii.ascii(unchecked: str)
         #expect(checkedBytes == uncheckedBytes)
 
-        let checkedString = String(ascii: checkedBytes)!
+        let checkedString = String.ascii(checkedBytes)!
         let uncheckedString = String.ascii(unchecked: uncheckedBytes)
         #expect(checkedString == uncheckedString)
     }

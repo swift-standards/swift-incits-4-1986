@@ -30,19 +30,6 @@ extension String {
         String(decoding: bytes, as: UTF8.self)
     }
 
-    /// Creates a string from ASCII bytes, nil if any byte is non-ASCII
-    ///
-    /// Convenience initializer that calls `String.ascii(_:)`.
-    ///
-    /// Example:
-    /// ```swift
-    /// String(ascii: [104, 101, 108, 108, 111])  // "hello"
-    /// String(ascii: [255])  // nil (not valid ASCII)
-    /// ```
-    public init?(ascii bytes: [UInt8]) {
-        guard let string = Self.ascii(bytes) else { return nil }
-        self = string
-    }
 }
 
 extension String {
@@ -103,10 +90,20 @@ extension String {
 // MARK: - Line Endings
 
 extension String {
-    public init<Encoding>(
-        _ lineEnding: String.LineEnding,
+    /// Creates a string from a line ending constant
+    ///
+    /// Pure function transformation from line ending to string representation.
+    ///
+    /// Example:
+    /// ```swift
+    /// String.ascii(lineEnding: .lf)    // "\n"
+    /// String.ascii(lineEnding: .cr)    // "\r"
+    /// String.ascii(lineEnding: .crlf)  // "\r\n"
+    /// ```
+    public static func ascii<Encoding>(
+        lineEnding: LineEnding,
         as encoding: Encoding.Type = UTF8.self
-    ) where Encoding: _UnicodeEncoding, Encoding.CodeUnit == UInt8 {
-        self = String(decoding: [UInt8](lineEnding), as: encoding)
+    ) -> String where Encoding: _UnicodeEncoding, Encoding.CodeUnit == UInt8 {
+        String(decoding: [UInt8].ASCII.ascii(lineEnding: lineEnding), as: encoding)
     }
 }

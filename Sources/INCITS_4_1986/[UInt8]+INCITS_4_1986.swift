@@ -139,34 +139,24 @@ extension [UInt8].ASCII {
     }
 }
 
-extension [UInt8] {
-    // MARK: - Convenience Initializers
-
-    /// Creates ASCII bytes from a string, nil if string contains non-ASCII characters
-    ///
-    /// Convenience initializer that calls `[UInt8].ascii.ascii(_:)`.
-    ///
-    /// Example:
-    /// ```swift
-    /// [UInt8](ascii: "hello")  // [104, 101, 108, 108, 111]
-    /// ```
-    public init?(ascii string: String) {
-        guard let bytes = Self.ASCII.ascii(string) else { return nil }
-        self = bytes
-    }
+extension [UInt8].ASCII {
+    // MARK: - Line Endings
 
     /// Creates byte array from a line ending constant
     ///
+    /// Pure function transformation from line ending to byte sequence.
+    ///
     /// Example:
     /// ```swift
-    /// [UInt8](.lf)    // [0x0A]
-    /// [UInt8](.crlf)  // [0x0D, 0x0A]
+    /// [UInt8].ascii(lineEnding: .lf)    // [0x0A]
+    /// [UInt8].ascii(lineEnding: .cr)    // [0x0D]
+    /// [UInt8].ascii(lineEnding: .crlf)  // [0x0D, 0x0A]
     /// ```
-    public init(_ lineEnding: String.LineEnding) {
+    public static func ascii(lineEnding: String.LineEnding) -> [UInt8] {
         switch lineEnding {
-        case .lf: self = [UInt8.ascii.lf]
-        case .cr: self = [UInt8.ascii.cr]
-        case .crlf: self = [UInt8].ascii.crlf
+        case .lf: return [UInt8.ascii.lf]
+        case .cr: return [UInt8.ascii.cr]
+        case .crlf: return Self.crlf
         }
     }
 }

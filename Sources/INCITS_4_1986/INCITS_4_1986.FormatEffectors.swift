@@ -28,47 +28,52 @@ extension INCITS_4_1986 {
     /// INCITS_4_1986.normalized(bytes, to: .crlf)  // [0x6C, 0x0D, 0x0A, 0x6D]
     /// ```
     public static func normalized(_ bytes: [UInt8], to lineEnding: String.LineEnding) -> [UInt8] {
-        // Fast path: check if normalization is needed
-        let hasLF = bytes.contains(INCITS_4_1986.ControlCharacters.lf)
-        let hasCR = bytes.contains(INCITS_4_1986.ControlCharacters.cr)
-
-        if lineEnding == .crlf && !hasLF && !hasCR { return bytes }
-        if lineEnding == .lf && !hasCR { return bytes }
-        if lineEnding == .cr && !hasLF { return bytes }
-
-        let targetBytes = [UInt8](lineEnding)
-        var resultBytes = [UInt8]()
-        resultBytes.reserveCapacity(bytes.count)
-
-        var index = 0
-        while index < bytes.count {
-            let byte = bytes[index]
-
-            if byte == INCITS_4_1986.ControlCharacters.cr {  // CR (CARRIAGE RETURN)
-                let next = index + 1
-                if next < bytes.count && bytes[next] == INCITS_4_1986.ControlCharacters.lf {  // LF
-                    // CRLF sequence
-                    resultBytes.append(contentsOf: targetBytes)
-                    index = next + 1
-                    continue
-                } else {
-                    // CR alone
-                    resultBytes.append(contentsOf: targetBytes)
-                    index = next
-                    continue
-                }
-            } else if byte == INCITS_4_1986.ControlCharacters.lf {  // LF (LINE FEED)
-                // LF alone
-                resultBytes.append(contentsOf: targetBytes)
-                index += 1
-                continue
-            }
-
-            resultBytes.append(byte)
-            index += 1
+        // Fast path: if no line ending characters exist, return as-is
+        // Single pass check is faster than two separate contains() calls
+        if !bytes.contains(where: { $0 == .ascii.cr || $0 == .ascii.lf }) {
+            return bytes
         }
 
-        return resultBytes
+        // Determine target line ending sequence inline
+        let cr = UInt8.ascii.cr
+        let lf = UInt8.ascii.lf
+        let target: [UInt8]
+        switch lineEnding {
+        case .lf:   target = [lf]
+        case .cr:   target = [cr]
+        case .crlf: target = [cr, lf]
+        }
+
+        var result = [UInt8]()
+        result.reserveCapacity(bytes.count + (lineEnding == .crlf ? bytes.count / 10 : 0))
+
+        var i = 0
+        while i < bytes.count {
+            let byte = bytes[i]
+
+            if byte == cr {
+                // Check for CRLF sequence
+                if i + 1 < bytes.count && bytes[i + 1] == lf {
+                    // CRLF → target
+                    result.append(contentsOf: target)
+                    i += 2
+                } else {
+                    // CR → target
+                    result.append(contentsOf: target)
+                    i += 1
+                }
+            } else if byte == lf {
+                // LF → target
+                result.append(contentsOf: target)
+                i += 1
+            } else {
+                // Regular byte, preserve as-is
+                result.append(byte)
+                i += 1
+            }
+        }
+
+        return result
     }
 
     /// Normalizes ASCII line endings in string to the specified style
