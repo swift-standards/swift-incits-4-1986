@@ -56,8 +56,8 @@ char.ascii.isLowercase
 
 ```swift
 // String to ASCII bytes
-let bytes = [UInt8].ascii.from("hello")  // [104, 101, 108, 108, 111]
-let bytes = [UInt8].ascii.from("hello🌍")  // nil (contains non-ASCII)
+let bytes = [UInt8].ascii("hello")  // [104, 101, 108, 108, 111]
+let bytes = [UInt8].ascii("hello🌍")  // nil (contains non-ASCII)
 
 // ASCII bytes to String
 let string = String.ascii([104, 101, 108, 108, 111])  // "hello"

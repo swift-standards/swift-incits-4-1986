@@ -9,32 +9,32 @@ struct `ASCII Round-trip Conversions` {
     @Test
     func `String to bytes using static method`() {
         // The improvement the user requested - static factory method!
-        let bytes = [UInt8].ascii.from("hello")
+        let bytes = [UInt8].ascii("hello")
         #expect(bytes == [104, 101, 108, 108, 111])
     }
 
     @Test
     func `String to bytes using static method unchecked`() {
-        let bytes = [UInt8].ascii.from(unchecked: "hello")
+        let bytes = [UInt8].ascii(unchecked: "hello")
         #expect(bytes == [104, 101, 108, 108, 111])
     }
 
     @Test
     func `String to bytes using static method with validation`() {
-        let bytes = [UInt8].ascii.from("hello")
+        let bytes = [UInt8].ascii("hello")
         #expect(bytes == [104, 101, 108, 108, 111])
     }
 
     @Test
     func `String to bytes using static method directly`() {
         let str = "hello"
-        let bytes = [UInt8].ascii.from(str)
+        let bytes = [UInt8].ascii(str)
         #expect(bytes == [104, 101, 108, 108, 111])
     }
 
     @Test
     func `Non-ASCII string returns nil`() {
-        #expect([UInt8].ascii.from("hello🌍") == nil)
+        #expect([UInt8].ascii("hello🌍") == nil)
     }
 
     @Test
@@ -69,7 +69,7 @@ struct `ASCII Round-trip Conversions` {
 
     @Test
     func `Unchecked conversion for performance`() {
-        let bytes = [UInt8].ascii.from(unchecked: "hello")
+        let bytes = [UInt8].ascii(unchecked: "hello")
         #expect(bytes == [104, 101, 108, 108, 111])
 
         let str = String.ascii(unchecked: bytes)
@@ -85,7 +85,7 @@ struct `ASCII Round-trip Conversions` {
     @Test
     func `Complete round-trip String → [UInt8] → String`() {
         let original = "Hello, World!"
-        let bytes = [UInt8].ascii.from(original)!
+        let bytes = [UInt8].ascii(original)!
         let restored = String.ascii(bytes)!
         #expect(restored == original)
     }
@@ -94,7 +94,7 @@ struct `ASCII Round-trip Conversions` {
     func `Complete round-trip [UInt8] → String → [UInt8]`() {
         let original: [UInt8] = [104, 101, 108, 108, 111]
         let string = String.ascii(original)!
-        let restored = [UInt8].ascii.from(string)!
+        let restored = [UInt8].ascii(string)!
         #expect(restored == original)
     }
 }
@@ -124,7 +124,7 @@ struct `ASCII Case Conversion` {
     func `Array case conversion matches String case conversion`() {
         let str = "Hello World"
         let strUpper = str.ascii(case: .upper)
-        let bytesUpper = String.ascii(unchecked: [UInt8].ascii.from(unchecked: str).ascii.ascii(case: .upper))
+        let bytesUpper = String.ascii(unchecked: [UInt8].ascii(unchecked: str).ascii.ascii(case: .upper))
         #expect(strUpper == bytesUpper)
     }
 
@@ -172,7 +172,7 @@ struct `Performance Variants` {
     @Test
     func `Unchecked String to bytes avoids validation`() {
         let str = "hello world"
-        let bytes = [UInt8].ascii.from(unchecked: str)
+        let bytes = [UInt8].ascii(unchecked: str)
         #expect(bytes == [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100])
     }
 
@@ -187,8 +187,8 @@ struct `Performance Variants` {
     func `Checked and unchecked produce same result for valid ASCII`() {
         let str = "hello"
 
-        let checkedBytes = [UInt8].ascii.from(str)!
-        let uncheckedBytes = [UInt8].ascii.from(unchecked: str)
+        let checkedBytes = [UInt8].ascii(str)!
+        let uncheckedBytes = [UInt8].ascii(unchecked: str)
         #expect(checkedBytes == uncheckedBytes)
 
         let checkedString = String.ascii(checkedBytes)!
