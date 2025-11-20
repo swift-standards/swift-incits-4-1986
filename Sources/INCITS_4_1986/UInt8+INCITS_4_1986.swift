@@ -42,6 +42,7 @@ extension UInt8 {
     /// UInt8.ascii("A")  // 65
     /// UInt8.ascii("🌍")  // nil
     /// ```
+    @inline(__always)
     public static func ascii(_ character: Character) -> UInt8? {
         character.asciiValue
     }
@@ -51,7 +52,7 @@ extension UInt8.ASCII {
     // MARK: - Character Classification
 
     /// Tests if byte is ASCII whitespace (0x20, 0x09, 0x0A, 0x0D)
-    @inlinable
+    @_transparent
     public var isWhitespace: Bool {
         // Inline comparison for performance (4 equality checks < Set lookup)
         self.uint8 == .ascii.sp || self.uint8 == .ascii.htab || self.uint8 == .ascii.lf || self.uint8 == .ascii.cr
@@ -62,7 +63,7 @@ extension UInt8.ASCII {
     /// Control characters per INCITS 4-1986 Section 4:
     /// - C0 controls: 0x00-0x1F (includes NULL, TAB, LF, CR, etc.)
     /// - DELETE: 0x7F
-    @inlinable
+    @_transparent
     public var isControl: Bool {
         self.uint8 <= .ascii.us || self.uint8 == .ascii.del
     }
@@ -73,7 +74,7 @@ extension UInt8.ASCII {
     /// - Printable characters excluding SPACE: 0x21 ('!') through 0x7E ('~')
     /// - Includes digits, letters, and punctuation
     /// - Excludes control characters (0x00-0x1F), SPACE (0x20), and DELETE (0x7F)
-    @inlinable
+    @_transparent
     public var isVisible: Bool {
         self.uint8 >= .ascii.exclamationPoint && self.uint8 <= .ascii.tilde
     }
@@ -86,7 +87,7 @@ extension UInt8.ASCII {
     /// - Excludes control characters (0x00-0x1F) and DELETE (0x7F)
     ///
     /// Note: `isPrintable` includes SPACE, while `isVisible` excludes it.
-    @inlinable
+    @_transparent
     public var isPrintable: Bool {
         self.uint8 >= .ascii.sp && self.uint8 <= .ascii.tilde
     }
@@ -94,13 +95,13 @@ extension UInt8.ASCII {
     // MARK: - Character Classification
 
     /// Tests if byte is ASCII digit ('0'...'9')
-    @inlinable
+    @_transparent
     public var isDigit: Bool {
         self.uint8 >= .ascii.0 && self.uint8 <= .ascii.9
     }
 
     /// Tests if byte is ASCII letter ('A'...'Z' or 'a'...'z')
-    @inlinable
+    @_transparent
     public var isLetter: Bool {
         (self.uint8 >= .ascii.A && self.uint8 <= .ascii.Z) || (self.uint8 >= .ascii.a && self.uint8 <= .ascii.z)
     }
@@ -118,13 +119,13 @@ extension UInt8.ASCII {
     }
 
     /// Tests if byte is ASCII uppercase letter ('A'...'Z')
-    @inlinable
+    @_transparent
     public var isUppercase: Bool {
         self.uint8 >= .ascii.A && self.uint8 <= .ascii.Z
     }
 
     /// Tests if byte is ASCII lowercase letter ('a'...'z')
-    @inlinable
+    @_transparent
     public var isLowercase: Bool {
         self.uint8 >= .ascii.a && self.uint8 <= .ascii.z
     }

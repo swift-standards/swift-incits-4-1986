@@ -57,21 +57,21 @@ extension Character.ASCII {
     // MARK: - Character Classification
 
     /// Tests if character is ASCII whitespace (space, tab, LF, CR)
-    @inlinable
+    @_transparent
     public var isWhitespace: Bool {
         guard let value = UInt8.ascii(self.character)  else { return false }
         return value.ascii.isWhitespace
     }
 
     /// Tests if character is ASCII digit ('0'...'9')
-    @inlinable
+    @_transparent
     public var isDigit: Bool {
         guard let value = UInt8.ascii(self.character) else { return false }
         return value.ascii.isDigit
     }
 
     /// Tests if character is ASCII letter ('A'...'Z' or 'a'...'z')
-    @inlinable
+    @_transparent
     public var isLetter: Bool {
         guard let value = UInt8.ascii(self.character) else { return false }
         return value.ascii.isLetter
@@ -92,14 +92,14 @@ extension Character.ASCII {
     }
 
     /// Tests if character is ASCII uppercase letter ('A'...'Z')
-    @inlinable
+    @_transparent
     public var isUppercase: Bool {
         guard let value = UInt8.ascii(self.character) else { return false }
         return value.ascii.isUppercase
     }
 
     /// Tests if character is ASCII lowercase letter ('a'...'z')
-    @inlinable
+    @_transparent
     public var isLowercase: Bool {
         guard let value = UInt8.ascii(self.character) else { return false }
         return value.ascii.isLowercase

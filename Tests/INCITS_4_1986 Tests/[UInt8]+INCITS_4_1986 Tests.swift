@@ -23,7 +23,7 @@ struct `[UInt8] - API Surface` {
     func `byte array has case conversion method`() {
         let bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.l, .ascii.o] // "Hello"
         let upper = bytes.ascii.convertingCase(to: .upper)
-        #expect(upper == [0x48, 0x45, 0x4C, 0x4C, 0x4F]) // "HELLO"
+        #expect(upper == [UInt8.ascii.H, .ascii.E, .ascii.L, .ascii.L, .ascii.O]) // "HELLO"
     }
 
     @Test
