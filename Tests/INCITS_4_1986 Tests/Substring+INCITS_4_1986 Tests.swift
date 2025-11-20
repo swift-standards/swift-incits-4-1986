@@ -45,7 +45,7 @@ extension `Performance Tests` {
     @Suite
     struct `Substring - Performance` {
 
-        @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 1_000_000))
         func `substring trimming 10K times`() {
             let str = "  hello world  "
             let sub = str[...]

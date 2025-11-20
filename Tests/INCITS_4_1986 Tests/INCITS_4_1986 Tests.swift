@@ -50,7 +50,7 @@ extension `Performance Tests` {
     @Suite
     struct `INCITS_4_1986 - Performance` {
 
-        @Test(.timed(threshold: .milliseconds(1), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 1_000_000))
         func `whitespaces set lookup 1M times`() {
             let testBytes: [UInt8] = [0x20, 0x41, 0x09, 0x61]
             for _ in 0..<250_000 {

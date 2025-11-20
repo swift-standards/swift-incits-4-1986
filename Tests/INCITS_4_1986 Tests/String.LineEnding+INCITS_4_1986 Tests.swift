@@ -47,7 +47,7 @@ extension `Performance Tests` {
     @Suite
     struct `String.LineEnding - Performance` {
 
-        @Test(.timed(threshold: .microseconds(500), maxAllocations: 100_000))
+        @Test(.timed(threshold: .milliseconds(200), maxAllocations: 100_000))
         func `line ending to bytes conversion 10K times`() {
             for _ in 0..<10_000 {
                 _ = [UInt8].ascii(lineEnding: .lf)

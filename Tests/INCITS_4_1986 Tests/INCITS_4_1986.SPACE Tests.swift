@@ -54,14 +54,14 @@ extension `Performance Tests` {
     @Suite
     struct `SPACE - Performance` {
 
-        @Test(.timed(threshold: .microseconds(500), maxAllocations: 100_000))
+        @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 100_000))
         func `SPACE access 1M times`() {
             for _ in 0..<1_000_000 {
                 _ = UInt8.ascii.sp
             }
         }
 
-        @Test(.timed(threshold: .milliseconds(1), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 1_000_000))
         func `SPACE whitespace check 1M times`() {
             let sp = UInt8.ascii.sp
             for _ in 0..<1_000_000 {

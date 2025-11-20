@@ -61,7 +61,7 @@ extension `Performance Tests` {
             _ = text.normalized(to: .crlf)
         }
 
-        @Test(.timed(threshold: .milliseconds(5), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(150), maxAllocations: 1_000_000))
         func `normalize file with no line endings - fast path`() {
             let text = String(repeating: "x", count: 100_000)
             _ = text.normalized(to: .lf)

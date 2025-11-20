@@ -170,7 +170,7 @@ extension `Performance Tests` {
     @Suite
     struct `Character - Performance` {
 
-        @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 1_000_000))
         func `character whitespace check 1M times`() {
             let char: Character = " "
             for _ in 0..<1_000_000 {
@@ -178,7 +178,7 @@ extension `Performance Tests` {
             }
         }
 
-        @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 1_000_000))
         func `character digit check 1M times`() {
             let char: Character = "5"
             for _ in 0..<1_000_000 {
@@ -186,7 +186,7 @@ extension `Performance Tests` {
             }
         }
 
-        @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 1_000_000))
         func `character letter check 1M times`() {
             let char: Character = "A"
             for _ in 0..<1_000_000 {

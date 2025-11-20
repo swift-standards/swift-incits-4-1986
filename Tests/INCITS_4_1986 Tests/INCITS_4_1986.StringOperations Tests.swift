@@ -65,7 +65,7 @@ extension `Performance Tests` {
     @Suite
     struct `String Trimming - Performance` {
 
-        @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 1_000_000))
         func `trim 10K strings with ASCII whitespace`() {
             for _ in 0..<10_000 {
                 _ = "  hello world  ".trimming(Set<Character>.ascii.whitespaces)

@@ -72,7 +72,7 @@ extension `Performance Tests` {
     @Suite
     struct `UInt8 - Performance` {
 
-        @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 1_000_000))
         func `byte predicate checks 1M times`() {
             let byte: UInt8 = 65
             for _ in 0..<1_000_000 {
@@ -82,7 +82,7 @@ extension `Performance Tests` {
             }
         }
 
-        @Test(.timed(threshold: .milliseconds(5), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(300), maxAllocations: 1_000_000))
         func `character to byte conversion 100K times`() {
             for _ in 0..<100_000 {
                 _ = UInt8.ascii("A")

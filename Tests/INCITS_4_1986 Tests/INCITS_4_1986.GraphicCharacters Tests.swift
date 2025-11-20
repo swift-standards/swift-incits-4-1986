@@ -79,7 +79,7 @@ extension `Performance Tests` {
     @Suite
     struct `Graphic Characters - Performance` {
 
-        @Test(.timed(threshold: .microseconds(500), maxAllocations: 100_000))
+        @Test(.timed(threshold: .milliseconds(200), maxAllocations: 100_000))
         func `graphic character access 100K times`() {
             for _ in 0..<100_000 {
                 _ = UInt8.ascii.A

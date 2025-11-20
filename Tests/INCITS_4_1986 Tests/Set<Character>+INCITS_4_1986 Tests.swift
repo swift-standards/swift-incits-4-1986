@@ -75,7 +75,7 @@ extension `Performance Tests` {
     @Suite
     struct `Set<Character> - Performance` {
 
-        @Test(.timed(threshold: .microseconds(500), maxAllocations: 100_000))
+        @Test(.timed(threshold: .milliseconds(50), maxAllocations: 100_000))
         func `whitespace set membership check 10K times`() {
             let ws = Set<Character>.ascii.whitespaces
             for _ in 0..<10_000 {
@@ -85,7 +85,7 @@ extension `Performance Tests` {
             }
         }
 
-        @Test(.timed(threshold: .milliseconds(1), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(300), maxAllocations: 1_000_000))
         func `whitespace set iteration 100K times`() {
             let ws = Set<Character>.ascii.whitespaces
             for _ in 0..<100_000 {

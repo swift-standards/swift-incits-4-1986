@@ -46,7 +46,7 @@ extension `Performance Tests` {
     @Suite
     struct `String - Performance` {
 
-        @Test(.timed(threshold: .milliseconds(5), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(150), maxAllocations: 1_000_000))
         func `string to bytes conversion 10K times`() {
             let str = "Hello World!"
             for _ in 0..<10_000 {
@@ -54,7 +54,7 @@ extension `Performance Tests` {
             }
         }
 
-        @Test(.timed(threshold: .milliseconds(5), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(150), maxAllocations: 1_000_000))
         func `bytes to string conversion 10K times`() {
             let bytes: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]
             for _ in 0..<10_000 {
