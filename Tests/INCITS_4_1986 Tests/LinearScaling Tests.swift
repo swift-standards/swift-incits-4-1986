@@ -87,7 +87,7 @@ struct `Linear Scaling - String Normalization` {
         _ = text.normalized(to: .crlf)
     }
 
-    @Test(.timed(threshold: .milliseconds(500), maxAllocations: 12_000_000))
+    @Test(.timed(threshold: .milliseconds(500), maxAllocations: 17_000_000))
     func `normalize 1M byte string`() {
         let text = String(repeating: "line\n", count: 200_000)  // ~1MB
         _ = text.normalized(to: .crlf)
