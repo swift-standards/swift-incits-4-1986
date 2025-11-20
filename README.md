@@ -23,7 +23,7 @@ Pure Swift implementation of **INCITS 4-1986 (R2022)**: Coded Character Sets - 7
 
 ```swift
 // Character classification predicates
-byte.isASCIIWhitespace    // space, tab, LF, CR
+byte.ascii.isWhitespace    // space, tab, LF, CR
 byte.isASCIIDigit         // '0'...'9'
 byte.isASCIILetter        // 'A'...'Z', 'a'...'z'
 byte.isASCIIAlphanumeric  // digits or letters
@@ -43,13 +43,13 @@ UInt8.asciiWhitespaceBytes  // {0x20, 0x09, 0x0A, 0x0D}
 
 ```swift
 // Character classification
-char.isASCIIWhitespace
-char.isASCIIDigit
-char.isASCIILetter
-char.isASCIIAlphanumeric
-char.isASCIIHexDigit
-char.isASCIIUppercase
-char.isASCIILowercase
+char.ascii.isWhitespace
+char.ascii.isDigit
+char.ascii.isLetter
+char.ascii.isAlphanumeric
+char.ascii.isHexDigit
+char.ascii.isUppercase
+char.ascii.isLowercase
 ```
 
 ### String Operations

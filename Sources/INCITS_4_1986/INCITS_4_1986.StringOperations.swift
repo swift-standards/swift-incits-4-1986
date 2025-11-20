@@ -1,30 +1,38 @@
-// Substring.swift
+// INCITS_4_1986.StringOperations.swift
 // swift-incits-4-1986
 //
-// INCITS 4-1986: US-ASCII substring operations
+// String operations using INCITS 4-1986 ASCII whitespace definitions
 
 import Standards
 
-extension Substring {
-    /// Trims characters from both ends of the substring
+// MARK: - String Trimming
+
+extension INCITS_4_1986 {
+    /// Trims characters from both ends of a substring
     /// - Parameters:
     ///   - substring: The substring to trim
     ///   - characterSet: The set of characters to trim
     /// - Returns: A new string with the specified characters trimmed from both ends
     ///
     /// Uses optimized UTF-8 byte-level processing when trimming ASCII whitespace.
+    ///
+    /// Per INCITS 4-1986:
+    /// - SPACE (0x20): Section 4.2
+    /// - HORIZONTAL TAB (0x09): Format effector, Section 4.1.2
+    /// - LINE FEED (0x0A): Format effector, Section 4.1.2
+    /// - CARRIAGE RETURN (0x0D): Format effector, Section 4.1.2
     public static func trimming(_ substring: Substring, of characterSet: Set<Character>) -> String {
         // Fast path: UTF-8 optimization for ASCII whitespace
-        if characterSet == .whitespaces {
+        if characterSet == Set<Character>.ascii.whitespaces {
             let utf8 = substring.utf8
             var start = utf8.startIndex
             var end = utf8.endIndex
 
-            while start < end, utf8[start].isASCIIWhitespace {
+            while start < end, utf8[start].ascii.isWhitespace {
                 utf8.formIndex(after: &start)
             }
 
-            while end > start, utf8[utf8.index(before: end)].isASCIIWhitespace {
+            while end > start, utf8[utf8.index(before: end)].ascii.isWhitespace {
                 utf8.formIndex(before: &end)
             }
 
@@ -44,14 +52,5 @@ extension Substring {
         }
 
         return String(substring[start..<end])
-    }
-
-    /// Trims characters from both ends of the substring
-    /// - Parameter characterSet: The set of characters to trim
-    /// - Returns: A new string with the specified characters trimmed from both ends
-    ///
-    /// Uses optimized UTF-8 byte-level processing when trimming ASCII whitespace.
-    public func trimming(_ characterSet: Set<Character>) -> String {
-        Self.trimming(self, of: characterSet)
     }
 }

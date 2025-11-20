@@ -37,16 +37,23 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "INCITS 4 1986_Tests",
+            name: "INCITS 4 1986".tests,
             dependencies: ["INCITS 4 1986"]
         )
-    ]
+    ],
+    swiftLanguageModes: [.v6]
 )
 
-for target in package.targets {
-    var settings = target.swiftSettings ?? []
-    settings.append(
+extension String {
+    var tests: Self { self + " Tests" }
+    var foundation: Self { self + " Foundation" }
+}
+
+for target in package.targets where ![.system, .binary, .plugin].contains(target.type) {
+    let existing = target.swiftSettings ?? []
+    target.swiftSettings = existing + [
+        .enableUpcomingFeature("ExistentialAny"),
+        .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility")
-    )
-    target.swiftSettings = settings
+    ]
 }

@@ -6,9 +6,27 @@
 import Standards
 
 extension Set<Character> {
-    /// ASCII whitespace characters (SPACE, TAB, LF, CR)
+    /// Convenient access to INCITS 4-1986 (US-ASCII) character constants
     ///
-    /// Derived from the canonical byte-level definition in `UInt8.asciiWhitespaceBytes`.
+    /// Returns the INCITS_4_1986 namespace for accessing ASCII constants without conflicts.
+    ///
+    /// Example:
+    /// ```swift
+    /// let whitespaces: Set<Character> = .ascii.whitespaceCharacters
+    /// let trimmed = " hello ".trimming(.ascii.whitespaceCharacters)
+    /// ```
+    public static var ascii: ASCII.Type {
+        ASCII.self
+    }
+    
+    public enum ASCII {}
+}
+
+extension Set<Character>.ASCII {
+    
+    /// ASCII whitespace characters as Set<Character>
+    ///
+    /// Derived from the canonical byte-level definition in `INCITS_4_1986.whitespaces`.
     /// Per INCITS 4-1986, these are the only four whitespace characters in US-ASCII:
     /// - U+0020 (SPACE)
     /// - U+0009 (HORIZONTAL TAB)
@@ -21,6 +39,6 @@ extension Set<Character> {
     /// The ASCII-only definition enables optimized byte-level processing
     /// in string trimming operations without Unicode normalization overhead.
     public static let whitespaces: Set<Character> = Set(
-        UInt8.asciiWhitespaceBytes.map { Character(UnicodeScalar($0)) }
+        INCITS_4_1986.whitespaces.map { Character(UnicodeScalar($0)) }
     )
 }

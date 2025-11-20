@@ -1,0 +1,121 @@
+// INCITS_4_1986.ControlCharacters.swift
+// swift-incits-4-1986
+//
+// Section 4.1: Control Characters (INCITS 4-1986)
+
+extension INCITS_4_1986 {
+    /// Section 4.1: Control Characters (0x00-0x1F, 0x7F)
+    ///
+    /// The control characters of the 7-bit coded character set are classified in the following categories:
+    /// - Transmission Control Characters
+    /// - Format Effectors
+    /// - Code Extension Control Characters
+    /// - Device Control Characters
+    /// - Information Separators
+    /// - Other Control Characters
+    public enum ControlCharacters {}
+}
+
+// MARK: - Authoritative Control Character Constants
+
+extension INCITS_4_1986.ControlCharacters {
+    /// NULL character (0x00)
+    public static let nul: UInt8 = 0x00
+
+    /// START OF HEADING (0x01)
+    public static let soh: UInt8 = 0x01
+
+    /// START OF TEXT (0x02)
+    public static let stx: UInt8 = 0x02
+
+    /// END OF TEXT (0x03)
+    public static let etx: UInt8 = 0x03
+
+    /// END OF TRANSMISSION (0x04)
+    public static let eot: UInt8 = 0x04
+
+    /// ENQUIRY (0x05)
+    public static let enq: UInt8 = 0x05
+
+    /// ACKNOWLEDGE (0x06)
+    public static let ack: UInt8 = 0x06
+
+    /// BELL (0x07)
+    public static let bel: UInt8 = 0x07
+
+    /// BACKSPACE (0x08)
+    public static let bs: UInt8 = 0x08
+
+    /// HORIZONTAL TAB (0x09)
+    public static let htab: UInt8 = 0x09
+
+    /// LINE FEED (0x0A)
+    public static let lf: UInt8 = 0x0A
+
+    /// VERTICAL TAB (0x0B)
+    public static let vtab: UInt8 = 0x0B
+
+    /// FORM FEED (0x0C)
+    public static let ff: UInt8 = 0x0C
+
+    /// CARRIAGE RETURN (0x0D)
+    public static let cr: UInt8 = 0x0D
+
+    /// SHIFT OUT (0x0E)
+    public static let so: UInt8 = 0x0E
+
+    /// SHIFT IN (0x0F)
+    public static let si: UInt8 = 0x0F
+
+    /// DATA LINK ESCAPE (0x10)
+    public static let dle: UInt8 = 0x10
+
+    /// DEVICE CONTROL ONE (0x11) - XON in flow control
+    public static let dc1: UInt8 = 0x11
+
+    /// DEVICE CONTROL TWO (0x12)
+    public static let dc2: UInt8 = 0x12
+
+    /// DEVICE CONTROL THREE (0x13) - XOFF in flow control
+    public static let dc3: UInt8 = 0x13
+
+    /// DEVICE CONTROL FOUR (0x14)
+    public static let dc4: UInt8 = 0x14
+
+    /// NEGATIVE ACKNOWLEDGE (0x15)
+    public static let nak: UInt8 = 0x15
+
+    /// SYNCHRONOUS IDLE (0x16)
+    public static let syn: UInt8 = 0x16
+
+    /// END OF TRANSMISSION BLOCK (0x17)
+    public static let etb: UInt8 = 0x17
+
+    /// CANCEL (0x18)
+    public static let can: UInt8 = 0x18
+
+    /// END OF MEDIUM (0x19)
+    public static let em: UInt8 = 0x19
+
+    /// SUBSTITUTE (0x1A)
+    public static let sub: UInt8 = 0x1A
+
+    /// ESCAPE (0x1B)
+    public static let esc: UInt8 = 0x1B
+
+    /// FILE SEPARATOR (0x1C)
+    public static let fs: UInt8 = 0x1C
+
+    /// GROUP SEPARATOR (0x1D)
+    public static let gs: UInt8 = 0x1D
+
+    /// RECORD SEPARATOR (0x1E)
+    public static let rs: UInt8 = 0x1E
+
+    /// UNIT SEPARATOR (0x1F)
+    public static let us: UInt8 = 0x1F
+
+    /// DELETE (0x7F)
+    public static let del: UInt8 = 0x7F
+}
+
