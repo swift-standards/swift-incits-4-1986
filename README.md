@@ -55,12 +55,13 @@ char.ascii.isLowercase
 ### String Operations
 
 ```swift
-// ASCII validation
-let bytes: [UInt8]? = "hello".asciiBytes  // [104, 101, 108, 108, 111]
-let bytes: [UInt8]? = "hello🌍".asciiBytes // nil
+// String to ASCII bytes
+let bytes = [UInt8].ascii.ascii("hello")  // [104, 101, 108, 108, 111]
+let bytes = [UInt8].ascii.ascii("hello🌍")  // nil (contains non-ASCII)
 
-let string = String(ascii: [104, 101, 108, 108, 111])  // "hello"
-let string = String(ascii: [255])  // nil
+// ASCII bytes to String
+let string = String.ascii([104, 101, 108, 108, 111])  // "hello"
+let string = String.ascii([255])  // nil (not valid ASCII)
 
 // String trimming (with ASCII whitespace optimization)
 "  hello  ".trimming(.whitespaces)  // "hello"
