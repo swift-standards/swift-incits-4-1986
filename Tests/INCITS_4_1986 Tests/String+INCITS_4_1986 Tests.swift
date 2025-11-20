@@ -17,7 +17,7 @@ struct `String - API Surface` {
 
     @Test
     func `string has ascii conversion method`() {
-        let bytes: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]
+        let bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.l, .ascii.o]
         let string = String.ascii(bytes)
         #expect(string == "Hello")
     }
@@ -56,7 +56,7 @@ extension `Performance Tests` {
 
         @Test(.timed(threshold: .milliseconds(150), maxAllocations: 1_000_000))
         func `bytes to string conversion 10K times`() {
-            let bytes: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]
+            let bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.l, .ascii.o]
             for _ in 0..<10_000 {
                 _ = String.ascii(bytes)
             }

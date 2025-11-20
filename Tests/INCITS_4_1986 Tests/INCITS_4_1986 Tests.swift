@@ -19,20 +19,20 @@ struct `INCITS_4_1986 - Constants` {
 
     @Test
     func `whitespaces contains SPACE, TAB, LF, CR`() {
-        #expect(INCITS_4_1986.whitespaces.contains(0x20)) // SPACE
-        #expect(INCITS_4_1986.whitespaces.contains(0x09)) // HT
-        #expect(INCITS_4_1986.whitespaces.contains(0x0A)) // LF
-        #expect(INCITS_4_1986.whitespaces.contains(0x0D)) // CR
+        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.sp)) // SPACE
+        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.htab)) // HT
+        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.lf)) // LF
+        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.cr)) // CR
     }
 
     @Test
     func `CRLF sequence is correct`() {
-        #expect(INCITS_4_1986.crlf == [0x0D, 0x0A])
+        #expect(INCITS_4_1986.crlf == [UInt8.ascii.cr, UInt8.ascii.lf])
     }
 
     @Test
     func `case conversion offset is 0x20`() {
-        #expect(INCITS_4_1986.caseConversionOffset == 0x20)
+        #expect(INCITS_4_1986.caseConversionOffset == UInt8.ascii.sp)
         #expect(INCITS_4_1986.caseConversionOffset == 32)
     }
 
@@ -52,7 +52,7 @@ extension `Performance Tests` {
 
         @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 1_000_000))
         func `whitespaces set lookup 1M times`() {
-            let testBytes: [UInt8] = [0x20, 0x41, 0x09, 0x61]
+            let testBytes: [UInt8] = [UInt8.ascii.sp, UInt8.ascii.A, UInt8.ascii.htab, UInt8.ascii.a]
             for _ in 0..<250_000 {
                 for byte in testBytes {
                     _ = INCITS_4_1986.whitespaces.contains(byte)

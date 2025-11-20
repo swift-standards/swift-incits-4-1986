@@ -13,7 +13,7 @@ import StandardsTestSupport
 @Suite
 struct `UInt8 - ASCII Predicates` {
 
-    @Test(arguments: [0x09, 0x0A, 0x0D, 0x20])
+    @Test(arguments: [UInt8.ascii.htab, UInt8.ascii.lf, UInt8.ascii.cr, UInt8.ascii.sp])
     func `whitespace bytes recognized`(byte: UInt8) {
         #expect(byte.ascii.isWhitespace)
     }
@@ -35,17 +35,17 @@ struct `UInt8 - ASCII Predicates` {
         #expect(byte.ascii.isLetter)
     }
 
-    @Test(arguments: Array(UInt8(0)...UInt8(0x1F)) + [0x7F])
+    @Test(arguments: Array(UInt8.ascii.nul...UInt8.ascii.us) + [UInt8.ascii.del])
     func `control characters recognized`(byte: UInt8) {
         #expect(byte.ascii.isControl)
     }
 
-    @Test(arguments: Array(UInt8(0x20)...UInt8(0x7E)))
+    @Test(arguments: Array(UInt8.ascii.sp...UInt8.ascii.tilde))
     func `printable characters recognized`(byte: UInt8) {
         #expect(byte.ascii.isPrintable)
     }
 
-    @Test(arguments: Array(UInt8(0x21)...UInt8(0x7E)))
+    @Test(arguments: Array(UInt8.ascii.exclamationPoint...UInt8.ascii.tilde))
     func `visible characters recognized`(byte: UInt8) {
         #expect(byte.ascii.isVisible)
     }

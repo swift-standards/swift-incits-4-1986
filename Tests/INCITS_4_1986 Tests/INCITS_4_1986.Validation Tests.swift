@@ -41,7 +41,7 @@ struct `ASCII Validation - Correctness` {
 @Suite
 struct `ASCII Validation - Boundary Values` {
 
-    @Test(arguments: [0x00, 0x01, 0x7E, 0x7F])
+    @Test(arguments: [UInt8.ascii.nul, 0x01, UInt8.ascii.tilde, UInt8.ascii.del])
     func `valid ASCII bytes`(byte: UInt8) {
         #expect([byte].ascii.isAllASCII, "Byte 0x\(String(byte, radix: 16)) should be valid ASCII")
     }
@@ -60,7 +60,7 @@ struct `ASCII Validation - Boundary Values` {
     @Test
     func `any non-ASCII byte fails validation`() {
         for byte in UInt8(128)...UInt8(255) {
-            let mixed = [UInt8(65), byte, UInt8(66)]
+            let mixed = [UInt8.ascii.A, byte, UInt8.ascii.B]
             #expect(!mixed.ascii.isAllASCII, "Array containing 0x\(String(byte, radix: 16)) should fail")
         }
     }

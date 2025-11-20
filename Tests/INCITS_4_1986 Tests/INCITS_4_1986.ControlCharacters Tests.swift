@@ -135,7 +135,7 @@ extension `Performance Tests` {
 
         @Test(.timed(threshold: .milliseconds(2000), maxAllocations: 1_000_000))
         func `control character classification 1M times`() {
-            let testBytes: [UInt8] = [0x00, 0x09, 0x0A, 0x0D, 0x1F, 0x7F]
+            let testBytes: [UInt8] = [UInt8.ascii.nul, UInt8.ascii.htab, UInt8.ascii.lf, UInt8.ascii.cr, UInt8.ascii.us, UInt8.ascii.del]
             for _ in 0..<166_667 {
                 for byte in testBytes {
                     _ = byte.ascii.isControl

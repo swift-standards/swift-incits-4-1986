@@ -29,25 +29,25 @@ struct `[UInt8] - API Surface` {
     @Test
     func `byte array has line ending conversion`() {
         let lf = [UInt8].ascii(lineEnding: .lf)
-        #expect(lf == [0x0A])
+        #expect(lf == [UInt8.ascii.lf])
 
         let crlf = [UInt8].ascii(lineEnding: .crlf)
-        #expect(crlf == [0x0D, 0x0A])
+        #expect(crlf == [UInt8.ascii.cr, UInt8.ascii.lf])
     }
 
     @Test
     func `byte array has string conversion`() {
-        let bytes: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]
+        let bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.l, .ascii.o]
         #expect([UInt8].ascii("Hello") == bytes)
     }
 
     @Test
     func `byte array has whitespaces constant`() {
         let ws = [UInt8].ascii.whitespaces
-        #expect(ws.contains(0x20)) // Space
-        #expect(ws.contains(0x09)) // Tab
-        #expect(ws.contains(0x0A)) // LF
-        #expect(ws.contains(0x0D)) // CR
+        #expect(ws.contains(UInt8.ascii.sp)) // Space
+        #expect(ws.contains(UInt8.ascii.htab)) // Tab
+        #expect(ws.contains(UInt8.ascii.lf)) // LF
+        #expect(ws.contains(UInt8.ascii.cr)) // CR
     }
 }
 

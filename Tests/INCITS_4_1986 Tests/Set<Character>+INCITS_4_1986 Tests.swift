@@ -55,7 +55,7 @@ struct `Set<Character> - whitespaces` {
 
     @Test
     func `whitespace characters match ASCII values`() {
-        let whitespaceBytes: Set<UInt8> = [0x20, 0x09, 0x0A, 0x0D]
+        let whitespaceBytes: Set<UInt8> = [UInt8.ascii.sp, UInt8.ascii.htab, UInt8.ascii.lf, UInt8.ascii.cr]
         for char in Set<Character>.ascii.whitespaces {
             if let ascii = char.asciiValue {
                 #expect(whitespaceBytes.contains(ascii))
