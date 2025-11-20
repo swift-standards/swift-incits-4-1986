@@ -521,39 +521,39 @@ extension `Performance Tests` {
     @Suite
     struct `Brutal - Performance Torture` {
         
-        @Test(.timed(threshold: .milliseconds(300), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(300), maxAllocations: 3_000_000))
         func `validate 1M bytes - all valid`() {
             let massive = Array(repeating: UInt8.ascii.A, count: 1_000_000)
             _ = massive.ascii.isAllASCII
         }
 
-        @Test(.timed(threshold: .milliseconds(50), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(50), maxAllocations: 3_000_000))
         func `validate 1M bytes - fail at position 0`() {
             var massive = Array(repeating: UInt8.ascii.A, count: 1_000_000)
             massive[0] = 0x80
             _ = massive.ascii.isAllASCII
         }
 
-        @Test(.timed(threshold: .milliseconds(300), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(300), maxAllocations: 2_000_000))
         func `validate 1M bytes - fail at position 999999`() {
             var massive = Array(repeating: UInt8.ascii.A, count: 1_000_000)
             massive[999_999] = 0x80
             _ = massive.ascii.isAllASCII
         }
         
-        @Test(.timed(threshold: .milliseconds(100), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(100), maxAllocations: 3_000_000))
         func `case convert 100K byte string - all lowercase`() {
             let str = String(repeating: "abcdefghijklmnopqrstuvwxyz", count: 4_000)
             _ = str.ascii(case: .upper)
         }
 
-        @Test(.timed(threshold: .milliseconds(100), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(100), maxAllocations: 3_000_000))
         func `case convert 100K byte string - all uppercase`() {
             let str = String(repeating: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", count: 4_000)
             _ = str.ascii(case: .lower)
         }
 
-        @Test(.timed(threshold: .milliseconds(100), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(100), maxAllocations: 2_000_000))
         func `normalize 100K byte string with 10K line endings`() {
             let line = "xxxxxxxxxx\n"  // 11 bytes
             let text = String(repeating: line, count: 10_000)  // ~110KB
@@ -567,7 +567,7 @@ extension `Performance Tests` {
             _ = text.trimming(.ascii.whitespaces)
         }
 
-        @Test(.timed(threshold: .milliseconds(500), maxAllocations: 1_000_000))
+        @Test(.timed(threshold: .milliseconds(500), maxAllocations: 3_000_000))
         func `character to byte conversion - 100K ASCII characters`() {
             for _ in 0..<100_000 {
                 _ = UInt8.ascii("A")

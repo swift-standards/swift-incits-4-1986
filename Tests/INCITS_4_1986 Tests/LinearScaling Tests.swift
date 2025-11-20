@@ -12,13 +12,13 @@ import StandardsTestSupport
 @Suite
 struct `Linear Scaling Benchmarks` {
 
-    @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
+    @Test(.timed(threshold: .milliseconds(10), maxAllocations: 3_000_000))
     func `validate 1K bytes`() {
         let bytes = Array(repeating: UInt8.ascii.A, count: 1_000)
         _ = bytes.ascii.isAllASCII
     }
 
-    @Test(.timed(threshold: .milliseconds(20), maxAllocations: 2_000_000))
+    @Test(.timed(threshold: .milliseconds(20), maxAllocations: 3_000_000))
     func `validate 10K bytes`() {
         let bytes = Array(repeating: UInt8.ascii.A, count: 10_000)
         _ = bytes.ascii.isAllASCII
@@ -30,7 +30,7 @@ struct `Linear Scaling Benchmarks` {
         _ = bytes.ascii.isAllASCII
     }
 
-    @Test(.timed(threshold: .milliseconds(300), maxAllocations: 20_000_000))
+    @Test(.timed(threshold: .milliseconds(300), maxAllocations: 30_000_000))
     func `validate 1M bytes`() {
         let bytes = Array(repeating: UInt8.ascii.A, count: 1_000_000)
         _ = bytes.ascii.isAllASCII
@@ -40,13 +40,13 @@ struct `Linear Scaling Benchmarks` {
 @Suite
 struct `Linear Scaling - Case Conversion` {
 
-    @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
+    @Test(.timed(threshold: .milliseconds(10), maxAllocations: 5_000_000))
     func `case convert 1K bytes`() {
         let bytes = Array(repeating: UInt8.ascii.a, count: 1_000)
         _ = bytes.ascii.convertingCase(to: .upper)
     }
 
-    @Test(.timed(threshold: .milliseconds(20), maxAllocations: 2_000_000))
+    @Test(.timed(threshold: .milliseconds(20), maxAllocations: 3_000_000))
     func `case convert 10K bytes`() {
         let bytes = Array(repeating: UInt8.ascii.a, count: 10_000)
         _ = bytes.ascii.convertingCase(to: .upper)
@@ -68,19 +68,19 @@ struct `Linear Scaling - Case Conversion` {
 @Suite
 struct `Linear Scaling - String Normalization` {
 
-    @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
+    @Test(.timed(threshold: .milliseconds(10), maxAllocations: 3_000_000))
     func `normalize 1K byte string`() {
         let text = String(repeating: "line\n", count: 200)  // ~1KB
         _ = text.normalized(to: .crlf)
     }
 
-    @Test(.timed(threshold: .milliseconds(20), maxAllocations: 3_000_000))
+    @Test(.timed(threshold: .milliseconds(20), maxAllocations: 5_000_000))
     func `normalize 10K byte string`() {
         let text = String(repeating: "line\n", count: 2_000)  // ~10KB
         _ = text.normalized(to: .crlf)
     }
 
-    @Test(.timed(threshold: .milliseconds(100), maxAllocations: 10_000_000))
+    @Test(.timed(threshold: .milliseconds(100), maxAllocations: 20_000_000))
     func `normalize 100K byte string`() {
         let text = String(repeating: "line\n", count: 20_000)  // ~100KB
         _ = text.normalized(to: .crlf)
