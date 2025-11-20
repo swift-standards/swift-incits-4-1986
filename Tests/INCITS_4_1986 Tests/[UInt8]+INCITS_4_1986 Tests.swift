@@ -7,10 +7,6 @@ import Testing
 import StandardsTestSupport
 @testable import INCITS_4_1986
 
-// Note: [UInt8] validation tests are in INCITS_4_1986.Validation Tests.swift
-// Note: [UInt8] case conversion tests are in INCITS_4_1986.CaseConversion Tests.swift
-// Note: [UInt8] line ending tests are in String.LineEnding+INCITS_4_1986 Tests.swift
-
 @Suite
 struct `[UInt8] - API Surface` {
 
@@ -25,7 +21,7 @@ struct `[UInt8] - API Surface` {
 
     @Test
     func `byte array has case conversion method`() {
-        let bytes: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F] // "Hello"
+        let bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.l, .ascii.o] // "Hello"
         let upper = bytes.ascii.convertingCase(to: .upper)
         #expect(upper == [0x48, 0x45, 0x4C, 0x4C, 0x4F]) // "HELLO"
     }
