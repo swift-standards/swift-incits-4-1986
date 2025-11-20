@@ -25,7 +25,7 @@ extension [UInt8] {
     }
 }
 
-// MARK: - String → Bytes Conversion
+// MARK: - Conversions
 
 extension [UInt8] {
     /// Creates ASCII bytes from a string, nil if string contains non-ASCII characters
@@ -53,6 +53,24 @@ extension [UInt8] {
     /// ```
     public static func ascii(unchecked string: String) -> [UInt8] {
         Array(string.utf8)
+    }
+
+    /// Creates byte array from a line ending constant
+    ///
+    /// Pure function transformation from line ending to byte sequence.
+    ///
+    /// Example:
+    /// ```swift
+    /// [UInt8].ascii(lineEnding: .lf)    // [0x0A]
+    /// [UInt8].ascii(lineEnding: .cr)    // [0x0D]
+    /// [UInt8].ascii(lineEnding: .crlf)  // [0x0D, 0x0A]
+    /// ```
+    public static func ascii(lineEnding: String.LineEnding) -> [UInt8] {
+        switch lineEnding {
+        case .lf: return [UInt8.ascii.lf]
+        case .cr: return [UInt8.ascii.cr]
+        case .crlf: return [UInt8].ascii.crlf
+        }
     }
 }
 
@@ -130,33 +148,12 @@ extension [UInt8].ASCII {
     ///
     /// Example:
     /// ```swift
-    /// [UInt8].ascii("Hello")!.ascii.ascii(case: .upper)  // "HELLO" bytes
-    /// [UInt8].ascii("World")!.ascii.ascii(case: .lower)  // "world" bytes
+    /// [UInt8].ascii("Hello")!.ascii.convertingCase(to: .upper)  // "HELLO" bytes
+    /// [UInt8].ascii("World")!.ascii.convertingCase(to: .lower)  // "world" bytes
     /// ```
     @inlinable
-    public func ascii(case: Character.Case) -> [UInt8] {
+    public func convertingCase(to case: Character.Case) -> [UInt8] {
         INCITS_4_1986.ascii(self.value, case: `case`)
     }
 }
 
-extension [UInt8].ASCII {
-    // MARK: - Line Endings
-
-    /// Creates byte array from a line ending constant
-    ///
-    /// Pure function transformation from line ending to byte sequence.
-    ///
-    /// Example:
-    /// ```swift
-    /// [UInt8].ascii(lineEnding: .lf)    // [0x0A]
-    /// [UInt8].ascii(lineEnding: .cr)    // [0x0D]
-    /// [UInt8].ascii(lineEnding: .crlf)  // [0x0D, 0x0A]
-    /// ```
-    public static func from(_ lineEnding: String.LineEnding) -> [UInt8] {
-        switch lineEnding {
-        case .lf: return [UInt8.ascii.lf]
-        case .cr: return [UInt8.ascii.cr]
-        case .crlf: return Self.crlf
-        }
-    }
-}

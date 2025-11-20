@@ -124,7 +124,7 @@ struct `ASCII Case Conversion` {
     func `Array case conversion matches String case conversion`() {
         let str = "Hello World"
         let strUpper = str.ascii(case: .upper)
-        let bytesUpper = String.ascii(unchecked: [UInt8].ascii(unchecked: str).ascii.ascii(case: .upper))
+        let bytesUpper = String.ascii(unchecked: [UInt8].ascii(unchecked: str).ascii.convertingCase(to: .upper))
         #expect(strUpper == bytesUpper)
     }
 

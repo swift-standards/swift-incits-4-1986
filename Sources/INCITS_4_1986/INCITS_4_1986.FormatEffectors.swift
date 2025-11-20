@@ -37,7 +37,7 @@ extension INCITS_4_1986 {
         // Determine target line ending sequence inline
         let cr = UInt8.ascii.cr
         let lf = UInt8.ascii.lf
-        let target = [UInt8].ascii.from(lineEnding)
+        let target = [UInt8].ascii(lineEnding: lineEnding)
 
         var result = [UInt8]()
         result.reserveCapacity(bytes.count + (lineEnding == .crlf ? bytes.count / 10 : 0))
