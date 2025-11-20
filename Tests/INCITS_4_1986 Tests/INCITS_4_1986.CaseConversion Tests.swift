@@ -131,11 +131,9 @@ struct `Case Conversion - Mathematical Properties` {
         #expect(a - A == INCITS_4_1986.caseConversionOffset)
     }
 
-    @Test
-    func `all letter pairs have correct offset`() {
-        for (lower, upper) in zip(UInt8.ascii.a...UInt8.ascii.z, UInt8.ascii.A...UInt8.ascii.Z) {
-            #expect(lower - upper == 32, "Offset between '\(Character(UnicodeScalar(lower)))' and '\(Character(UnicodeScalar(upper)))' should be 32")
-        }
+    @Test(arguments: Array(zip(UInt8.ascii.a...UInt8.ascii.z, UInt8.ascii.A...UInt8.ascii.Z)))
+    func `all letter pairs have correct offset`(lower: UInt8, upper: UInt8) {
+        #expect(lower - upper == 32, "Offset between '\(Character(UnicodeScalar(lower)))' and '\(Character(UnicodeScalar(upper)))' should be 32")
     }
 }
 

@@ -40,18 +40,16 @@ struct `Graphic Characters - Letters` {
         #expect(UInt8.ascii.z == 0x7A)
     }
 
-    @Test
-    func `all 52 letters present`() {
-        // Uppercase A-Z
-        for (char, expected) in zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0x41...0x5A) {
-            let byte = UInt8.ascii(char)!
-            #expect(byte == expected)
-        }
-        // Lowercase a-z
-        for (char, expected) in zip("abcdefghijklmnopqrstuvwxyz", 0x61...0x7A) {
-            let byte = UInt8.ascii(char)!
-            #expect(byte == expected)
-        }
+    @Test(arguments: Array(zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ", UInt8.ascii.A...UInt8.ascii.Z)))
+    func `uppercase letters present`(char: Character, expected: UInt8) {
+        let byte = UInt8.ascii(char)!
+        #expect(byte == expected, "Character '\(char)' should have value 0x\(String(expected, radix: 16))")
+    }
+
+    @Test(arguments: Array(zip("abcdefghijklmnopqrstuvwxyz", UInt8.ascii.a...UInt8.ascii.z)))
+    func `lowercase letters present`(char: Character, expected: UInt8) {
+        let byte = UInt8.ascii(char)!
+        #expect(byte == expected, "Character '\(char)' should have value 0x\(String(expected, radix: 16))")
     }
 }
 

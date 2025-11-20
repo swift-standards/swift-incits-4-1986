@@ -41,12 +41,10 @@ struct `Line Ending Normalization - Idempotence` {
         #expect(first == second, "Normalizing twice should be idempotent")
     }
 
-    @Test
-    func `text without line endings unchanged`() {
+    @Test(arguments: [String.LineEnding.lf, .cr, .crlf])
+    func `text without line endings unchanged`(ending: String.LineEnding) {
         let text = "no line endings here"
-        #expect(text.normalized(to: .lf) == text)
-        #expect(text.normalized(to: .cr) == text)
-        #expect(text.normalized(to: .crlf) == text)
+        #expect(text.normalized(to: ending) == text)
     }
 }
 
