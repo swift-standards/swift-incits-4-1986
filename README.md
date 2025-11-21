@@ -15,12 +15,16 @@ Pure Swift implementation with no Foundation dependencies, suitable for Swift Em
 
 - 128 ASCII character constants (0x00-0x7F) organized by standard sections
 - Character classification predicates (whitespace, digits, letters, alphanumeric, hex digits)
-- ASCII-only case conversion for strings and byte arrays
+- ASCII namespace pattern for String, Substring, Character, UInt8, and `[UInt8]` types
+- String and Substring character classification (isAllASCII, isAllDigits, isAllLetters, etc.)
+- String and Substring case validation (isAllLowercase, isAllUppercase)
+- String and Substring line ending detection and constants
+- ASCII-only case conversion for strings, substrings, and byte arrays
 - String trimming with optimized UTF-8 fast path for ASCII whitespace
 - Line ending normalization (LF, CR, CRLF) for cross-platform text processing
 - Bidirectional String ⟷ `[UInt8]` conversion with ASCII validation
 - Cross-module inlining via `@inlinable` and `@_transparent` for zero-cost abstractions
-- 500+ tests covering edge cases, performance, and standards compliance
+- 880+ tests covering edge cases, performance, and standards compliance
 
 ## Installation
 
@@ -251,6 +255,101 @@ Convert ASCII letters in strings (Unicode-safe):
 
 // Only ASCII letters affected
 "Test123!".ascii(case: .upper)  // "TEST123!"
+
+// Convenience methods on .ascii namespace
+"hello".ascii.uppercased()  // "HELLO"
+"WORLD".ascii.lowercased()  // "world"
+```
+
+### String Character Classification
+
+Test string-level character properties:
+
+```swift
+let str = "Hello123"
+
+// ASCII validation
+str.ascii.isAllASCII          // true
+"Hello🌍".ascii.isAllASCII    // false
+
+// Content classification
+"123456".ascii.isAllDigits           // true
+"abc".ascii.isAllLetters             // true
+"abc123".ascii.isAllAlphanumeric     // true
+"  \t\n".ascii.isAllWhitespace       // true
+"\t\n\r".ascii.isAllControl          // true
+"ABC123!".ascii.isAllVisible         // true
+"hello world".ascii.isAllPrintable   // true
+
+// Contains checks
+"hello".ascii.containsNonASCII       // false
+"café".ascii.containsNonASCII        // true
+"DEADBEEF".ascii.containsHexDigit    // true
+```
+
+### String Case Validation
+
+Validate case of ASCII letters in strings:
+
+```swift
+// Case validation (non-letters ignored)
+"hello world".ascii.isAllLowercase   // true
+"HELLO WORLD".ascii.isAllUppercase   // true
+"Hello World".ascii.isAllLowercase   // false
+
+// Numbers and symbols don't affect validation
+"hello123!".ascii.isAllLowercase     // true
+"HELLO123!".ascii.isAllUppercase     // true
+```
+
+### String Line Ending Detection
+
+Detect and analyze line ending styles:
+
+```swift
+// Line ending constants
+String.ascii.lf     // "\n"
+String.ascii.cr     // "\r"
+String.ascii.crlf   // "\r\n"
+
+// Detection
+"Hello\r\nWorld".ascii.containsCRLF  // true
+"A\nB\rC".ascii.containsMixedLineEndings  // true (has both LF and CR)
+"A\r\nB\r\n".ascii.containsMixedLineEndings  // false (only CRLF)
+
+// Detect line ending type
+"Hello\nWorld".ascii.detectedLineEnding()     // .lf
+"Hello\r\nWorld".ascii.detectedLineEnding()   // .crlf
+"Hello\rWorld".ascii.detectedLineEnding()     // .cr
+"Hello World".ascii.detectedLineEnding()      // nil (no line endings)
+```
+
+### Substring Operations
+
+All String.ASCII operations available on Substring:
+
+```swift
+let str = "  Hello World  "
+let sub = str[...]
+
+// Character classification
+sub.ascii.isAllASCII
+sub.ascii.isAllLetters
+sub.ascii.containsNonASCII
+
+// Case validation and conversion
+sub.ascii.isAllLowercase
+sub.ascii(case: .upper)
+sub.ascii.uppercased()
+sub.ascii.lowercased()
+
+// Line ending detection
+sub.ascii.containsCRLF
+sub.ascii.containsMixedLineEndings
+sub.ascii.detectedLineEnding()
+
+// Trimming
+sub.trimming(.ascii.whitespaces)  // "Hello World"
 ```
 
 ### String Trimming
@@ -410,10 +509,13 @@ Conforms to **INCITS 4-1986 (Reaffirmed 2022)**:
 
 ## Testing
 
-Test suite: 500+ tests in 80+ suites
+Test suite: 380+ tests in 100+ suites
 
 Coverage:
 - Character classification for all 128 ASCII bytes
+- String and Substring character classification and validation
+- String and Substring case validation and conversion
+- String and Substring line ending detection
 - Case conversion (upper, lower, round-trip)
 - String ⟷ byte array conversion (valid, invalid, empty)
 - Line ending normalization (LF, CR, CRLF, mixed)
