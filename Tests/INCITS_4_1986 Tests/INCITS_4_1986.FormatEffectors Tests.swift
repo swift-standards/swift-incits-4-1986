@@ -12,13 +12,13 @@ import Testing
 struct `Line Ending Normalization - Correctness` {
 
     @Test(arguments: [
-        ("hello\nworld", String.LineEnding.lf, "hello\nworld"),
-        ("hello\nworld", String.LineEnding.cr, "hello\rworld"),
-        ("hello\nworld", String.LineEnding.crlf, "hello\r\nworld"),
-        ("hello\r\nworld", String.LineEnding.lf, "hello\nworld"),
-        ("hello\rworld", String.LineEnding.lf, "hello\nworld")
+        ("hello\nworld", String.ASCII.LineEnding.lf, "hello\nworld"),
+        ("hello\nworld", String.ASCII.LineEnding.cr, "hello\rworld"),
+        ("hello\nworld", String.ASCII.LineEnding.crlf, "hello\r\nworld"),
+        ("hello\r\nworld", String.ASCII.LineEnding.lf, "hello\nworld"),
+        ("hello\rworld", String.ASCII.LineEnding.lf, "hello\nworld")
     ])
-    func `line ending normalization`(input: String, to: String.LineEnding, expected: String) {
+    func `line ending normalization`(input: String, to: String.ASCII.LineEnding, expected: String) {
         #expect(input.normalized(to: to) == expected)
     }
 
@@ -34,16 +34,16 @@ struct `Line Ending Normalization - Correctness` {
 @Suite
 struct `Line Ending Normalization - Idempotence` {
 
-    @Test(arguments: [String.LineEnding.lf, .cr, .crlf])
-    func `normalization is idempotent`(ending: String.LineEnding) {
+    @Test(arguments: [String.ASCII.LineEnding.lf, .cr, .crlf])
+    func `normalization is idempotent`(ending: String.ASCII.LineEnding) {
         let text = "hello\nworld\r\ntest\rend"
         let first = text.normalized(to: ending)
         let second = first.normalized(to: ending)
         #expect(first == second, "Normalizing twice should be idempotent")
     }
 
-    @Test(arguments: [String.LineEnding.lf, .cr, .crlf])
-    func `text without line endings unchanged`(ending: String.LineEnding) {
+    @Test(arguments: [String.ASCII.LineEnding.lf, .cr, .crlf])
+    func `text without line endings unchanged`(ending: String.ASCII.LineEnding) {
         let text = "no line endings here"
         #expect(text.normalized(to: ending) == text)
     }

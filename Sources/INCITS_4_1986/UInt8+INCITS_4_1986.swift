@@ -54,7 +54,7 @@ extension UInt8 {
     /// - ``ASCII``
     /// - ``INCITS_4_1986``
     public var ascii: ASCII {
-        ASCII(uint8: self)
+        ASCII(byte: self)
     }
 
     /// ASCII operations namespace for UInt8
@@ -88,13 +88,13 @@ extension UInt8 {
     /// - ``INCITS_4_1986/GraphicCharacters``
     public struct ASCII {
         /// The wrapped byte value
-        public let uint8: UInt8
+        public let byte: UInt8
 
         /// Creates an ASCII namespace wrapper for the given byte
         ///
-        /// - Parameter uint8: The byte to wrap
-        public init(uint8: UInt8) {
-            self.uint8 = uint8
+        /// - Parameter byte: The byte to wrap
+        init(byte: UInt8) {
+            self.byte = byte
         }
     }
 }
@@ -181,7 +181,7 @@ extension UInt8.ASCII {
     @_transparent
     public var isWhitespace: Bool {
         // Inline comparison for performance (4 equality checks < Set lookup)
-        self.uint8 == .ascii.sp || self.uint8 == .ascii.htab || self.uint8 == .ascii.lf || self.uint8 == .ascii.cr
+        self.byte == .ascii.sp || self.byte == .ascii.htab || self.byte == .ascii.lf || self.byte == .ascii.cr
     }
 
     /// Tests if byte is ASCII control character
@@ -218,7 +218,7 @@ extension UInt8.ASCII {
     /// - ``INCITS_4_1986/ControlCharacters``
     @_transparent
     public var isControl: Bool {
-        self.uint8 <= .ascii.us || self.uint8 == .ascii.del
+        self.byte <= .ascii.us || self.byte == .ascii.del
     }
 
     /// Tests if byte is ASCII visible (non-whitespace printable) character
@@ -253,7 +253,7 @@ extension UInt8.ASCII {
     /// - ``INCITS_4_1986/GraphicCharacters``
     @_transparent
     public var isVisible: Bool {
-        self.uint8 >= .ascii.exclamationPoint && self.uint8 <= .ascii.tilde
+        self.byte >= .ascii.exclamationPoint && self.byte <= .ascii.tilde
     }
 
     /// Tests if byte is ASCII printable (graphic) character
@@ -289,7 +289,7 @@ extension UInt8.ASCII {
     /// - ``INCITS_4_1986/SPACE``
     @_transparent
     public var isPrintable: Bool {
-        self.uint8 >= .ascii.sp && self.uint8 <= .ascii.tilde
+        self.byte >= .ascii.sp && self.byte <= .ascii.tilde
     }
 
     // MARK: - Character Classification
@@ -297,13 +297,13 @@ extension UInt8.ASCII {
     /// Tests if byte is ASCII digit ('0'...'9')
     @_transparent
     public var isDigit: Bool {
-        self.uint8 >= .ascii.0 && self.uint8 <= .ascii.9
+        self.byte >= .ascii.0 && self.byte <= .ascii.9
     }
 
     /// Tests if byte is ASCII letter ('A'...'Z' or 'a'...'z')
     @_transparent
     public var isLetter: Bool {
-        (self.uint8 >= .ascii.A && self.uint8 <= .ascii.Z) || (self.uint8 >= .ascii.a && self.uint8 <= .ascii.z)
+        (self.byte >= .ascii.A && self.byte <= .ascii.Z) || (self.byte >= .ascii.a && self.byte <= .ascii.z)
     }
 
     /// Tests if byte is ASCII alphanumeric (digit or letter)
@@ -315,20 +315,20 @@ extension UInt8.ASCII {
     /// Tests if byte is ASCII hexadecimal digit ('0'...'9', 'A'...'F', 'a'...'f')
     @inlinable
     public var isHexDigit: Bool {
-        isDigit || (self.uint8 >= .ascii.A && self.uint8 <= .ascii.F)
-            || (self.uint8 >= .ascii.a && self.uint8 <= .ascii.f)
+        isDigit || (self.byte >= .ascii.A && self.byte <= .ascii.F)
+            || (self.byte >= .ascii.a && self.byte <= .ascii.f)
     }
 
     /// Tests if byte is ASCII uppercase letter ('A'...'Z')
     @_transparent
     public var isUppercase: Bool {
-        self.uint8 >= .ascii.A && self.uint8 <= .ascii.Z
+        self.byte >= .ascii.A && self.byte <= .ascii.Z
     }
 
     /// Tests if byte is ASCII lowercase letter ('a'...'z')
     @_transparent
     public var isLowercase: Bool {
-        self.uint8 >= .ascii.a && self.uint8 <= .ascii.z
+        self.byte >= .ascii.a && self.byte <= .ascii.z
     }
 
     // MARK: - Numeric Value Parsing (Static Transformations)
@@ -408,9 +408,9 @@ extension UInt8.ASCII {
         let offset = INCITS_4_1986.caseConversionOffset
         switch `case` {
         case .upper:
-            return isLowercase ? self.uint8 - offset : self.uint8
+            return isLowercase ? self.byte - offset : self.byte
         case .lower:
-            return isUppercase ? self.uint8 + offset : self.uint8
+            return isUppercase ? self.byte + offset : self.byte
         }
     }
 }
@@ -535,6 +535,7 @@ extension UInt8.ASCII {
 
     /// SPACE (0x20)
     public static var sp: UInt8 { INCITS_4_1986.SPACE.sp }
+    public static var space: UInt8 { INCITS_4_1986.SPACE.sp }
 
     // MARK: - Graphic Characters - Punctuation (direct access)
 
@@ -543,6 +544,7 @@ extension UInt8.ASCII {
 
     /// QUOTATION MARK (0x22) - "
     public static var quotationMark: UInt8 { INCITS_4_1986.GraphicCharacters.quotationMark }
+    public static var dquote: UInt8 { INCITS_4_1986.GraphicCharacters.quotationMark }
 
     /// NUMBER SIGN (0x23) - #
     public static var numberSign: UInt8 { INCITS_4_1986.GraphicCharacters.numberSign }
@@ -625,12 +627,14 @@ extension UInt8.ASCII {
 
     /// LESS-THAN SIGN (0x3C) - <
     public static var lessThanSign: UInt8 { INCITS_4_1986.GraphicCharacters.lessThanSign }
-
+    
     /// EQUALS SIGN (0x3D) - =
     public static var equalsSign: UInt8 { INCITS_4_1986.GraphicCharacters.equalsSign }
 
     /// GREATER-THAN SIGN (0x3E) - >
     public static var greaterThanSign: UInt8 { INCITS_4_1986.GraphicCharacters.greaterThanSign }
+    
+    
 
     /// QUESTION MARK (0x3F) - ?
     public static var questionMark: UInt8 { INCITS_4_1986.GraphicCharacters.questionMark }
@@ -831,4 +835,16 @@ extension UInt8.ASCII {
 
     /// TILDE (OVERLINE) (0x7E) - ~
     public static var tilde: UInt8 { INCITS_4_1986.GraphicCharacters.tilde }
+}
+
+// Conveniences for common shorthands
+extension UInt8.ASCII {
+    /// LESS-THAN SIGN (0x3C) - <
+    public static var lt: UInt8 { INCITS_4_1986.GraphicCharacters.lessThanSign }
+    
+    /// GREATER-THAN SIGN (0x3E) - >
+    public static var gt: UInt8 { INCITS_4_1986.GraphicCharacters.greaterThanSign }
+    
+    /// COMMERCIAL AT (0x40) - @
+    public static var at: UInt8 { INCITS_4_1986.GraphicCharacters.commercialAt }
 }

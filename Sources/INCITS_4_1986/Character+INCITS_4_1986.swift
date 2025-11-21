@@ -32,7 +32,7 @@ extension Character {
     public struct ASCII {
         public let character: Character
 
-        public init(character: Character) {
+        init(character: Character) {
             self.character = character
         }
     }

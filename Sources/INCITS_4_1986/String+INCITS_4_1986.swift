@@ -5,6 +5,212 @@
 
 import Standards
 
+// MARK: - ASCII Namespace
+
+extension String {
+    /// Access to ASCII type-level constants and methods
+    public static var ascii: ASCII.Type {
+        ASCII.self
+    }
+
+    /// Access to ASCII instance methods for this string
+    public var ascii: ASCII {
+        ASCII(string: self)
+    }
+
+    public struct ASCII {
+        public let string: String
+
+        init(string: String) {
+            self.string = string
+        }
+    }
+}
+
+extension String.ASCII {
+    // MARK: - Nested Namespaces
+
+    /// Access to SPACE constant
+    public typealias SPACE = INCITS_4_1986.SPACE
+
+    /// Access to Control Characters constants
+    public typealias ControlCharacters = INCITS_4_1986.ControlCharacters
+
+    /// Access to Graphic Characters constants
+    public typealias GraphicCharacters = INCITS_4_1986.GraphicCharacters
+}
+
+// MARK: - ASCII Line Ending Constants
+
+extension String.ASCII {
+    /// LINE FEED string (\\n) - 0x0A
+    public static let lf: String = String(decoding: [UInt8.ascii.lf], as: UTF8.self)
+
+    /// CARRIAGE RETURN string (\\r) - 0x0D
+    public static let cr: String = String(decoding: [UInt8.ascii.cr], as: UTF8.self)
+
+    /// CRLF string (\\r\\n) - 0x0D 0x0A
+    public static let crlf: String = String(decoding: INCITS_4_1986.crlf, as: UTF8.self)
+}
+
+// MARK: - ASCII Character Classification
+
+extension String.ASCII {
+    /// Returns true if all characters in the string are valid ASCII (U+0000 to U+007F)
+    @inlinable
+    public var isAllASCII: Bool {
+        self.string.utf8.allSatisfy { $0 <= 0x7F }
+    }
+
+    /// Returns true if all characters in the string are ASCII whitespace
+    @inlinable
+    public var isAllWhitespace: Bool {
+        !self.string.isEmpty && self.string.allSatisfy { $0.ascii.isWhitespace }
+    }
+
+    /// Returns true if all characters in the string are ASCII digits (0-9)
+    @inlinable
+    public var isAllDigits: Bool {
+        !self.string.isEmpty && self.string.allSatisfy { $0.ascii.isDigit }
+    }
+
+    /// Returns true if all characters in the string are ASCII letters (A-Z, a-z)
+    @inlinable
+    public var isAllLetters: Bool {
+        !self.string.isEmpty && self.string.allSatisfy { $0.ascii.isLetter }
+    }
+
+    /// Returns true if all characters in the string are ASCII alphanumeric (0-9, A-Z, a-z)
+    @inlinable
+    public var isAllAlphanumeric: Bool {
+        !self.string.isEmpty && self.string.allSatisfy { $0.ascii.isAlphanumeric }
+    }
+
+    /// Returns true if all characters in the string are ASCII control characters
+    @inlinable
+    public var isAllControl: Bool {
+        !self.string.isEmpty && self.string.allSatisfy {
+            guard let byte = UInt8.ascii($0) else { return false }
+            return byte.ascii.isControl
+        }
+    }
+
+    /// Returns true if all characters in the string are ASCII visible characters (excludes SPACE)
+    @inlinable
+    public var isAllVisible: Bool {
+        !self.string.isEmpty && self.string.allSatisfy {
+            guard let byte = UInt8.ascii($0) else { return false }
+            return byte.ascii.isVisible
+        }
+    }
+
+    /// Returns true if all characters in the string are ASCII printable characters (includes SPACE)
+    @inlinable
+    public var isAllPrintable: Bool {
+        !self.string.isEmpty && self.string.allSatisfy {
+            guard let byte = UInt8.ascii($0) else { return false }
+            return byte.ascii.isPrintable
+        }
+    }
+
+    /// Returns true if the string contains any non-ASCII characters
+    @inlinable
+    public var containsNonASCII: Bool {
+        self.string.utf8.contains { $0 > 0x7F }
+    }
+
+    /// Returns true if the string contains any ASCII hexadecimal digit (0-9, A-F, a-f)
+    @inlinable
+    public var containsHexDigit: Bool {
+        self.string.contains { $0.ascii.isHexDigit }
+    }
+}
+
+// MARK: - ASCII Case Validation
+
+extension String.ASCII {
+    /// Returns true if all ASCII letters in the string are lowercase
+    ///
+    /// Non-letter characters are ignored in the check.
+    @inlinable
+    public var isAllLowercase: Bool {
+        self.string.allSatisfy { char in
+            char.ascii.isLetter ? char.ascii.isLowercase : true
+        }
+    }
+
+    /// Returns true if all ASCII letters in the string are uppercase
+    ///
+    /// Non-letter characters are ignored in the check.
+    @inlinable
+    public var isAllUppercase: Bool {
+        self.string.allSatisfy { char in
+            char.ascii.isLetter ? char.ascii.isUppercase : true
+        }
+    }
+}
+
+// MARK: - ASCII Case Conversion Convenience
+
+extension String.ASCII {
+    /// Converts ASCII letters to uppercase
+    ///
+    /// Convenience method for `ascii(case: .upper)`.
+    @inlinable
+    public func uppercased() -> String {
+        INCITS_4_1986.ascii(self.string, case: .upper)
+    }
+
+    /// Converts ASCII letters to lowercase
+    ///
+    /// Convenience method for `ascii(case: .lower)`.
+    @inlinable
+    public func lowercased() -> String {
+        INCITS_4_1986.ascii(self.string, case: .lower)
+    }
+}
+
+// MARK: - ASCII Line Ending Detection
+
+extension String.ASCII {
+    /// Returns true if the string contains CRLF (\\r\\n) sequences
+    @inlinable
+    public var containsCRLF: Bool {
+        self.string.contains(.ascii.crlf)
+    }
+
+    /// Returns true if the string contains mixed line ending styles
+    ///
+    /// Detects if the string uses more than one line ending style (LF, CR, CRLF).
+    public var containsMixedLineEndings: Bool {
+        let hasCRLF = self.string.contains(.ascii.crlf)
+
+        // Check for standalone CR/LF by removing CRLF first
+        let withoutCRLF = self.string.replacing(String.ascii.crlf, with: "")
+        let hasStandaloneCR = withoutCRLF.contains(String.ascii.cr)
+        let hasStandaloneLF = withoutCRLF.contains(String.ascii.lf)
+
+        // Count different types (treating CRLF as one unit)
+        let types = [hasCRLF, hasStandaloneCR, hasStandaloneLF].filter { $0 }
+        return types.count > 1
+    }
+
+    /// Detects the line ending style used in the string
+    ///
+    /// Returns the first line ending type found, or `nil` if no line endings are present.
+    /// Prioritizes CRLF detection since it contains both CR and LF.
+    public func detectedLineEnding() -> String.ASCII.LineEnding? {
+        if self.string.contains(.ascii.crlf) {
+            return .crlf
+        } else if self.string.contains(.ascii.cr) {
+            return .cr
+        } else if self.string.contains(.ascii.lf) {
+            return .lf
+        }
+        return nil
+    }
+}
+
 // MARK: - ASCII String Creation
 
 extension String {
@@ -298,7 +504,7 @@ extension String {
     /// - ``LineEnding``
     /// - ``INCITS_4_1986/crlf``
     public func normalized<Encoding>(
-        to lineEnding: LineEnding,
+        to lineEnding: String.ASCII.LineEnding,
         as encoding: Encoding.Type = UTF8.self
     ) -> String where Encoding: _UnicodeEncoding, Encoding.CodeUnit == UInt8 {
         INCITS_4_1986.normalized(self, to: lineEnding, as: encoding)
@@ -350,7 +556,7 @@ extension String {
     /// - ``INCITS_4_1986/crlf``
     /// - ``normalized(to:as:)``
     public static func ascii<Encoding>(
-        lineEnding: LineEnding,
+        lineEnding: String.ASCII.LineEnding,
         as encoding: Encoding.Type = UTF8.self
     ) -> String where Encoding: _UnicodeEncoding, Encoding.CodeUnit == UInt8 {
         String(decoding: [UInt8].ascii(lineEnding: lineEnding), as: encoding)

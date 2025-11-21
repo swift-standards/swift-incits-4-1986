@@ -79,7 +79,7 @@ extension [UInt8] {
         /// Creates an ASCII namespace wrapper for the given byte array
         ///
         /// - Parameter bytes: The byte array to wrap
-        public init(bytes: [UInt8]) {
+        init(bytes: [UInt8]) {
             self.bytes = bytes
         }
     }
@@ -205,7 +205,7 @@ extension [UInt8] {
     /// - ``String/LineEnding``
     /// - ``INCITS_4_1986/crlf``
     /// - ``ASCII/crlf``
-    public static func ascii(lineEnding: String.LineEnding) -> [UInt8] {
+    public static func ascii(lineEnding: String.ASCII.LineEnding) -> [UInt8] {
         switch lineEnding {
         case .lf: return [UInt8.ascii.lf]
         case .cr: return [UInt8.ascii.cr]

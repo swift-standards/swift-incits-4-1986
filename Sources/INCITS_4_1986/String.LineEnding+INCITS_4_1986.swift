@@ -5,14 +5,14 @@
 //  Created by Coen ten Thije Boonkkamp on 20/11/2025.
 //
 
-extension String {
+extension String.ASCII {
     /// Line ending style for ASCII text normalization
     ///
     /// Values derive from INCITS 4-1986 ASCII character definitions:
     /// - CR: CARRIAGE RETURN (0x0D)
     /// - LF: LINE FEED (0x0A)
     ///
-    /// All byte values flow from `UInt8.cr` and `UInt8.lf` constants - single source of truth.
+    /// All byte values flow from `UInt8.ascii.cr` and `UInt8.ascii.lf` constants - single source of truth.
     public enum LineEnding: Sendable {
         /// Unix style: LINE FEED (0x0A)
         case lf

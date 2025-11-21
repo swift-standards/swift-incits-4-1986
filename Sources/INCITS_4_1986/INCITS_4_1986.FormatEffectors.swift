@@ -27,7 +27,7 @@ extension INCITS_4_1986 {
     /// let bytes: [UInt8] = [0x6C, 0x0A, 0x6D]  // "l\nm"
     /// INCITS_4_1986.normalized(bytes, to: .crlf)  // [0x6C, 0x0D, 0x0A, 0x6D]
     /// ```
-    public static func normalized(_ bytes: [UInt8], to lineEnding: String.LineEnding) -> [UInt8] {
+    public static func normalized(_ bytes: [UInt8], to lineEnding: String.ASCII.LineEnding) -> [UInt8] {
         // Fast path: if no line ending characters exist, return as-is
         // Single pass check is faster than two separate contains() calls
         if !bytes.contains(where: { $0 == .ascii.cr || $0 == .ascii.lf }) {
@@ -82,7 +82,7 @@ extension INCITS_4_1986 {
     /// ```
     public static func normalized<Encoding>(
         _ string: String,
-        to lineEnding: String.LineEnding,
+        to lineEnding: String.ASCII.LineEnding,
         as encoding: Encoding.Type = UTF8.self
     ) -> String where Encoding: _UnicodeEncoding, Encoding.CodeUnit == UInt8 {
         let normalizedBytes = normalized(Array(string.utf8), to: lineEnding)
