@@ -6,7 +6,17 @@
 
 import Standards
 
-// MARK: - Line Ending Normalization
+extension INCITS_4_1986 {
+    /// Case Conversion Operations
+    ///
+    /// Authoritative implementations for converting ASCII letters between uppercase and lowercase.
+    ///
+    /// Per INCITS 4-1986 Table 7 (Graphic Characters):
+    /// - Capital letters: A-Z (0x41-0x5A)
+    /// - Small letters: a-z (0x61-0x7A)
+    /// - Difference between cases: 32 (0x20)
+    public enum FormatEffectors {}
+}
 
 extension INCITS_4_1986 {
     /// Normalizes ASCII line endings in byte array to the specified style
@@ -27,7 +37,10 @@ extension INCITS_4_1986 {
     /// let bytes: [UInt8] = [0x6C, 0x0A, 0x6D]  // "l\nm"
     /// INCITS_4_1986.normalized(bytes, to: .crlf)  // [0x6C, 0x0D, 0x0A, 0x6D]
     /// ```
-    public static func normalized(_ bytes: [UInt8], to lineEnding: String.ASCII.LineEnding) -> [UInt8] {
+    public static func normalized(
+        _ bytes: [UInt8],
+        to lineEnding: INCITS_4_1986.FormatEffectors.LineEnding
+    ) -> [UInt8] {
         // Fast path: if no line ending characters exist, return as-is
         // Single pass check is faster than two separate contains() calls
         if !bytes.contains(where: { $0 == .ascii.cr || $0 == .ascii.lf }) {
@@ -37,7 +50,7 @@ extension INCITS_4_1986 {
         // Determine target line ending sequence inline
         let cr = UInt8.ascii.cr
         let lf = UInt8.ascii.lf
-        let target = [UInt8].ascii(lineEnding: lineEnding)
+        let target = [UInt8](ascii: lineEnding)
 
         var result = [UInt8]()
         result.reserveCapacity(bytes.count + (lineEnding == .crlf ? bytes.count / 10 : 0))
@@ -69,23 +82,5 @@ extension INCITS_4_1986 {
         }
 
         return result
-    }
-
-    /// Normalizes ASCII line endings in string to the specified style
-    ///
-    /// Convenience method that delegates to byte-level `normalized(_:to:)`.
-    ///
-    /// Example:
-    /// ```swift
-    /// INCITS_4_1986.normalized("line1\nline2\r\nline3", to: .crlf)
-    /// // "line1\r\nline2\r\nline3"
-    /// ```
-    public static func normalized<Encoding>(
-        _ string: String,
-        to lineEnding: String.ASCII.LineEnding,
-        as encoding: Encoding.Type = UTF8.self
-    ) -> String where Encoding: _UnicodeEncoding, Encoding.CodeUnit == UInt8 {
-        let normalizedBytes = normalized(Array(string.utf8), to: lineEnding)
-        return String(decoding: normalizedBytes, as: encoding)
     }
 }

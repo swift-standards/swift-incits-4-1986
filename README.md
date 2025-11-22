@@ -24,7 +24,7 @@ Pure Swift implementation with no Foundation dependencies, suitable for Swift Em
 - Line ending normalization (LF, CR, CRLF) for cross-platform text processing
 - Bidirectional String ⟷ `[UInt8]` conversion with ASCII validation
 - Cross-module inlining via `@inlinable` and `@_transparent` for zero-cost abstractions
-- 880+ tests covering edge cases, performance, and standards compliance
+- 513 tests covering edge cases, performance, and standards compliance
 
 ## Installation
 
@@ -61,8 +61,8 @@ byte.ascii.isUppercase   // true
 "Hello World".ascii(case: .upper)  // "HELLO WORLD"
 
 // String ⟷ bytes conversion
-let bytes = [UInt8].ascii("hello")  // [104, 101, 108, 108, 111]
-let text = String.ascii(bytes)      // "hello"
+let bytes = [UInt8](ascii: "hello")  // [104, 101, 108, 108, 111]
+let text = String(ascii: bytes)      // "hello"
 
 // String trimming
 "  Hello  ".trimming(.ascii.whitespaces)  // "Hello"
@@ -96,7 +96,7 @@ UInt8.ascii.a    // 0x61 (lowercase a)
 UInt8.ascii.tilde  // 0x7E (~)
 
 // Common sequences
-let crlf = INCITS_4_1986.crlf  // [0x0D, 0x0A]
+let crlf = INCITS_4_1986.ControlCharacters.crlf  // [0x0D, 0x0A]
 let whitespaces = INCITS_4_1986.whitespaces  // {0x20, 0x09, 0x0A, 0x0D}
 ```
 
@@ -170,20 +170,20 @@ Convert strings to ASCII byte arrays with validation:
 
 ```swift
 // Valid ASCII string
-let bytes = [UInt8].ascii("Hello")
+let bytes = [UInt8](ascii: "Hello")
 // [72, 101, 108, 108, 111]
 
 // With validation
-if let asciiBytes = [UInt8].ascii("Hello World") {
+if let asciiBytes = [UInt8](ascii: "Hello World") {
     // All characters are valid ASCII
 }
 
 // Non-ASCII returns nil
-[UInt8].ascii("Hello🌍")  // nil (emoji not ASCII)
-[UInt8].ascii("café")     // nil (é not ASCII)
+[UInt8](ascii: "Hello🌍")  // nil (emoji not ASCII)
+[UInt8](ascii: "café")     // nil (é not ASCII)
 
 // Unchecked conversion (no validation)
-let bytes = [UInt8].ascii(unchecked: "Hello")
+let bytes = [UInt8].ascii.unchecked("Hello")
 // Use only when you know string is ASCII
 ```
 
@@ -193,14 +193,14 @@ Convert ASCII byte arrays to strings:
 
 ```swift
 // With validation
-let text = String.ascii([72, 101, 108, 108, 111])  // "Hello"
+let text = String(ascii: [72, 101, 108, 108, 111])  // "Hello"
 
 // Invalid ASCII returns nil
-String.ascii([0xFF])  // nil (not valid 7-bit ASCII)
-String.ascii([0x80])  // nil (high bit set)
+String(ascii: [0xFF])  // nil (not valid 7-bit ASCII)
+String(ascii: [0x80])  // nil (high bit set)
 
 // Unchecked conversion (no validation)
-let text = String.ascii(unchecked: [72, 105])  // "Hi"
+let text = String.ascii.unchecked([72, 105])  // "Hi"
 // Use only when you know bytes are ASCII
 ```
 
@@ -217,6 +217,19 @@ mixed.ascii.isAllASCII  // false (0xFF > 0x7F)
 
 let empty: [UInt8] = []
 empty.ascii.isAllASCII  // true (empty array is valid)
+
+// Collection predicates (symmetric with StringProtocol)
+let digits = [UInt8](ascii: "12345")!
+digits.ascii.isAllDigits      // true
+digits.ascii.isAllLetters     // false
+
+let letters = [UInt8](ascii: "Hello")!
+letters.ascii.isAllLetters    // true
+letters.ascii.isAllUppercase  // false (mixed case)
+letters.ascii.isAllLowercase  // false (mixed case)
+
+let upperOnly = [UInt8](ascii: "HELLO")!
+upperOnly.ascii.isAllUppercase  // true
 ```
 
 ### Byte Array Case Conversion
@@ -224,20 +237,26 @@ empty.ascii.isAllASCII  // true (empty array is valid)
 Convert all ASCII letters in a byte array:
 
 ```swift
-let hello = [UInt8].ascii("Hello World")!
+let hello = [UInt8](ascii: "Hello World")!
 
-// To uppercase
-hello.ascii.convertingCase(to: .upper)
+// Elegant case conversion
+hello.ascii(case: .upper)
 // [72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68] ("HELLO WORLD")
 
-// To lowercase
-hello.ascii.convertingCase(to: .lower)
+hello.ascii(case: .lower)
 // [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100] ("hello world")
 
 // Non-letters unchanged
-let mixed = [UInt8].ascii("Test123!")!
-mixed.ascii.convertingCase(to: .upper)
+let mixed = [UInt8](ascii: "Test123!")!
+mixed.ascii(case: .upper)
 // [84, 69, 83, 84, 49, 50, 51, 33] ("TEST123!")
+
+// Validation via callAsFunction
+let valid: [UInt8] = [0x48, 0x69]
+valid.ascii()  // Optional([0x48, 0x69])
+
+let invalid: [UInt8] = [0x48, 0xFF]
+invalid.ascii()  // nil
 ```
 
 ### String Case Conversion
@@ -313,7 +332,6 @@ String.ascii.cr     // "\r"
 String.ascii.crlf   // "\r\n"
 
 // Detection
-"Hello\r\nWorld".ascii.containsCRLF  // true
 "A\nB\rC".ascii.containsMixedLineEndings  // true (has both LF and CR)
 "A\r\nB\r\n".ascii.containsMixedLineEndings  // false (only CRLF)
 
@@ -326,7 +344,7 @@ String.ascii.crlf   // "\r\n"
 
 ### Substring Operations
 
-All String.ASCII operations available on Substring:
+All INCITS_4_1986.ASCII operations available on Substring:
 
 ```swift
 let str = "  Hello World  "
@@ -344,7 +362,6 @@ sub.ascii.uppercased()
 sub.ascii.lowercased()
 
 // Line ending detection
-sub.ascii.containsCRLF
 sub.ascii.containsMixedLineEndings
 sub.ascii.detectedLineEnding()
 
@@ -405,19 +422,19 @@ Get line ending bytes for network protocols:
 
 ```swift
 // String line endings
-let lf = String.ascii(lineEnding: .lf)      // "\n"
-let cr = String.ascii(lineEnding: .cr)      // "\r"
-let crlf = String.ascii(lineEnding: .crlf)  // "\r\n"
+let lf = String(ascii: .lf)      // "\n"
+let cr = String(ascii: .cr)      // "\r"
+let crlf = String(ascii: .crlf)  // "\r\n"
 
 // Byte array line endings
-let lfBytes = [UInt8].ascii(lineEnding: .lf)      // [0x0A]
-let crBytes = [UInt8].ascii(lineEnding: .cr)      // [0x0D]
-let crlfBytes = [UInt8].ascii(lineEnding: .crlf)  // [0x0D, 0x0A]
+let lfBytes = [UInt8](ascii: .lf)      // [0x0A]
+let crBytes = [UInt8](ascii: .cr)      // [0x0D]
+let crlfBytes = [UInt8](ascii: .crlf)  // [0x0D, 0x0A]
 
 // Use in protocol implementation
-var httpResponse: [UInt8] = [UInt8].ascii("HTTP/1.1 200 OK")!
+var httpResponse: [UInt8] = [UInt8](ascii: "HTTP/1.1 200 OK")!
 httpResponse += [UInt8].ascii.crlf
-httpResponse += [UInt8].ascii("Content-Type: text/plain")!
+httpResponse += [UInt8](ascii: "Content-Type: text/plain")!
 httpResponse += [UInt8].ascii.crlf
 ```
 
@@ -454,14 +471,14 @@ let tab = INCITS_4_1986.ControlCharacters.htab     // 0x09
 let letterA = INCITS_4_1986.GraphicCharacters.A    // 0x41
 
 // Common byte sequences
-let crlf = INCITS_4_1986.crlf  // [0x0D, 0x0A]
+let crlf = INCITS_4_1986.ControlCharacters.crlf  // [0x0D, 0x0A]
 
 // Whitespace set
 let whitespaces = INCITS_4_1986.whitespaces
 // {0x20, 0x09, 0x0A, 0x0D}
 
 // Case conversion offset
-let offset = INCITS_4_1986.caseConversionOffset  // 0x20
+let offset = INCITS_4_1986.CaseConversion.offset  // 0x20
 // 'A' (0x41) + 0x20 = 'a' (0x61)
 ```
 
@@ -509,7 +526,7 @@ Conforms to **INCITS 4-1986 (Reaffirmed 2022)**:
 
 ## Testing
 
-Test suite: 380+ tests in 100+ suites
+Test suite: 513 tests in 164 suites
 
 Coverage:
 - Character classification for all 128 ASCII bytes

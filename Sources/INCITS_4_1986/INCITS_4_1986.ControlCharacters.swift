@@ -73,14 +73,10 @@ extension INCITS_4_1986 {
     public enum ControlCharacters {}
 }
 
-// MARK: - Other Control Characters
-
 extension INCITS_4_1986.ControlCharacters {
     /// NULL character (0x00)
     public static let nul: UInt8 = 0x00
 }
-
-// MARK: - Transmission Control Characters
 
 extension INCITS_4_1986.ControlCharacters {
     /// START OF HEADING (0x01)
@@ -114,8 +110,6 @@ extension INCITS_4_1986.ControlCharacters {
     public static let etb: UInt8 = 0x17
 }
 
-// MARK: - Format Effectors
-
 extension INCITS_4_1986.ControlCharacters {
     /// BACKSPACE (0x08)
     public static let bs: UInt8 = 0x08
@@ -136,8 +130,6 @@ extension INCITS_4_1986.ControlCharacters {
     public static let cr: UInt8 = 0x0D
 }
 
-// MARK: - Code Extension Control Characters
-
 extension INCITS_4_1986.ControlCharacters {
     /// SHIFT OUT (0x0E)
     public static let so: UInt8 = 0x0E
@@ -148,8 +140,6 @@ extension INCITS_4_1986.ControlCharacters {
     /// ESCAPE (0x1B)
     public static let esc: UInt8 = 0x1B
 }
-
-// MARK: - Device Control Characters
 
 extension INCITS_4_1986.ControlCharacters {
     /// DEVICE CONTROL ONE (0x11) - XON in flow control
@@ -165,8 +155,6 @@ extension INCITS_4_1986.ControlCharacters {
     public static let dc4: UInt8 = 0x14
 }
 
-// MARK: - Information Separators
-
 extension INCITS_4_1986.ControlCharacters {
     /// FILE SEPARATOR (0x1C)
     public static let fs: UInt8 = 0x1C
@@ -180,8 +168,6 @@ extension INCITS_4_1986.ControlCharacters {
     /// UNIT SEPARATOR (0x1F)
     public static let us: UInt8 = 0x1F
 }
-
-// MARK: - Additional Control Characters
 
 extension INCITS_4_1986.ControlCharacters {
     /// BELL (0x07)
@@ -198,4 +184,48 @@ extension INCITS_4_1986.ControlCharacters {
 
     /// DELETE (0x7F)
     public static let del: UInt8 = 0x7F
+}
+
+
+extension INCITS_4_1986.ControlCharacters {
+    /// CRLF line ending (0x0D 0x0A)
+    ///
+    /// The canonical line ending sequence consisting of CARRIAGE RETURN (0x0D) followed by LINE FEED (0x0A).
+    ///
+    /// ## Protocol Requirements
+    ///
+    /// CRLF is the **required** line ending for many Internet protocols per their RFCs:
+    /// - HTTP (RFC 9112)
+    /// - SMTP (RFC 5321)
+    /// - FTP (RFC 959)
+    /// - MIME (RFC 2045)
+    /// - Telnet (RFC 854)
+    ///
+    /// This requirement stems from the need for consistent, cross-platform text representation
+    /// in network communications, regardless of the originating platform's native line ending.
+    ///
+    /// ## Usage
+    ///
+    /// ```swift
+    /// // Normalize text to CRLF for network transmission
+    /// let text = "Line 1\nLine 2\nLine 3"
+    /// let normalized = text.normalized(to: .crlf)
+    ///
+    /// // Access the CRLF bytes directly
+    /// let lineEnding = INCITS_4_1986.ControlCharacters.crlf  // [0x0D, 0x0A]
+    ///
+    /// // Append CRLF to byte array
+    /// var bytes: [UInt8] = [0x48, 0x69]  // "Hi"
+    /// bytes += INCITS_4_1986.ControlCharacters.crlf
+    /// ```
+    ///
+    /// ## See Also
+    ///
+    /// - ``ControlCharacters/cr``
+    /// - ``ControlCharacters/lf``
+    /// - ``String/LineEnding``
+    public static let crlf: [UInt8] = [
+        INCITS_4_1986.ControlCharacters.cr,
+        INCITS_4_1986.ControlCharacters.lf
+    ]
 }

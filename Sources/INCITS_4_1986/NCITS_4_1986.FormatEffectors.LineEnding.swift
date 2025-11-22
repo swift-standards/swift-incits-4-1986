@@ -5,7 +5,7 @@
 //  Created by Coen ten Thije Boonkkamp on 20/11/2025.
 //
 
-extension String.ASCII {
+extension INCITS_4_1986.FormatEffectors {
     /// Line ending style for ASCII text normalization
     ///
     /// Values derive from INCITS 4-1986 ASCII character definitions:

@@ -80,8 +80,6 @@ extension INCITS_4_1986 {
     public enum SPACE {}
 }
 
-// MARK: - Authoritative SPACE Constants
-
 extension INCITS_4_1986.SPACE {
     /// SPACE (0x20) - The dual-nature whitespace character
     ///

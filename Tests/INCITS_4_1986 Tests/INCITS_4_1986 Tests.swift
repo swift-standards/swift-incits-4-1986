@@ -11,7 +11,7 @@ import Testing
 // MARK: - Module Constants
 
 @Suite
-struct `INCITS_4_1986 - Constants` {
+struct `INCITS_4_1986 - Constants Tests` {
 
     @Test
     func `whitespaces set contains exactly 4 characters`() {
@@ -28,20 +28,20 @@ struct `INCITS_4_1986 - Constants` {
 
     @Test
     func `CRLF sequence is correct`() {
-        #expect(INCITS_4_1986.crlf == [UInt8.ascii.cr, UInt8.ascii.lf])
+        #expect(INCITS_4_1986.ControlCharacters.crlf == [UInt8.ascii.cr, UInt8.ascii.lf])
     }
 
     @Test
     func `case conversion offset is 0x20`() {
-        #expect(INCITS_4_1986.caseConversionOffset == UInt8.ascii.sp)
-        #expect(INCITS_4_1986.caseConversionOffset == 32)
+        #expect(INCITS_4_1986.CaseConversion.offset == UInt8.ascii.sp)
+        #expect(INCITS_4_1986.CaseConversion.offset == 32)
     }
 
     @Test
     func `case conversion offset matches letter distance`() {
         let a = UInt8.ascii.a
         let A = UInt8.ascii.A
-        #expect(a - A == INCITS_4_1986.caseConversionOffset)
+        #expect(a - A == INCITS_4_1986.CaseConversion.offset)
     }
 }
 

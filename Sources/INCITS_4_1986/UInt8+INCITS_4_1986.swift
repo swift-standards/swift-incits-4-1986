@@ -11,6 +11,8 @@ import Standards
 // MARK: - ASCII Namespace Access
 
 extension UInt8 {
+    // MARK: - Namespace Access
+
     /// Access to ASCII type-level constants and methods
     ///
     /// Provides static access to all ASCII character constants and static utility methods.
@@ -22,7 +24,6 @@ extension UInt8 {
     /// let letterA = UInt8.ascii.A        // 0x41
     /// let space = UInt8.ascii.sp         // 0x20
     /// let tab = UInt8.ascii.htab         // 0x09
-    /// let digit = UInt8.ascii(digit: 0x35)  // 5
     /// ```
     ///
     /// ## See Also
@@ -105,7 +106,7 @@ extension UInt8 {
     /// Creates ASCII byte from a character with validation
     ///
     /// Converts a Swift `Character` to its ASCII byte value, returning `nil` if the character
-    /// is outside the ASCII range (U+0000 to U+007F). This method validates that the character
+    /// is outside the ASCII range (U+0000 to U+007F). This initializer validates that the character
     /// fits within the 7-bit US-ASCII encoding before conversion.
     ///
     /// ## Validation
@@ -118,40 +119,40 @@ extension UInt8 {
     ///
     /// ## Performance
     ///
-    /// This method is marked `@inline(__always)` for optimal performance, delegating to
+    /// This initializer is marked `@inline(__always)` for optimal performance, delegating to
     /// the Swift standard library's `Character.asciiValue` property.
     ///
     /// ## Usage
     ///
     /// ```swift
     /// // Valid ASCII characters
-    /// UInt8.ascii("A")     // 65 (0x41)
-    /// UInt8.ascii("0")     // 48 (0x30)
-    /// UInt8.ascii(" ")     // 32 (0x20)
-    /// UInt8.ascii("\n")    // 10 (0x0A)
+    /// UInt8(ascii: "A")     // 65 (0x41)
+    /// UInt8(ascii: "0")     // 48 (0x30)
+    /// UInt8(ascii: " ")     // 32 (0x20)
+    /// UInt8(ascii: "\n")    // 10 (0x0A)
     ///
     /// // Non-ASCII characters
-    /// UInt8.ascii("🌍")    // nil (emoji)
-    /// UInt8.ascii("é")     // nil (accented letter)
-    /// UInt8.ascii("中")    // nil (CJK character)
+    /// UInt8(ascii: "🌍")    // nil (emoji)
+    /// UInt8(ascii: "é")     // nil (accented letter)
+    /// UInt8(ascii: "中")    // nil (CJK character)
     /// ```
     ///
-    /// - Parameter character: The character to convert
-    /// - Returns: ASCII byte value (0-127) if character is ASCII, `nil` otherwise
+    /// - Parameter ascii: The character to convert to ASCII byte
     ///
     /// ## See Also
     ///
     /// - ``INCITS_4_1986``
     /// - ``ASCII``
     @inline(__always)
-    public static func ascii(_ character: Character) -> UInt8? {
-        character.asciiValue
+    public init?(ascii character: Character) {
+        guard let value = character.asciiValue else { return nil }
+        self = value
     }
 }
 
 extension UInt8.ASCII {
     // MARK: - Character Classification
-
+    
     /// Tests if byte is ASCII whitespace
     ///
     /// Returns `true` for the four ASCII whitespace characters defined in INCITS 4-1986:
@@ -178,12 +179,12 @@ extension UInt8.ASCII {
     /// ## See Also
     ///
     /// - ``INCITS_4_1986/whitespaces``
+    /// - ``INCITS_4_1986/CharacterClassification/isWhitespace(_:)``
     @_transparent
     public var isWhitespace: Bool {
-        // Inline comparison for performance (4 equality checks < Set lookup)
-        self.byte == .ascii.sp || self.byte == .ascii.htab || self.byte == .ascii.lf || self.byte == .ascii.cr
+        INCITS_4_1986.CharacterClassification.isWhitespace(self.byte)
     }
-
+    
     /// Tests if byte is ASCII control character
     ///
     /// Returns `true` for all 33 control characters defined in INCITS 4-1986:
@@ -216,11 +217,12 @@ extension UInt8.ASCII {
     /// ## See Also
     ///
     /// - ``INCITS_4_1986/ControlCharacters``
+    /// - ``INCITS_4_1986/CharacterClassification/isControl(_:)``
     @_transparent
     public var isControl: Bool {
-        self.byte <= .ascii.us || self.byte == .ascii.del
+        INCITS_4_1986.CharacterClassification.isControl(self.byte)
     }
-
+    
     /// Tests if byte is ASCII visible (non-whitespace printable) character
     ///
     /// Returns `true` for visible graphic characters (0x21-0x7E), which are printable characters
@@ -251,11 +253,12 @@ extension UInt8.ASCII {
     ///
     /// - ``isPrintable``
     /// - ``INCITS_4_1986/GraphicCharacters``
+    /// - ``INCITS_4_1986/CharacterClassification/isVisible(_:)``
     @_transparent
     public var isVisible: Bool {
-        self.byte >= .ascii.exclamationPoint && self.byte <= .ascii.tilde
+        INCITS_4_1986.CharacterClassification.isVisible(self.byte)
     }
-
+    
     /// Tests if byte is ASCII printable (graphic) character
     ///
     /// Returns `true` for all printable graphic characters (0x20-0x7E), which includes both
@@ -287,71 +290,105 @@ extension UInt8.ASCII {
     /// - ``isVisible``
     /// - ``INCITS_4_1986/GraphicCharacters``
     /// - ``INCITS_4_1986/SPACE``
+    /// - ``INCITS_4_1986/CharacterClassification/isPrintable(_:)``
     @_transparent
     public var isPrintable: Bool {
-        self.byte >= .ascii.sp && self.byte <= .ascii.tilde
+        INCITS_4_1986.CharacterClassification.isPrintable(self.byte)
     }
-
+    
     // MARK: - Character Classification
-
+    
     /// Tests if byte is ASCII digit ('0'...'9')
+    ///
+    /// ## See Also
+    ///
+    /// - ``INCITS_4_1986/CharacterClassification/isDigit(_:)``
     @_transparent
     public var isDigit: Bool {
-        self.byte >= .ascii.0 && self.byte <= .ascii.9
+        INCITS_4_1986.CharacterClassification.isDigit(self.byte)
     }
-
+    
     /// Tests if byte is ASCII letter ('A'...'Z' or 'a'...'z')
+    ///
+    /// ## See Also
+    ///
+    /// - ``INCITS_4_1986/CharacterClassification/isLetter(_:)``
     @_transparent
     public var isLetter: Bool {
-        (self.byte >= .ascii.A && self.byte <= .ascii.Z) || (self.byte >= .ascii.a && self.byte <= .ascii.z)
+        INCITS_4_1986.CharacterClassification.isLetter(self.byte)
     }
-
+    
     /// Tests if byte is ASCII alphanumeric (digit or letter)
+    ///
+    /// ## See Also
+    ///
+    /// - ``INCITS_4_1986/CharacterClassification/isAlphanumeric(_:)``
     @inlinable
     public var isAlphanumeric: Bool {
-        isDigit || isLetter
+        INCITS_4_1986.CharacterClassification.isAlphanumeric(self.byte)
     }
-
+    
     /// Tests if byte is ASCII hexadecimal digit ('0'...'9', 'A'...'F', 'a'...'f')
+    ///
+    /// ## See Also
+    ///
+    /// - ``INCITS_4_1986/CharacterClassification/isHexDigit(_:)``
     @inlinable
     public var isHexDigit: Bool {
-        isDigit || (self.byte >= .ascii.A && self.byte <= .ascii.F)
-            || (self.byte >= .ascii.a && self.byte <= .ascii.f)
+        INCITS_4_1986.CharacterClassification.isHexDigit(self.byte)
     }
-
+    
     /// Tests if byte is ASCII uppercase letter ('A'...'Z')
+    ///
+    /// ## See Also
+    ///
+    /// - ``INCITS_4_1986/CharacterClassification/isUppercase(_:)``
     @_transparent
     public var isUppercase: Bool {
-        self.byte >= .ascii.A && self.byte <= .ascii.Z
+        INCITS_4_1986.CharacterClassification.isUppercase(self.byte)
     }
-
+    
     /// Tests if byte is ASCII lowercase letter ('a'...'z')
+    ///
+    /// ## See Also
+    ///
+    /// - ``INCITS_4_1986/CharacterClassification/isLowercase(_:)``
     @_transparent
     public var isLowercase: Bool {
-        self.byte >= .ascii.a && self.byte <= .ascii.z
+        INCITS_4_1986.CharacterClassification.isLowercase(self.byte)
     }
-
+}
+    
+extension UInt8.ASCII {
     // MARK: - Numeric Value Parsing (Static Transformations)
-
+    
     /// Parses an ASCII digit byte to its numeric value (0-9)
     ///
     /// Pure function transformation from ASCII digit to numeric value.
     /// Inverse operation of the `isDigit` predicate.
     /// Forms a Galois connection between predicates and values.
     ///
-    /// Example:
+    /// ## Usage
+    ///
     /// ```swift
-    /// UInt8.ascii(digit: 0x30)  // 0 (character '0')
-    /// UInt8.ascii(digit: 0x35)  // 5 (character '5')
-    /// UInt8.ascii(digit: 0x39)  // 9 (character '9')
-    /// UInt8.ascii(digit: 0x41)  // nil (character 'A')
+    /// UInt8(ascii: digit: 0x30)  // 0 (character '0')
+    /// UInt8(ascii: digit: 0x35)  // 5 (character '5')
+    /// UInt8(ascii: digit: 0x39)  // 9 (character '9')
+    /// UInt8(ascii: digit: 0x41)  // nil (character 'A')
     /// ```
+    ///
+    /// ## See Also
+    ///
+    /// - ``INCITS_4_1986/NumericParsing/digit(_:)``
     @inlinable
     public static func ascii(digit byte: UInt8) -> UInt8? {
-        guard byte.ascii.isDigit else { return nil }
-        return byte - UInt8.ascii.0
+        INCITS_4_1986.NumericParsing.digit(byte)
     }
+}
 
+
+extension UInt8.ASCII {
+    
     /// Parses an ASCII hex digit byte to its numeric value (0-15)
     ///
     /// Pure function transformation from ASCII hex digit to numeric value.
@@ -363,55 +400,105 @@ extension UInt8.ASCII {
     /// - 'A'...'F' → 10...15
     /// - 'a'...'f' → 10...15
     ///
-    /// Example:
+    /// ## Usage
+    ///
     /// ```swift
-    /// UInt8.ascii(hexDigit: 0x30)  // 0 (character '0')
-    /// UInt8.ascii(hexDigit: 0x39)  // 9 (character '9')
-    /// UInt8.ascii(hexDigit: 0x41)  // 10 (character 'A')
-    /// UInt8.ascii(hexDigit: 0x46)  // 15 (character 'F')
-    /// UInt8.ascii(hexDigit: 0x61)  // 10 (character 'a')
-    /// UInt8.ascii(hexDigit: 0x66)  // 15 (character 'f')
-    /// UInt8.ascii(hexDigit: 0x47)  // nil (character 'G')
+    /// UInt8(ascii: hexDigit: 0x30)  // 0 (character '0')
+    /// UInt8(ascii: hexDigit: 0x39)  // 9 (character '9')
+    /// UInt8(ascii: hexDigit: 0x41)  // 10 (character 'A')
+    /// UInt8(ascii: hexDigit: 0x46)  // 15 (character 'F')
+    /// UInt8(ascii: hexDigit: 0x61)  // 10 (character 'a')
+    /// UInt8(ascii: hexDigit: 0x66)  // 15 (character 'f')
+    /// UInt8(ascii: hexDigit: 0x47)  // nil (character 'G')
     /// ```
+    ///
+    /// ## See Also
+    ///
+    /// - ``INCITS_4_1986/NumericParsing/hexDigit(_:)``
     @inlinable
     public static func ascii(hexDigit byte: UInt8) -> UInt8? {
-        switch byte {
-        case UInt8.ascii.0...UInt8.ascii.9:
-            return byte - UInt8.ascii.0
-        case UInt8.ascii.A...UInt8.ascii.F:
-            return byte - UInt8.ascii.A + 10
-        case UInt8.ascii.a...UInt8.ascii.f:
-            return byte - UInt8.ascii.a + 10
-        default:
-            return nil
-        }
+        INCITS_4_1986.NumericParsing.hexDigit(byte)
+    }
+}
+
+extension UInt8.ASCII {
+    /// Parses an ASCII digit byte via call syntax
+    ///
+    /// Enables the convenient syntax: `UInt8(ascii: digit: byte)`
+    @inlinable
+    public static func callAsFunction(digit byte: UInt8) -> UInt8? {
+        INCITS_4_1986.NumericParsing.digit(byte)
     }
 
-    // MARK: - Case Conversion
 
-    /// Converts ASCII letter to specified case, returns unchanged if not an ASCII letter
-    /// - Parameter case: The target case (upper or lower)
-    /// - Returns: Converted byte if ASCII letter, unchanged otherwise
+    /// Parses an ASCII hex digit byte via call syntax
     ///
-    /// Mathematical Properties:
-    /// - **Idempotence**: `b.ascii(case: c).ascii(case: c) == b.ascii(case: c)`
-    /// - **Involution** (for letters): `b.ascii(case: .upper).ascii(case: .lower) == b` (if `b.isLetter`)
+    /// Enables the convenient syntax: `UInt8(ascii: hexDigit: byte)`
+    @inlinable
+    public static func callAsFunction(hexDigit byte: UInt8) -> UInt8? {
+        INCITS_4_1986.NumericParsing.hexDigit(byte)
+    }
+
+
+    /// Returns the byte if it's valid ASCII, nil otherwise
     ///
-    /// Example:
+    /// Validates that the byte is in the ASCII range (0x00-0x7F).
+    ///
     /// ```swift
-    /// UInt8(ascii: "a").ascii(case: .upper)  // 65 ("A")
-    /// UInt8(ascii: "Z").ascii(case: .lower)  // 122 ("z")
-    /// UInt8(ascii: "1").ascii(case: .upper)  // 49 ("1") - unchanged
+    /// let valid = UInt8(0x41)
+    /// valid.ascii()  // Optional(0x41)
+    ///
+    /// let invalid = UInt8(0xFF)
+    /// invalid.ascii()  // nil
     /// ```
     @inlinable
-    public func ascii(case: Character.Case) -> UInt8 {
-        let offset = INCITS_4_1986.caseConversionOffset
-        switch `case` {
-        case .upper:
-            return isLowercase ? self.byte - offset : self.byte
-        case .lower:
-            return isUppercase ? self.byte + offset : self.byte
-        }
+    public func callAsFunction() -> UInt8? {
+        self.byte <= .ascii.del ? self.byte : nil
+    }
+
+    /// Converts ASCII letter to specified case via call syntax
+    ///
+    /// This enables the convenient syntax: `byte.ascii(case: .upper)`
+    @inlinable
+    public func callAsFunction(case: Character.Case) -> UInt8 {
+        INCITS_4_1986.CaseConversion.convert(self.byte, to: `case`)
+    }
+
+    /// Creates ASCII byte from a character without validation
+    ///
+    /// Converts a Swift `Character` to its byte value, assuming it's valid ASCII without validation.
+    /// This method provides optimal performance when the caller can guarantee ASCII validity.
+    ///
+    /// ## Performance
+    ///
+    /// This method skips validation, making it more efficient than the failable initializer
+    /// `UInt8(ascii:)` when you know the character is ASCII. It uses Swift's built-in UTF-8
+    /// encoding to extract the first byte.
+    ///
+    /// ## Safety
+    ///
+    /// **Important**: This method does not validate the input. If the character is not ASCII,
+    /// the result will be the first UTF-8 byte of the character's encoding, which may not be
+    /// what you expect.
+    ///
+    /// ## Usage
+    ///
+    /// ```swift
+    /// // When you know the character is ASCII
+    /// let byte = UInt8.ascii.unchecked("A")  // 0x41
+    /// let digit = UInt8.ascii.unchecked("5")  // 0x35
+    /// let space = UInt8.ascii.unchecked(" ")  // 0x20
+    /// ```
+    ///
+    /// - Parameter character: The character to convert to a byte (assumed ASCII, no checking performed)
+    /// - Returns: The byte value of the character
+    ///
+    /// ## See Also
+    ///
+    /// - ``UInt8/init(ascii:)``
+    @inline(__always)
+    public static func unchecked(_ character: Character) -> UInt8 {
+        character.utf8.first!
     }
 }
 

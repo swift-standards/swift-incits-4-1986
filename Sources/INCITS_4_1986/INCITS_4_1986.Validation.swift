@@ -6,8 +6,6 @@
 
 import Standards
 
-// MARK: - Validation
-
 extension INCITS_4_1986 {
     /// Returns true if all bytes are valid ASCII (0x00-0x7F)
     ///

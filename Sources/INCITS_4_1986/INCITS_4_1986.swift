@@ -46,7 +46,7 @@
 ///
 /// // Use common constants
 /// let whitespace = INCITS_4_1986.whitespaces
-/// let lineEnding = INCITS_4_1986.crlf
+/// let lineEnding = INCITS_4_1986.ControlCharacters.crlf
 /// ```
 ///
 /// ## Conformance
@@ -64,7 +64,7 @@
 /// - ``GraphicCharacters``
 /// - ``SPACE``
 /// - ``whitespaces``
-/// - ``caseConversionOffset``
+/// - ``CaseConversion.offset``
 /// - ``crlf``
 public enum INCITS_4_1986 {}
 
@@ -107,78 +107,5 @@ extension INCITS_4_1986 {
         ControlCharacters.htab,
         ControlCharacters.lf,
         ControlCharacters.cr
-    ]
-
-    /// ASCII case conversion offset
-    ///
-    /// The numeric distance between corresponding uppercase and lowercase ASCII letters.
-    ///
-    /// Per INCITS 4-1986, uppercase letters 'A'-'Z' (0x41-0x5A) and lowercase letters 'a'-'z' (0x61-0x7A)
-    /// are separated by exactly 0x20 (32 decimal). This relationship is fundamental to ASCII's design
-    /// and enables efficient case conversion through simple arithmetic operations.
-    ///
-    /// ## Mathematical Properties
-    ///
-    /// - **Identity**: `'a' - 'A' = 0x20` for all letter pairs
-    /// - **Symmetry**: `lowercase = uppercase + 0x20` and `uppercase = lowercase - 0x20`
-    /// - **Bit manipulation**: The offset is a single bit difference (bit 5)
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// let upperA: UInt8 = 0x41  // 'A'
-    /// let lowerA = upperA + INCITS_4_1986.caseConversionOffset  // 0x61 ('a')
-    ///
-    /// let lowerZ: UInt8 = 0x7A  // 'z'
-    /// let upperZ = lowerZ - INCITS_4_1986.caseConversionOffset  // 0x5A ('Z')
-    /// ```
-    ///
-    /// ## See Also
-    ///
-    /// - ``GraphicCharacters/A``
-    /// - ``GraphicCharacters/a``
-    public static let caseConversionOffset: UInt8 = 0x20
-
-    // MARK: - Common ASCII Byte Sequences
-
-    /// CRLF line ending (0x0D 0x0A)
-    ///
-    /// The canonical line ending sequence consisting of CARRIAGE RETURN (0x0D) followed by LINE FEED (0x0A).
-    ///
-    /// ## Protocol Requirements
-    ///
-    /// CRLF is the **required** line ending for many Internet protocols per their RFCs:
-    /// - HTTP (RFC 9112)
-    /// - SMTP (RFC 5321)
-    /// - FTP (RFC 959)
-    /// - MIME (RFC 2045)
-    /// - Telnet (RFC 854)
-    ///
-    /// This requirement stems from the need for consistent, cross-platform text representation
-    /// in network communications, regardless of the originating platform's native line ending.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Normalize text to CRLF for network transmission
-    /// let text = "Line 1\nLine 2\nLine 3"
-    /// let normalized = text.normalized(to: .crlf)
-    ///
-    /// // Access the CRLF bytes directly
-    /// let lineEnding = INCITS_4_1986.crlf  // [0x0D, 0x0A]
-    ///
-    /// // Append CRLF to byte array
-    /// var bytes: [UInt8] = [0x48, 0x69]  // "Hi"
-    /// bytes += INCITS_4_1986.crlf
-    /// ```
-    ///
-    /// ## See Also
-    ///
-    /// - ``ControlCharacters/cr``
-    /// - ``ControlCharacters/lf``
-    /// - ``String/LineEnding``
-    public static let crlf: [UInt8] = [
-        INCITS_4_1986.ControlCharacters.cr,
-        INCITS_4_1986.ControlCharacters.lf
     ]
 }

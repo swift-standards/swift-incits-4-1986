@@ -5,8 +5,6 @@
 
 import Standards
 
-// MARK: - String Trimming
-
 extension INCITS_4_1986 {
     /// Trims characters from both ends of a string
     /// - Parameters:

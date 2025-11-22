@@ -71,12 +71,10 @@ extension INCITS_4_1986 {
     ///
     /// ## See Also
     ///
-    /// - ``INCITS_4_1986/caseConversionOffset``
+    /// - ``INCITS_4_1986/CaseConversion.offset``
     /// - ``SPACE``
     public enum GraphicCharacters {}
 }
-
-// MARK: - Punctuation and Symbols (0x21-0x2F)
 
 extension INCITS_4_1986.GraphicCharacters {
     /// EXCLAMATION POINT (0x21) - !
@@ -125,8 +123,6 @@ extension INCITS_4_1986.GraphicCharacters {
     public static let slant: UInt8 = 0x2F
 }
 
-// MARK: - Digits (0x30-0x39)
-
 extension INCITS_4_1986.GraphicCharacters {
     /// DIGIT ZERO (0x30) - 0
     public static let `0`: UInt8 = 0x30
@@ -159,8 +155,6 @@ extension INCITS_4_1986.GraphicCharacters {
     public static let `9`: UInt8 = 0x39
 }
 
-// MARK: - Punctuation and Symbols (0x3A-0x40)
-
 extension INCITS_4_1986.GraphicCharacters {
     /// COLON (0x3A) - :
     public static let colon: UInt8 = 0x3A
@@ -183,8 +177,6 @@ extension INCITS_4_1986.GraphicCharacters {
     /// COMMERCIAL AT (0x40) - @
     public static let commercialAt: UInt8 = 0x40
 }
-
-// MARK: - Uppercase Letters (0x41-0x5A)
 
 extension INCITS_4_1986.GraphicCharacters {
     /// CAPITAL LETTER A (0x41)
@@ -266,8 +258,6 @@ extension INCITS_4_1986.GraphicCharacters {
     public static let `Z`: UInt8 = 0x5A
 }
 
-// MARK: - Brackets and Symbols (0x5B-0x60)
-
 extension INCITS_4_1986.GraphicCharacters {
     /// LEFT BRACKET (0x5B) - [
     public static let leftBracket: UInt8 = 0x5B
@@ -287,8 +277,6 @@ extension INCITS_4_1986.GraphicCharacters {
     /// LEFT SINGLE QUOTATION MARK, GRAVE ACCENT (0x60) - `
     public static let leftSingleQuotationMark: UInt8 = 0x60
 }
-
-// MARK: - Lowercase Letters (0x61-0x7A)
 
 extension INCITS_4_1986.GraphicCharacters {
     /// SMALL LETTER A (0x61)
@@ -369,8 +357,6 @@ extension INCITS_4_1986.GraphicCharacters {
     /// SMALL LETTER Z (0x7A)
     public static let `z`: UInt8 = 0x7A
 }
-
-// MARK: - Final Symbols (0x7B-0x7E)
 
 extension INCITS_4_1986.GraphicCharacters {
     /// LEFT BRACE (0x7B) - {
