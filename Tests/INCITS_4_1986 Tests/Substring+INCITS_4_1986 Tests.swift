@@ -501,27 +501,27 @@ struct `Substring.ASCII - Line Ending Constants` {
 
     @Test
     func `lf constant is correct`() {
-        #expect(Substring.ASCII.lf == "\n")
-        #expect(Substring.ASCII.lf.count == 1)
+        #expect(String.ASCII.lf == "\n")
+        #expect(String.ASCII.lf.count == 1)
     }
 
     @Test
     func `cr constant is correct`() {
-        #expect(Substring.ASCII.cr == "\r")
-        #expect(Substring.ASCII.cr.count == 1)
+        #expect(String.ASCII.cr == "\r")
+        #expect(String.ASCII.cr.count == 1)
     }
 
     @Test
     func `crlf constant is correct`() {
-        #expect(Substring.ASCII.crlf == "\r\n")
-        #expect(Substring.ASCII.crlf.utf8.count == 2)
+        #expect(String.ASCII.crlf == "\r\n")
+        #expect(String.ASCII.crlf.utf8.count == 2)
     }
 
     @Test
     func `constants match String.ASCII constants`() {
-        #expect(Substring.ASCII.lf == String.ASCII.lf)
-        #expect(Substring.ASCII.cr == String.ASCII.cr)
-        #expect(Substring.ASCII.crlf == String.ASCII.crlf)
+        #expect(String.ASCII.lf == String.ASCII.lf)
+        #expect(String.ASCII.cr == String.ASCII.cr)
+        #expect(String.ASCII.crlf == String.ASCII.crlf)
     }
 }
 
