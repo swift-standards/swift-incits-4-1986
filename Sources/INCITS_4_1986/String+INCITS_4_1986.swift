@@ -303,7 +303,6 @@ extension String {
     public static func ascii(unchecked bytes: [UInt8]) -> String {
         String(decoding: bytes, as: UTF8.self)
     }
-
 }
 
 // MARK: - ASCII Case Conversion
@@ -354,94 +353,6 @@ extension String {
     /// - ``Character/Case``
     public func ascii(case: Character.Case) -> String {
         INCITS_4_1986.ascii(self, case: `case`)
-    }
-}
-
-// MARK: - String Trimming
-
-extension String {
-    /// Trims characters from both ends of the string (static variant)
-    ///
-    /// Removes all occurrences of characters in the specified set from both the leading and
-    /// trailing edges of the string. Characters in the middle of the string are never removed.
-    ///
-    /// ## Performance
-    ///
-    /// This method uses an optimized UTF-8 fast path when trimming ASCII characters (including
-    /// ASCII whitespace), providing significantly better performance than Foundation's trimming
-    /// methods for ASCII-heavy strings.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Trim ASCII whitespace
-    /// let text = "  Hello World  "
-    /// String.trimming(text, of: .ascii.whitespaces)  // "Hello World"
-    ///
-    /// // Trim custom character set
-    /// let padded = "***important***"
-    /// String.trimming(padded, of: ["*"])  // "important"
-    ///
-    /// // Only edges are trimmed
-    /// let spaced = "  Hello  World  "
-    /// String.trimming(spaced, of: .ascii.whitespaces)  // "Hello  World"
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - string: The string to trim
-    ///   - characterSet: Set of characters to remove from both ends
-    /// - Returns: New string with specified characters removed from both edges
-    ///
-    /// ## See Also
-    ///
-    /// - ``trimming(_:)``
-    /// - ``INCITS_4_1986/trimming(_:of:)``
-    /// - ``INCITS_4_1986/whitespaces``
-    public static func trimming(_ string: String, of characterSet: Set<Character>) -> String {
-        INCITS_4_1986.trimming(string[...], of: characterSet)
-    }
-
-    /// Trims characters from both ends of the string (instance method)
-    ///
-    /// Removes all occurrences of characters in the specified set from both the leading and
-    /// trailing edges of the string. Characters in the middle of the string are never removed.
-    ///
-    /// ## Performance
-    ///
-    /// This method uses an optimized UTF-8 fast path when trimming ASCII characters (including
-    /// ASCII whitespace), providing significantly better performance than Foundation's trimming
-    /// methods for ASCII-heavy strings.
-    ///
-    /// The `@inlinable` attribute allows the compiler to inline this method at call sites,
-    /// eliminating function call overhead for maximum performance.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Trim ASCII whitespace
-    /// let text = "  Hello World  "
-    /// text.trimming(.ascii.whitespaces)  // "Hello World"
-    ///
-    /// // Trim with tabs and newlines
-    /// let messy = "\t\n  Clean Text  \n\t"
-    /// messy.trimming(.ascii.whitespaces)  // "Clean Text"
-    ///
-    /// // Trim custom characters
-    /// let quoted = "\"hello\""
-    /// quoted.trimming(["\""])  // "hello"
-    /// ```
-    ///
-    /// - Parameter characterSet: Set of characters to remove from both ends
-    /// - Returns: New string with specified characters removed from both edges
-    ///
-    /// ## See Also
-    ///
-    /// - ``trimming(_:of:)``
-    /// - ``INCITS_4_1986/trimming(_:of:)``
-    /// - ``INCITS_4_1986/whitespaces``
-    @inlinable
-    public func trimming(_ characterSet: Set<Character>) -> String {
-        INCITS_4_1986.trimming(self[...], of: characterSet)
     }
 }
 
