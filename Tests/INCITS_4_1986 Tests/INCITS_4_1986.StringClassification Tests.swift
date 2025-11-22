@@ -89,7 +89,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string - returns false per spec
             "a",
             " a ",
             "  test  ",
@@ -114,7 +113,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "12a34",
             "test",
             "123 456",
@@ -140,7 +138,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "hello123",
             "test ",
             "Hello-World",
@@ -166,7 +163,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "test-123",
             "hello world",
             "test!",
@@ -194,7 +190,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "a",
             " ",  // SPACE is not control
             "\tA",
@@ -220,7 +215,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             " ",  // SPACE is not visible
             "hello ",
             " world",
@@ -246,7 +240,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "Hello\n",
             "\t",
             "test\r\n",
@@ -349,38 +342,45 @@ struct `INCITS_4_1986.StringClassification Tests` {
         }
 
         @Test
-        func `empty string is not all whitespace`() {
-            #expect(!INCITS_4_1986.StringClassification.isAllWhitespace(""))
+        func `empty string is all whitespace`() {
+            // Vacuous truth: all (zero) characters satisfy the predicate
+            #expect(INCITS_4_1986.StringClassification.isAllWhitespace(""))
         }
 
         @Test
-        func `empty string is not all digits`() {
-            #expect(!INCITS_4_1986.StringClassification.isAllDigits(""))
+        func `empty string is all digits`() {
+            // Vacuous truth: all (zero) characters satisfy the predicate
+            #expect(INCITS_4_1986.StringClassification.isAllDigits(""))
         }
 
         @Test
-        func `empty string is not all letters`() {
-            #expect(!INCITS_4_1986.StringClassification.isAllLetters(""))
+        func `empty string is all letters`() {
+            // Vacuous truth: all (zero) characters satisfy the predicate
+            #expect(INCITS_4_1986.StringClassification.isAllLetters(""))
         }
 
         @Test
-        func `empty string is not all alphanumeric`() {
-            #expect(!INCITS_4_1986.StringClassification.isAllAlphanumeric(""))
+        func `empty string is all alphanumeric`() {
+            // Vacuous truth: all (zero) characters satisfy the predicate
+            #expect(INCITS_4_1986.StringClassification.isAllAlphanumeric(""))
         }
 
         @Test
-        func `empty string is not all control`() {
-            #expect(!INCITS_4_1986.StringClassification.isAllControl(""))
+        func `empty string is all control`() {
+            // Vacuous truth: all (zero) characters satisfy the predicate
+            #expect(INCITS_4_1986.StringClassification.isAllControl(""))
         }
 
         @Test
-        func `empty string is not all visible`() {
-            #expect(!INCITS_4_1986.StringClassification.isAllVisible(""))
+        func `empty string is all visible`() {
+            // Vacuous truth: all (zero) characters satisfy the predicate
+            #expect(INCITS_4_1986.StringClassification.isAllVisible(""))
         }
 
         @Test
-        func `empty string is not all printable`() {
-            #expect(!INCITS_4_1986.StringClassification.isAllPrintable(""))
+        func `empty string is all printable`() {
+            // Vacuous truth: all (zero) characters satisfy the predicate
+            #expect(INCITS_4_1986.StringClassification.isAllPrintable(""))
         }
 
         @Test

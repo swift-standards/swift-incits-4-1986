@@ -26,50 +26,50 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Tests whether every byte in the array is one of the four ASCII whitespace characters:
     /// SPACE (0x20), HORIZONTAL TAB (0x09), LINE FEED (0x0A), or CARRIAGE RETURN (0x0D).
     ///
-    /// Returns `false` for empty arrays.
+    /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllWhitespace(_ bytes: [UInt8]) -> Bool {
-        !bytes.isEmpty && bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isWhitespace)
+        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isWhitespace)
     }
 
     /// Returns true if all bytes are ASCII digits (0-9)
     ///
     /// Tests whether every byte in the array is an ASCII digit (0x30-0x39).
     ///
-    /// Returns `false` for empty arrays.
+    /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllDigits(_ bytes: [UInt8]) -> Bool {
-        !bytes.isEmpty && bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isDigit)
+        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isDigit)
     }
 
     /// Returns true if all bytes are ASCII letters (A-Z, a-z)
     ///
     /// Tests whether every byte in the array is an ASCII letter (uppercase or lowercase).
     ///
-    /// Returns `false` for empty arrays.
+    /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllLetters(_ bytes: [UInt8]) -> Bool {
-        !bytes.isEmpty && bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isLetter)
+        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isLetter)
     }
 
     /// Returns true if all bytes are ASCII alphanumeric (A-Z, a-z, 0-9)
     ///
     /// Tests whether every byte in the array is either an ASCII letter or digit.
     ///
-    /// Returns `false` for empty arrays.
+    /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllAlphanumeric(_ bytes: [UInt8]) -> Bool {
-        !bytes.isEmpty && bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isAlphanumeric)
+        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isAlphanumeric)
     }
 
     /// Returns true if all bytes are ASCII control characters
     ///
     /// Tests whether every byte in the array is an ASCII control character (0x00-0x1F or 0x7F).
     ///
-    /// Returns `false` for empty arrays.
+    /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllControl(_ bytes: [UInt8]) -> Bool {
-        !bytes.isEmpty && bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isControl)
+        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isControl)
     }
 
     /// Returns true if all bytes are ASCII visible characters
@@ -77,10 +77,10 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Tests whether every byte in the array is a visible ASCII character (0x21-0x7E).
     /// Visible characters exclude SPACE and all control characters.
     ///
-    /// Returns `false` for empty arrays.
+    /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllVisible(_ bytes: [UInt8]) -> Bool {
-        !bytes.isEmpty && bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isVisible)
+        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isVisible)
     }
 
     /// Returns true if all bytes are ASCII printable characters
@@ -88,10 +88,10 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Tests whether every byte in the array is a printable ASCII character (0x20-0x7E).
     /// Printable characters include SPACE and all graphic characters.
     ///
-    /// Returns `false` for empty arrays.
+    /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllPrintable(_ bytes: [UInt8]) -> Bool {
-        !bytes.isEmpty && bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isPrintable)
+        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isPrintable)
     }
 
     /// Returns true if all letter bytes are lowercase

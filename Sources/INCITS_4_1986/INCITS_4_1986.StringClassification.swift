@@ -65,23 +65,23 @@ extension INCITS_4_1986.StringClassification {
 
     /// Tests if all characters in the string are ASCII whitespace
     ///
-    /// Returns `true` only if the string is non-empty and every character is one of the
-    /// four ASCII whitespace characters: SPACE, TAB, LF, or CR.
+    /// Returns `true` if every character is one of the four ASCII whitespace characters:
+    /// SPACE, TAB, LF, or CR.
     ///
     /// ## Usage
     ///
     /// ```swift
     /// INCITS_4_1986.StringClassification.isAllWhitespace("   ")      // true
     /// INCITS_4_1986.StringClassification.isAllWhitespace("\t\n")     // true
-    /// INCITS_4_1986.StringClassification.isAllWhitespace("")         // false (empty)
+    /// INCITS_4_1986.StringClassification.isAllWhitespace("")         // true (vacuous truth)
     /// INCITS_4_1986.StringClassification.isAllWhitespace(" a ")      // false
     /// ```
     ///
     /// - Parameter string: The string to test
-    /// - Returns: `true` if non-empty and all characters are ASCII whitespace
+    /// - Returns: `true` if all characters are ASCII whitespace (vacuous truth for empty strings)
     @inlinable
     public static func isAllWhitespace<S: StringProtocol>(_ string: S) -> Bool {
-        !string.isEmpty && string.allSatisfy { char in
+        string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isWhitespace(byte)
         }
@@ -89,21 +89,21 @@ extension INCITS_4_1986.StringClassification {
 
     /// Tests if all characters in the string are ASCII digits (0-9)
     ///
-    /// Returns `true` only if the string is non-empty and every character is an ASCII digit.
+    /// Returns `true` if every character is an ASCII digit.
     ///
     /// ## Usage
     ///
     /// ```swift
     /// INCITS_4_1986.StringClassification.isAllDigits("12345")    // true
     /// INCITS_4_1986.StringClassification.isAllDigits("123a45")   // false
-    /// INCITS_4_1986.StringClassification.isAllDigits("")         // false (empty)
+    /// INCITS_4_1986.StringClassification.isAllDigits("")         // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
-    /// - Returns: `true` if non-empty and all characters are ASCII digits
+    /// - Returns: `true` if all characters are ASCII digits (vacuous truth for empty strings)
     @inlinable
     public static func isAllDigits<S: StringProtocol>(_ string: S) -> Bool {
-        !string.isEmpty && string.allSatisfy { char in
+        string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isDigit(byte)
         }
@@ -111,21 +111,21 @@ extension INCITS_4_1986.StringClassification {
 
     /// Tests if all characters in the string are ASCII letters (A-Z, a-z)
     ///
-    /// Returns `true` only if the string is non-empty and every character is an ASCII letter.
+    /// Returns `true` if every character is an ASCII letter.
     ///
     /// ## Usage
     ///
     /// ```swift
     /// INCITS_4_1986.StringClassification.isAllLetters("Hello")    // true
     /// INCITS_4_1986.StringClassification.isAllLetters("Hello123") // false
-    /// INCITS_4_1986.StringClassification.isAllLetters("")         // false (empty)
+    /// INCITS_4_1986.StringClassification.isAllLetters("")         // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
-    /// - Returns: `true` if non-empty and all characters are ASCII letters
+    /// - Returns: `true` if all characters are ASCII letters (vacuous truth for empty strings)
     @inlinable
     public static func isAllLetters<S: StringProtocol>(_ string: S) -> Bool {
-        !string.isEmpty && string.allSatisfy { char in
+        string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isLetter(byte)
         }
@@ -133,22 +133,21 @@ extension INCITS_4_1986.StringClassification {
 
     /// Tests if all characters in the string are ASCII alphanumeric (0-9, A-Z, a-z)
     ///
-    /// Returns `true` only if the string is non-empty and every character is either
-    /// an ASCII digit or letter.
+    /// Returns `true` if every character is either an ASCII digit or letter.
     ///
     /// ## Usage
     ///
     /// ```swift
     /// INCITS_4_1986.StringClassification.isAllAlphanumeric("Hello123")  // true
     /// INCITS_4_1986.StringClassification.isAllAlphanumeric("Hello-123") // false
-    /// INCITS_4_1986.StringClassification.isAllAlphanumeric("")          // false (empty)
+    /// INCITS_4_1986.StringClassification.isAllAlphanumeric("")          // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
-    /// - Returns: `true` if non-empty and all characters are ASCII alphanumeric
+    /// - Returns: `true` if all characters are ASCII alphanumeric (vacuous truth for empty strings)
     @inlinable
     public static func isAllAlphanumeric<S: StringProtocol>(_ string: S) -> Bool {
-        !string.isEmpty && string.allSatisfy { char in
+        string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isAlphanumeric(byte)
         }
@@ -156,22 +155,21 @@ extension INCITS_4_1986.StringClassification {
 
     /// Tests if all characters in the string are ASCII control characters
     ///
-    /// Returns `true` only if the string is non-empty and every character is an ASCII
-    /// control character (0x00-0x1F or 0x7F).
+    /// Returns `true` if every character is an ASCII control character (0x00-0x1F or 0x7F).
     ///
     /// ## Usage
     ///
     /// ```swift
     /// INCITS_4_1986.StringClassification.isAllControl("\t\n")    // true
     /// INCITS_4_1986.StringClassification.isAllControl("\tA")     // false
-    /// INCITS_4_1986.StringClassification.isAllControl("")        // false (empty)
+    /// INCITS_4_1986.StringClassification.isAllControl("")        // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
-    /// - Returns: `true` if non-empty and all characters are ASCII control characters
+    /// - Returns: `true` if all characters are ASCII control characters (vacuous truth for empty strings)
     @inlinable
     public static func isAllControl<S: StringProtocol>(_ string: S) -> Bool {
-        !string.isEmpty && string.allSatisfy { char in
+        string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isControl(byte)
         }
@@ -179,22 +177,21 @@ extension INCITS_4_1986.StringClassification {
 
     /// Tests if all characters in the string are ASCII visible characters (excludes SPACE)
     ///
-    /// Returns `true` only if the string is non-empty and every character is a visible
-    /// ASCII graphic character (0x21-0x7E).
+    /// Returns `true` if every character is a visible ASCII graphic character (0x21-0x7E).
     ///
     /// ## Usage
     ///
     /// ```swift
     /// INCITS_4_1986.StringClassification.isAllVisible("Hello!")   // true
     /// INCITS_4_1986.StringClassification.isAllVisible("Hello ")   // false (contains SPACE)
-    /// INCITS_4_1986.StringClassification.isAllVisible("")         // false (empty)
+    /// INCITS_4_1986.StringClassification.isAllVisible("")         // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
-    /// - Returns: `true` if non-empty and all characters are ASCII visible characters
+    /// - Returns: `true` if all characters are ASCII visible characters (vacuous truth for empty strings)
     @inlinable
     public static func isAllVisible<S: StringProtocol>(_ string: S) -> Bool {
-        !string.isEmpty && string.allSatisfy { char in
+        string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isVisible(byte)
         }
@@ -202,22 +199,21 @@ extension INCITS_4_1986.StringClassification {
 
     /// Tests if all characters in the string are ASCII printable characters (includes SPACE)
     ///
-    /// Returns `true` only if the string is non-empty and every character is a printable
-    /// ASCII graphic character (0x20-0x7E).
+    /// Returns `true` if every character is a printable ASCII graphic character (0x20-0x7E).
     ///
     /// ## Usage
     ///
     /// ```swift
     /// INCITS_4_1986.StringClassification.isAllPrintable("Hello World")  // true
     /// INCITS_4_1986.StringClassification.isAllPrintable("Hello\n")      // false (contains LF)
-    /// INCITS_4_1986.StringClassification.isAllPrintable("")             // false (empty)
+    /// INCITS_4_1986.StringClassification.isAllPrintable("")             // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
-    /// - Returns: `true` if non-empty and all characters are ASCII printable characters
+    /// - Returns: `true` if all characters are ASCII printable characters (vacuous truth for empty strings)
     @inlinable
     public static func isAllPrintable<S: StringProtocol>(_ string: S) -> Bool {
-        !string.isEmpty && string.allSatisfy { char in
+        string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isPrintable(byte)
         }
