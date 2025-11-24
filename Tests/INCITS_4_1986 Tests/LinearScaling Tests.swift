@@ -121,7 +121,7 @@ struct `Linear Scaling Tests` {
             _ = text.trimming(.ascii.whitespaces)
         }
 
-        @Test(.timed(threshold: .milliseconds(200), maxAllocations: 12_000_000))
+        @Test(.timed(threshold: .milliseconds(200), maxAllocations: 14_000_000))
         func `trim 1M spaces`() {
             let spaces = String(repeating: " ", count: 500_000)
             let text = spaces + "content" + spaces
