@@ -5,6 +5,8 @@
 
 import Standards
 
+// MARK: - [UInt8] ASCII Namespace
+
 extension [UInt8] {
     /// Access to ASCII type-level constants and methods
     ///
@@ -81,6 +83,25 @@ extension [UInt8] {
         public typealias GraphicCharacters = INCITS_4_1986.GraphicCharacters
     }
 }
+
+// MARK: - Collection<UInt8> Extension
+
+extension Collection where Element == UInt8 {
+    /// Access to ASCII instance methods for this byte collection
+    ///
+    /// Provides instance-level access to ASCII validation and transformation methods.
+    /// Converts to [UInt8] internally for processing.
+    ///
+    /// ## See Also
+    ///
+    /// - ``[UInt8]/ASCII``
+    /// - ``INCITS_4_1986``
+    public var ascii: [UInt8].ASCII {
+        [UInt8].ASCII(bytes: Array(self))
+    }
+}
+
+// MARK: - [UInt8] Initializers
 
 extension [UInt8] {
     /// Creates ASCII byte array from a string with validation
@@ -169,6 +190,8 @@ extension [UInt8] {
         }
     }
 }
+
+// MARK: - [UInt8].ASCII Static Methods
 
 /// Creates ASCII byte array from a string without validation
 ///

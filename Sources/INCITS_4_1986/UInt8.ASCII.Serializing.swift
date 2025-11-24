@@ -75,7 +75,7 @@ extension UInt8.ASCII {
         ///
         /// - Parameter bytes: The ASCII byte representation
         /// - Throws: Self.Error if the bytes are malformed
-        init(ascii bytes: [UInt8]) throws(Error)
+        init<Bytes: Collection>(ascii bytes: Bytes) throws(Error) where Bytes.Element == UInt8
 
         /// Serialize to canonical ASCII byte representation (CANONICAL SERIALIZATION)
         ///
