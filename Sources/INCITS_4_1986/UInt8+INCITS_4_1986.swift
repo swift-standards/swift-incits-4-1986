@@ -649,6 +649,7 @@ extension UInt8.ASCII {
 
     /// PLUS SIGN (0x2B) - +
     public static var plusSign: UInt8 { INCITS_4_1986.GraphicCharacters.plusSign }
+    public static var plus: UInt8 { INCITS_4_1986.GraphicCharacters.plusSign }
 
     /// COMMA (0x2C) - ,
     public static var comma: UInt8 { INCITS_4_1986.GraphicCharacters.comma }
@@ -662,6 +663,7 @@ extension UInt8.ASCII {
     /// SLANT (SOLIDUS) (0x2F) - /
     public static var slant: UInt8 { INCITS_4_1986.GraphicCharacters.slant }
     public static var solidus: UInt8 { INCITS_4_1986.GraphicCharacters.solidus }
+    public static var slash: UInt8 { INCITS_4_1986.GraphicCharacters.slant }
 
     // MARK: - Graphic Characters - Digits (direct access)
 
@@ -806,6 +808,7 @@ extension UInt8.ASCII {
     /// REVERSE SLANT (0x5C) - \
     public static var reverseSlant: UInt8 { INCITS_4_1986.GraphicCharacters.reverseSlant }
     public static var reverseSolidus: UInt8 { INCITS_4_1986.GraphicCharacters.reverseSolidus }
+    public static var backslash: UInt8 { INCITS_4_1986.GraphicCharacters.reverseSolidus }
 
     /// RIGHT BRACKET (0x5D) - ]
     public static var rightBracket: UInt8 { INCITS_4_1986.GraphicCharacters.rightBracket }
