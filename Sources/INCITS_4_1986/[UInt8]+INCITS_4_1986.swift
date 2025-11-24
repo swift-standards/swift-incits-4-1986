@@ -74,13 +74,6 @@ extension [UInt8] {
         /// The wrapped byte array
         public let bytes: [UInt8]
 
-        /// Creates an ASCII namespace wrapper for the given byte array
-        ///
-        /// - Parameter bytes: The byte array to wrap
-        init(bytes: [UInt8]) {
-            self.bytes = bytes
-        }
-
         // MARK: - Type Aliases
 
         public typealias SPACE = INCITS_4_1986.SPACE
@@ -88,7 +81,6 @@ extension [UInt8] {
         public typealias GraphicCharacters = INCITS_4_1986.GraphicCharacters
     }
 }
-
 
 extension [UInt8] {
     /// Creates ASCII byte array from a string with validation

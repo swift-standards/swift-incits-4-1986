@@ -90,13 +90,6 @@ extension UInt8 {
     public struct ASCII {
         /// The wrapped byte value
         public let byte: UInt8
-
-        /// Creates an ASCII namespace wrapper for the given byte
-        ///
-        /// - Parameter byte: The byte to wrap
-        init(byte: UInt8) {
-            self.byte = byte
-        }
     }
 }
 
@@ -152,7 +145,7 @@ extension UInt8 {
 
 extension UInt8.ASCII {
     // MARK: - Character Classification
-    
+
     /// Tests if byte is ASCII whitespace
     ///
     /// Returns `true` for the four ASCII whitespace characters defined in INCITS 4-1986:
@@ -184,7 +177,7 @@ extension UInt8.ASCII {
     public var isWhitespace: Bool {
         INCITS_4_1986.CharacterClassification.isWhitespace(self.byte)
     }
-    
+
     /// Tests if byte is ASCII control character
     ///
     /// Returns `true` for all 33 control characters defined in INCITS 4-1986:
@@ -222,7 +215,7 @@ extension UInt8.ASCII {
     public var isControl: Bool {
         INCITS_4_1986.CharacterClassification.isControl(self.byte)
     }
-    
+
     /// Tests if byte is ASCII visible (non-whitespace printable) character
     ///
     /// Returns `true` for visible graphic characters (0x21-0x7E), which are printable characters
@@ -258,7 +251,7 @@ extension UInt8.ASCII {
     public var isVisible: Bool {
         INCITS_4_1986.CharacterClassification.isVisible(self.byte)
     }
-    
+
     /// Tests if byte is ASCII printable (graphic) character
     ///
     /// Returns `true` for all printable graphic characters (0x20-0x7E), which includes both
@@ -295,9 +288,9 @@ extension UInt8.ASCII {
     public var isPrintable: Bool {
         INCITS_4_1986.CharacterClassification.isPrintable(self.byte)
     }
-    
+
     // MARK: - Character Classification
-    
+
     /// Tests if byte is ASCII digit ('0'...'9')
     ///
     /// ## See Also
@@ -307,7 +300,7 @@ extension UInt8.ASCII {
     public var isDigit: Bool {
         INCITS_4_1986.CharacterClassification.isDigit(self.byte)
     }
-    
+
     /// Tests if byte is ASCII letter ('A'...'Z' or 'a'...'z')
     ///
     /// ## See Also
@@ -317,7 +310,7 @@ extension UInt8.ASCII {
     public var isLetter: Bool {
         INCITS_4_1986.CharacterClassification.isLetter(self.byte)
     }
-    
+
     /// Tests if byte is ASCII alphanumeric (digit or letter)
     ///
     /// ## See Also
@@ -327,7 +320,7 @@ extension UInt8.ASCII {
     public var isAlphanumeric: Bool {
         INCITS_4_1986.CharacterClassification.isAlphanumeric(self.byte)
     }
-    
+
     /// Tests if byte is ASCII hexadecimal digit ('0'...'9', 'A'...'F', 'a'...'f')
     ///
     /// ## See Also
@@ -337,7 +330,7 @@ extension UInt8.ASCII {
     public var isHexDigit: Bool {
         INCITS_4_1986.CharacterClassification.isHexDigit(self.byte)
     }
-    
+
     /// Tests if byte is ASCII uppercase letter ('A'...'Z')
     ///
     /// ## See Also
@@ -347,7 +340,7 @@ extension UInt8.ASCII {
     public var isUppercase: Bool {
         INCITS_4_1986.CharacterClassification.isUppercase(self.byte)
     }
-    
+
     /// Tests if byte is ASCII lowercase letter ('a'...'z')
     ///
     /// ## See Also
@@ -358,10 +351,10 @@ extension UInt8.ASCII {
         INCITS_4_1986.CharacterClassification.isLowercase(self.byte)
     }
 }
-    
+
 extension UInt8.ASCII {
     // MARK: - Numeric Value Parsing (Static Transformations)
-    
+
     /// Parses an ASCII digit byte to its numeric value (0-9)
     ///
     /// Pure function transformation from ASCII digit to numeric value.
@@ -386,9 +379,8 @@ extension UInt8.ASCII {
     }
 }
 
-
 extension UInt8.ASCII {
-    
+
     /// Parses an ASCII hex digit byte to its numeric value (0-15)
     ///
     /// Pure function transformation from ASCII hex digit to numeric value.
@@ -430,7 +422,6 @@ extension UInt8.ASCII {
         INCITS_4_1986.NumericParsing.digit(byte)
     }
 
-
     /// Parses an ASCII hex digit byte via call syntax
     ///
     /// Enables the convenient syntax: `UInt8(ascii: hexDigit: byte)`
@@ -438,7 +429,6 @@ extension UInt8.ASCII {
     public static func callAsFunction(hexDigit byte: UInt8) -> UInt8? {
         INCITS_4_1986.NumericParsing.hexDigit(byte)
     }
-
 
     /// Returns the byte if it's valid ASCII, nil otherwise
     ///
@@ -714,14 +704,12 @@ extension UInt8.ASCII {
 
     /// LESS-THAN SIGN (0x3C) - <
     public static var lessThanSign: UInt8 { INCITS_4_1986.GraphicCharacters.lessThanSign }
-    
+
     /// EQUALS SIGN (0x3D) - =
     public static var equalsSign: UInt8 { INCITS_4_1986.GraphicCharacters.equalsSign }
 
     /// GREATER-THAN SIGN (0x3E) - >
     public static var greaterThanSign: UInt8 { INCITS_4_1986.GraphicCharacters.greaterThanSign }
-    
-    
 
     /// QUESTION MARK (0x3F) - ?
     public static var questionMark: UInt8 { INCITS_4_1986.GraphicCharacters.questionMark }
@@ -928,10 +916,10 @@ extension UInt8.ASCII {
 extension UInt8.ASCII {
     /// LESS-THAN SIGN (0x3C) - <
     public static var lt: UInt8 { INCITS_4_1986.GraphicCharacters.lessThanSign }
-    
+
     /// GREATER-THAN SIGN (0x3E) - >
     public static var gt: UInt8 { INCITS_4_1986.GraphicCharacters.greaterThanSign }
-    
+
     /// COMMERCIAL AT (0x40) - @
     public static var at: UInt8 { INCITS_4_1986.GraphicCharacters.commercialAt }
 }

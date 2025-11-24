@@ -60,7 +60,7 @@ extension INCITS_4_1986 {
     ///     INCITS_4_1986.GraphicCharacters.r,
     ///     INCITS_4_1986.GraphicCharacters.e
     /// ]
-    /// let text = String.ascii(bytes)  // "Hi there"
+    /// let text = String(ascii: bytes)  // "Hi there"
     ///
     /// // Check for whitespace (includes SPACE)
     /// let byte: UInt8 = 0x20

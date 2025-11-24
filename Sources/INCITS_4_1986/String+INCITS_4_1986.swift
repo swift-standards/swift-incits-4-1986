@@ -178,4 +178,3 @@ extension INCITS_4_1986.ASCII {
         INCITS_4_1986.LineEndingDetection.hasMixedLineEndings(self.value)
     }
 }
-

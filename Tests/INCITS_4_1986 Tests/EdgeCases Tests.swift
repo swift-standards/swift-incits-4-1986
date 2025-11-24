@@ -12,27 +12,27 @@ import Testing
 
 @Suite
 struct `Edge Cases Tests` {
-    
+
     @Suite
     struct `Edge Cases - ASCII Boundaries Tests` {
-        
+
         @Test
         func `boundary at 0x7F is valid ASCII`() {
             #expect([UInt8.ascii.del].ascii.isAllASCII)
         }
-        
+
         @Test
         func `boundary at 0x80 is invalid ASCII`() {
             #expect(![0x80].ascii.isAllASCII)
         }
-        
+
         @Test
         func `off-by-one below ASCII range`() {
             // 0x00 is valid (NUL), but verify it's not treated as empty/invalid
             #expect([UInt8.ascii.nul].ascii.isAllASCII)
             #expect(UInt8.ascii.nul.ascii.isControl)
         }
-        
+
         @Test
         func `off-by-one above ASCII range`() {
             // 0x80 is first non-ASCII byte (extended ASCII)
@@ -41,7 +41,7 @@ struct `Edge Cases Tests` {
             #expect(!extendedASCII.ascii.isControl)
             #expect(!extendedASCII.ascii.isPrintable)
         }
-        
+
         @Test
         func `letter boundaries are precise`() {
             // A-Z: 0x41-0x5A, a-z: 0x61-0x7A
@@ -49,13 +49,13 @@ struct `Edge Cases Tests` {
             #expect(UInt8.ascii.A.ascii.isLetter == true)  // 0x41 'A'
             #expect(UInt8.ascii.Z.ascii.isLetter == true)  // 0x5A 'Z'
             #expect((UInt8.ascii.Z + 1).ascii.isLetter == false)  // 0x5B '['
-            
+
             #expect((UInt8.ascii.a - 1).ascii.isLetter == false)  // 0x60 '`'
             #expect(UInt8.ascii.a.ascii.isLetter == true)  // 0x61 'a'
             #expect(UInt8.ascii.z.ascii.isLetter == true)  // 0x7A 'z'
             #expect((UInt8.ascii.z + 1).ascii.isLetter == false)  // 0x7B '{'
         }
-        
+
         @Test
         func `digit boundaries are precise`() {
             // 0-9: 0x30-0x39
@@ -64,7 +64,7 @@ struct `Edge Cases Tests` {
             #expect(UInt8.ascii.9.ascii.isDigit == true)  // 0x39 '9'
             #expect((UInt8.ascii.9 + 1).ascii.isDigit == false)  // 0x3A ':'
         }
-        
+
         @Test
         func `printable boundaries are precise`() {
             // Printable: 0x20-0x7E (space through tilde)
@@ -73,7 +73,7 @@ struct `Edge Cases Tests` {
             #expect(UInt8.ascii.tilde.ascii.isPrintable == true)  // 0x7E (~)
             #expect((UInt8.ascii.tilde + 1).ascii.isPrintable == false)  // 0x7F (DEL)
         }
-        
+
         @Test
         func `visible boundaries are precise`() {
             // Visible: 0x21-0x7E (exclamation through tilde, excludes space)
@@ -83,38 +83,38 @@ struct `Edge Cases Tests` {
             #expect((UInt8.ascii.tilde + 1).ascii.isVisible == false)  // 0x7F (DEL)
         }
     }
-    
+
     // MARK: - Case Conversion Edge Cases
-    
+
     @Suite
     struct `Edge Cases - Case Conversion` {
-        
+
         @Test
         func `already uppercase string unchanged`() {
             let bytes: [UInt8] = [UInt8.ascii.H, .ascii.E, .ascii.L, .ascii.L, .ascii.O]
             #expect(bytes.ascii(case: .upper) == bytes)
         }
-        
+
         @Test
         func `already lowercase string unchanged`() {
             let bytes: [UInt8] = [UInt8.ascii.h, .ascii.e, .ascii.l, .ascii.l, .ascii.o]
             #expect(bytes.ascii(case: .lower) == bytes)
         }
-        
+
         @Test
         func `string with no letters unchanged`() {
             let bytes: [UInt8] = [UInt8.ascii.0, .ascii.1, .ascii.2, .ascii.sp, .ascii.exclamationPoint]
             #expect(bytes.ascii(case: .upper) == bytes)
             #expect(bytes.ascii(case: .lower) == bytes)
         }
-        
+
         @Test
         func `control characters unchanged during case conversion`() {
             let bytes: [UInt8] = [UInt8.ascii.nul, .ascii.htab, .ascii.lf, .ascii.cr, .ascii.esc, .ascii.del]
             #expect(bytes.ascii(case: .upper) == bytes)
             #expect(bytes.ascii(case: .lower) == bytes)
         }
-        
+
         @Test
         func `symbols unchanged during case conversion`() {
             let symbols: [UInt8] = [
@@ -124,21 +124,21 @@ struct `Edge Cases Tests` {
             #expect(symbols.ascii(case: .upper) == symbols)
             #expect(symbols.ascii(case: .lower) == symbols)
         }
-        
+
         @Test
         func `empty array case conversion`() {
             let empty: [UInt8] = []
             #expect(empty.ascii(case: .upper) == [])
             #expect(empty.ascii(case: .lower) == [])
         }
-        
+
         @Test
         func `mixed letters and non-letters preserves structure`() {
             let bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.3, .ascii.exclamationPoint]
             let upper = bytes.ascii(case: .upper)
             #expect(upper == [UInt8.ascii.H, .ascii.E, .ascii.L, .ascii.3, .ascii.exclamationPoint])
         }
-        
+
         @Test
         func `case conversion at letter boundaries`() {
             // Test characters just outside letter ranges remain unchanged
@@ -151,7 +151,7 @@ struct `Edge Cases Tests` {
             #expect(nonLetters.ascii(case: .upper) == nonLetters)
             #expect(nonLetters.ascii(case: .lower) == nonLetters)
         }
-        
+
         @Test
         func `string case conversion works correctly`() {
             let str = "HeLLo123!"
@@ -159,91 +159,91 @@ struct `Edge Cases Tests` {
             #expect(str.ascii(case: .lower) == "hello123!")
         }
     }
-    
+
     // MARK: - Validation Edge Cases
-    
+
     @Suite
     struct `Edge Cases - Validation` {
-        
+
         @Test
         func `empty array is valid ASCII`() {
             let empty: [UInt8] = []
             #expect(empty.ascii.isAllASCII)
         }
-        
+
         @Test
         func `single NUL byte is valid`() {
             #expect([UInt8.ascii.nul].ascii.isAllASCII)
         }
-        
+
         @Test
         func `single DEL byte is valid`() {
             #expect([UInt8.ascii.del].ascii.isAllASCII)
         }
-        
+
         @Test
         func `all zeros array is valid ASCII`() {
             let zeros = Array(repeating: UInt8.ascii.nul, count: 1000)
             #expect(zeros.ascii.isAllASCII)
         }
-        
+
         @Test
         func `all DEL array is valid ASCII`() {
             let dels = Array(repeating: UInt8.ascii.del, count: 1000)
             #expect(dels.ascii.isAllASCII)
         }
-        
+
         @Test
         func `non-ASCII at start fails immediately`() {
             let bytes: [UInt8] = [0x80, UInt8.ascii.A, .ascii.B, .ascii.C]
             #expect(!bytes.ascii.isAllASCII)
         }
-        
+
         @Test
         func `non-ASCII at end detected`() {
             let bytes: [UInt8] = [UInt8.ascii.A, .ascii.B, .ascii.C, 0x80]
             #expect(!bytes.ascii.isAllASCII)
         }
-        
+
         @Test
         func `non-ASCII in middle detected`() {
             let bytes: [UInt8] = [UInt8.ascii.A, 0x80, UInt8.ascii.B]
             #expect(!bytes.ascii.isAllASCII)
         }
-        
+
         @Test
         func `all extended ASCII bytes invalid`() {
             for byte in UInt8(0x80)...UInt8(0xFF) {
                 #expect(![byte].ascii.isAllASCII, "Byte 0x\(String(byte, radix: 16)) should be invalid")
             }
         }
-        
+
         @Test
         func `all standard ASCII bytes valid`() {
             let allASCII = Array(UInt8.ascii.nul...UInt8.ascii.del)
             #expect(allASCII.ascii.isAllASCII)
         }
     }
-    
+
     // MARK: - Character Conversion Edge Cases
-    
+
     @Suite
     struct `Edge Cases - Character Conversion` {
-        
+
         @Test
         func `non-ASCII character returns nil`() {
             #expect(UInt8(ascii: "é") == nil)
             #expect(UInt8(ascii: "ñ") == nil)
             #expect(UInt8(ascii: "ü") == nil)
         }
-        
+
         @Test
         func `emoji returns nil`() {
             #expect(UInt8(ascii: "😀") == nil)
             #expect(UInt8(ascii: "🎉") == nil)
             #expect(UInt8(ascii: "❤️") == nil)
         }
-        
+
         @Test
         func `CJK characters return nil`() {
             #expect(UInt8(ascii: "中") == nil)
@@ -251,14 +251,14 @@ struct `Edge Cases Tests` {
             #expect(UInt8(ascii: "日") == nil)
             #expect(UInt8(ascii: "本") == nil)
         }
-        
+
         @Test
         func `control characters convert correctly`() {
             #expect(UInt8(ascii: "\t") == UInt8.ascii.htab)
             #expect(UInt8(ascii: "\n") == UInt8.ascii.lf)
             #expect(UInt8(ascii: "\r") == UInt8.ascii.cr)
         }
-        
+
         @Test
         func `all ASCII characters roundtrip`() {
             // Every ASCII byte should convert to a character and back
@@ -270,7 +270,7 @@ struct `Edge Cases Tests` {
                 }
             }
         }
-        
+
         @Test
         func `character predicate handles non-ASCII gracefully`() {
             let nonASCII = Character("é")
@@ -279,74 +279,74 @@ struct `Edge Cases Tests` {
             #expect(nonASCII.ascii.isWhitespace == false)
         }
     }
-    
+
     // MARK: - Line Ending Edge Cases
-    
+
     @Suite
     struct `Edge Cases - Line Endings` {
-        
+
         @Test
         func `empty string normalization`() {
             #expect("".normalized(to: .lf).isEmpty)
             #expect("".normalized(to: .crlf).isEmpty)
         }
-        
+
         @Test
         func `no line endings unchanged`() {
             let text = "Hello World"
             #expect(text.normalized(to: .lf) == text)
             #expect(text.normalized(to: .crlf) == text)
         }
-        
+
         @Test
         func `mixed line endings normalized`() {
             let mixed = "line1\r\nline2\nline3\rline4"
             #expect(mixed.normalized(to: .lf) == "line1\nline2\nline3\nline4")
             #expect(mixed.normalized(to: .crlf) == "line1\r\nline2\r\nline3\r\nline4")
         }
-        
+
         @Test
         func `consecutive CRLF preserved`() {
             let text = "line1\r\n\r\nline2"
             #expect(text.normalized(to: .lf) == "line1\n\nline2")
             #expect(text.normalized(to: .crlf) == "line1\r\n\r\nline2")
         }
-        
+
         @Test
         func `consecutive LF preserved`() {
             let text = "line1\n\n\nline2"
             #expect(text.normalized(to: .lf) == text)
             #expect(text.normalized(to: .crlf) == "line1\r\n\r\n\r\nline2")
         }
-        
+
         @Test
         func `consecutive CR preserved`() {
             let text = "line1\r\r\rline2"
             #expect(text.normalized(to: .lf) == "line1\n\n\nline2")
             #expect(text.normalized(to: .crlf) == "line1\r\n\r\n\r\nline2")
         }
-        
+
         @Test
         func `line ending at start`() {
             #expect("\ntext".normalized(to: .lf) == "\ntext")
             #expect("\r\ntext".normalized(to: .lf) == "\ntext")
             #expect("\ntext".normalized(to: .crlf) == "\r\ntext")
         }
-        
+
         @Test
         func `line ending at end`() {
             #expect("text\n".normalized(to: .lf) == "text\n")
             #expect("text\r\n".normalized(to: .lf) == "text\n")
             #expect("text\n".normalized(to: .crlf) == "text\r\n")
         }
-        
+
         @Test
         func `only line endings`() {
             #expect("\n\n\n".normalized(to: .lf) == "\n\n\n")
             #expect("\r\n\r\n".normalized(to: .lf) == "\n\n")
             #expect("\n\n".normalized(to: .crlf) == "\r\n\r\n")
         }
-        
+
         @Test
         func `CR followed by non-LF character`() {
             // Standalone CR should be normalized
@@ -354,30 +354,30 @@ struct `Edge Cases Tests` {
             #expect(text.normalized(to: .lf) == "line1\nX")
             #expect(text.normalized(to: .crlf) == "line1\r\nX")
         }
-        
+
         @Test
         func `normalize already normalized CRLF to CRLF`() {
             let text = "line1\r\nline2\r\n"
             #expect(text.normalized(to: .crlf) == text)
         }
-        
+
         @Test
         func `normalize already normalized LF to LF`() {
             let text = "line1\nline2\n"
             #expect(text.normalized(to: .lf) == text)
         }
     }
-    
+
     // MARK: - Trimming Edge Cases
-    
+
     @Suite
     struct `Edge Cases - String Trimming` {
-        
+
         @Test
         func `empty string trimming`() {
             #expect("".trimming(.ascii.whitespaces).isEmpty)
         }
-        
+
         @Test
         func `all whitespace string becomes empty`() {
             #expect("    ".trimming(.ascii.whitespaces).isEmpty)
@@ -385,83 +385,83 @@ struct `Edge Cases Tests` {
             #expect("\n\n".trimming(.ascii.whitespaces).isEmpty)
             #expect(" \t\n\r ".trimming(.ascii.whitespaces).isEmpty)
         }
-        
+
         @Test
         func `no whitespace unchanged`() {
             let text = "HelloWorld"
             #expect(text.trimming(.ascii.whitespaces) == text)
         }
-        
+
         @Test
         func `internal whitespace preserved`() {
             let text = "Hello World"
             #expect(text.trimming(.ascii.whitespaces) == text)
         }
-        
+
         @Test
         func `mixed leading whitespace removed`() {
             let text = " \t\n  Hello"
             #expect(text.trimming(.ascii.whitespaces) == "Hello")
         }
-        
+
         @Test
         func `mixed trailing whitespace removed`() {
             let text = "Hello  \n\t "
             #expect(text.trimming(.ascii.whitespaces) == "Hello")
         }
-        
+
         @Test
         func `single space leading`() {
             #expect(" Hello".trimming(.ascii.whitespaces) == "Hello")
         }
-        
+
         @Test
         func `single space trailing`() {
             #expect("Hello ".trimming(.ascii.whitespaces) == "Hello")
         }
-        
+
         @Test
         func `only internal whitespace`() {
             let text = "A B C"
             #expect(text.trimming(.ascii.whitespaces) == text)
         }
-        
+
         @Test
         func `multiple consecutive internal whitespace preserved`() {
             let text = "A    B"
             #expect(text.trimming(.ascii.whitespaces) == text)
         }
-        
+
         @Test
         func `whitespace at start middle and end`() {
             let text = "  Hello   World  "
             #expect(text.trimming(.ascii.whitespaces) == "Hello   World")
         }
-        
+
         @Test
         func `trim custom character set`() {
             let custom: Set<Character> = ["x", "y", "z"]
             #expect("xxHelloxx".trimming(custom) == "Hello")
             #expect("xyHellozyx".trimming(custom) == "Hello")
         }
-        
+
         @Test
         func `trim empty set does nothing`() {
             let text = "  Hello  "
             #expect(text.trimming(Set<Character>()) == text)
         }
     }
-    
+
     // MARK: - Whitespace Set Edge Cases
-    
+
     @Suite
     struct `Edge Cases - Whitespace Set` {
-        
+
         @Test
         func `whitespace set is exactly 4 characters`() {
             #expect(Set<Character>.ascii.whitespaces.count == 4)
         }
-        
+
         @Test
         func `whitespace set contains only ASCII whitespace`() {
             let ws = Set<Character>.ascii.whitespaces
@@ -471,28 +471,28 @@ struct `Edge Cases Tests` {
             #expect(ws.contains("\r"))
             #expect(ws.count == 4)
         }
-        
+
         @Test
         func `whitespace set does not contain vertical tab`() {
             // VTAB (0x0B) is a control character but NOT in ASCII whitespace set
             let vtab = Character(UnicodeScalar(0x0B))
             #expect(!Set<Character>.ascii.whitespaces.contains(vtab))
         }
-        
+
         @Test
         func `whitespace set does not contain form feed`() {
             // FF (0x0C) is a control character but NOT in ASCII whitespace set
             let ff = Character(UnicodeScalar(0x0C))
             #expect(!Set<Character>.ascii.whitespaces.contains(ff))
         }
-        
+
         @Test
         func `whitespace set does not contain non-breaking space`() {
             // U+00A0 is Unicode whitespace but NOT ASCII
             let nbsp = Character("\u{00A0}")
             #expect(!Set<Character>.ascii.whitespaces.contains(nbsp))
         }
-        
+
         @Test
         func `whitespace bytes are control characters`() {
             // All ASCII whitespace bytes are also control characters except space
@@ -502,12 +502,12 @@ struct `Edge Cases Tests` {
             #expect(!UInt8.ascii.sp.ascii.isControl)
         }
     }
-    
+
     // MARK: - Constants Edge Cases
-    
+
     @Suite
     struct `Edge Cases - Constants` {
-        
+
         @Test
         func `whitespaces constant has 4 bytes`() {
             #expect(INCITS_4_1986.whitespaces.count == 4)
@@ -516,13 +516,13 @@ struct `Edge Cases Tests` {
             #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.cr))
             #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.sp))
         }
-        
+
         @Test
         func `crlf constant is exactly two bytes`() {
             #expect(INCITS_4_1986.ControlCharacters.crlf.count == 2)
             #expect(INCITS_4_1986.ControlCharacters.crlf == [UInt8.ascii.cr, UInt8.ascii.lf])
         }
-        
+
         @Test
         func `crlf order is CR then LF`() {
             #expect(INCITS_4_1986.ControlCharacters.crlf[0] == UInt8.ascii.cr)

@@ -10,53 +10,53 @@ import Testing
 
 @Suite
 struct `Set<Character>` {
-    
+
     @Suite
     struct `Set<Character> - whitespaces` {
-        
+
         @Test
         func `whitespace set contains space`() {
             #expect(Set<Character>.ascii.whitespaces.contains(" "))
         }
-        
+
         @Test
         func `whitespace set contains tab`() {
             #expect(Set<Character>.ascii.whitespaces.contains("\t"))
         }
-        
+
         @Test
         func `whitespace set contains newline`() {
             #expect(Set<Character>.ascii.whitespaces.contains("\n"))
         }
-        
+
         @Test
         func `whitespace set contains carriage return`() {
             #expect(Set<Character>.ascii.whitespaces.contains("\r"))
         }
-        
+
         @Test
         func `whitespace set has exactly 4 characters`() {
             #expect(Set<Character>.ascii.whitespaces.count == 4)
         }
-        
+
         @Test(arguments: ["a", "Z", "0", "!", "@", "#"])
         func `whitespace set does not contain non-whitespace`(char: Character) {
             #expect(!Set<Character>.ascii.whitespaces.contains(char))
         }
-        
+
         @Test
         func `whitespace set matches expected characters`() {
             let expected: Set<Character> = [" ", "\t", "\n", "\r"]
             #expect(Set<Character>.ascii.whitespaces == expected)
         }
-        
+
         @Test
         func `all whitespace characters are ASCII`() {
             for char in Set<Character>.ascii.whitespaces {
                 #expect(char.isASCII)
             }
         }
-        
+
         @Test
         func `whitespace characters match ASCII values`() {
             let whitespaceBytes: Set<UInt8> = [UInt8.ascii.sp, UInt8.ascii.htab, UInt8.ascii.lf, UInt8.ascii.cr]
@@ -66,7 +66,7 @@ struct `Set<Character>` {
                 }
             }
         }
-        
+
         @Test
         func `can use whitespaces in Set operations`() {
             let custom: Set<Character> = [" ", "\t", "x", "y"]

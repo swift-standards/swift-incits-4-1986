@@ -12,7 +12,7 @@ import Testing
 struct `FormatEffectors Tests` {
     @Suite
     struct `Line Ending Normalization - Correctness` {
-        
+
         @Test(arguments: [
             ("hello\nworld", INCITS_4_1986.FormatEffectors.LineEnding.lf, "hello\nworld"),
             ("hello\nworld", .cr, "hello\rworld"),
@@ -23,7 +23,7 @@ struct `FormatEffectors Tests` {
         func `line ending normalization`(input: String, to: INCITS_4_1986.FormatEffectors.LineEnding, expected: String) {
             #expect(input.normalized(to: to) == expected)
         }
-        
+
         @Test
         func `normalization preserves content`() {
             let text = "Line 1\nLine 2\r\nLine 3\rEnd"
@@ -32,10 +32,10 @@ struct `FormatEffectors Tests` {
             #expect(lines == ["Line 1", "Line 2", "Line 3", "End"])
         }
     }
-    
+
     @Suite
     struct `Line Ending Normalization - Idempotence` {
-        
+
         @Test(arguments: [INCITS_4_1986.FormatEffectors.LineEnding.lf, .cr, .crlf])
         func `normalization is idempotent`(ending: INCITS_4_1986.FormatEffectors.LineEnding) {
             let text = "hello\nworld\r\ntest\rend"
@@ -43,7 +43,7 @@ struct `FormatEffectors Tests` {
             let second = first.normalized(to: ending)
             #expect(first == second, "Normalizing twice should be idempotent")
         }
-        
+
         @Test(arguments: [INCITS_4_1986.FormatEffectors.LineEnding.lf, .cr, .crlf])
         func `text without line endings unchanged`(ending: INCITS_4_1986.FormatEffectors.LineEnding) {
             let text = "no line endings here"

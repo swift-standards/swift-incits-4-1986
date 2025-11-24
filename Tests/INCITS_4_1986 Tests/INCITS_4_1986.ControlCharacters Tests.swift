@@ -13,39 +13,38 @@ import Testing
 struct `Control Characters` {
     @Suite
     struct `Constants Tests` {
-        
+
         @Test
         func `NUL character via namespace`() {
             #expect(UInt8.ascii.nul == 0x00)
         }
-        
+
         @Test
         func `HTAB character via namespace`() {
             #expect(UInt8.ascii.htab == 0x09)
         }
-        
+
         @Test
         func `LF character via namespace`() {
             #expect(UInt8.ascii.lf == 0x0A)
         }
-        
+
         @Test
         func `CR character via namespace`() {
             #expect(UInt8.ascii.cr == 0x0D)
         }
-        
+
         @Test
         func `DELETE character via namespace`() {
             #expect(UInt8.ascii.del == 0x7F)
         }
     }
-    
-    
+
     // MARK: - Control Characters - Coverage
-    
+
     @Suite
     struct `Coverage Tests` {
-        
+
         @Test(arguments: [
             (0x00, "nul"), (0x01, "soh"), (0x02, "stx"), (0x03, "etx"),
             (0x04, "eot"), (0x05, "enq"), (0x06, "ack"), (0x07, "bel"),
@@ -60,7 +59,7 @@ struct `Control Characters` {
         func `all control characters accessible`(value: UInt8, name: String) {
             #expect(value <= 0x1F || value == 0x7F, "\(name) should be a control character")
         }
-        
+
         @Test
         func `all 33 control characters present`() {
             // C0 controls (0x00-0x1F)
@@ -99,7 +98,7 @@ struct `Control Characters` {
             // DELETE
             #expect(UInt8.ascii.del == 0x7F)
         }
-        
+
         @Test
         func `control characters recognized by predicate`() {
             let controlChars: [UInt8] = [
@@ -110,7 +109,7 @@ struct `Control Characters` {
                 #expect(byte.ascii.isControl, "0x\(String(byte, radix: 16)) should be control")
             }
         }
-        
+
         @Test
         func `control characters accessible directly`() {
             // Verify direct access without ControlCharacters namespace

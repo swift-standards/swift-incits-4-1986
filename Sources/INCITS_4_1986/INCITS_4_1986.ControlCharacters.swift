@@ -186,7 +186,6 @@ extension INCITS_4_1986.ControlCharacters {
     public static let del: UInt8 = 0x7F
 }
 
-
 extension INCITS_4_1986.ControlCharacters {
     /// CRLF line ending (0x0D 0x0A)
     ///

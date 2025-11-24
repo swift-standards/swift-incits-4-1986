@@ -14,7 +14,7 @@ import Testing
 struct `INCITS_4_1986.FormatEffectors.LineEnding` {
     @Suite
     struct `INCITS_4_1986.FormatEffectors.LineEnding - Constants` {
-        
+
         @Test(arguments: [
             (INCITS_4_1986.FormatEffectors.LineEnding.lf, "LF", [UInt8.ascii.lf]),
             (INCITS_4_1986.FormatEffectors.LineEnding.cr, "CR", [UInt8.ascii.cr]),
@@ -23,7 +23,7 @@ struct `INCITS_4_1986.FormatEffectors.LineEnding` {
         func `line ending conversions to bytes`(ending: INCITS_4_1986.FormatEffectors.LineEnding, name: String, expected: [UInt8]) {
             #expect([UInt8](ascii: ending) == expected, "\(name) should produce correct bytes")
         }
-        
+
         @Test(arguments: [
             (INCITS_4_1986.FormatEffectors.LineEnding.lf, "\n"),
             (INCITS_4_1986.FormatEffectors.LineEnding.cr, "\r"),
@@ -32,7 +32,7 @@ struct `INCITS_4_1986.FormatEffectors.LineEnding` {
         func `line ending conversions to string`(ending: INCITS_4_1986.FormatEffectors.LineEnding, expected: String) {
             #expect(String(ascii: ending) == expected)
         }
-        
+
         @Test
         func `line ending round-trip through bytes`() {
             for ending in [INCITS_4_1986.FormatEffectors.LineEnding.lf, .cr, .crlf] {

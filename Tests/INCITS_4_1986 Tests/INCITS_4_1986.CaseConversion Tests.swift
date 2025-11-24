@@ -13,25 +13,25 @@ import Testing
 struct `Case Conversion Tests` {
     @Suite
     struct `String Case Conversion - Correctness` {
-        
+
         @Test
         func `String case conversion to uppercase`() {
             #expect("hello".ascii(case: .upper) == "HELLO")
             #expect("Hello World".ascii(case: .upper) == "HELLO WORLD")
         }
-        
+
         @Test
         func `String case conversion to lowercase`() {
             #expect("HELLO".ascii(case: .lower) == "hello")
             #expect("Hello World".ascii(case: .lower) == "hello world")
         }
-        
+
         @Test
         func `String case conversion preserves non-ASCII`() {
             #expect("hello🌍".ascii(case: .upper) == "HELLO🌍")
             #expect("HELLO🌍".ascii(case: .lower) == "hello🌍")
         }
-        
+
         @Test
         func `Array case conversion matches String case conversion`() {
             let str = "Hello World"
@@ -42,7 +42,7 @@ struct `Case Conversion Tests` {
             )
             #expect(strUpper == bytesUpper)
         }
-        
+
         @Test
         func `Case conversion round-trip`() {
             let original = "Hello World"
@@ -51,12 +51,12 @@ struct `Case Conversion Tests` {
             #expect(lower == "hello world")
         }
     }
-    
+
     // MARK: - Byte-Level Case Conversion
-    
+
     @Suite
     struct `UInt8 Case Conversion - Correctness` {
-        
+
         @Test(arguments: [
             ("a", "A"), ("b", "B"), ("z", "Z"),
             ("m", "M"), ("n", "N")
@@ -66,7 +66,7 @@ struct `Case Conversion Tests` {
             let upperByte = UInt8(ascii: upper)!
             #expect(lowerByte.ascii(case: .upper) == upperByte)
         }
-        
+
         @Test(arguments: [
             ("A", "a"), ("B", "b"), ("Z", "z"),
             ("M", "m"), ("N", "n")
@@ -76,7 +76,7 @@ struct `Case Conversion Tests` {
             let lowerByte = UInt8(ascii: lower)!
             #expect(upperByte.ascii(case: .lower) == lowerByte)
         }
-        
+
         @Test(arguments: ["0", "1", "9", "!", "@", " "])
         func `non-letters unchanged`(char: Character) {
             let byte = UInt8(ascii: char)!
@@ -84,12 +84,12 @@ struct `Case Conversion Tests` {
             #expect(byte.ascii(case: .lower) == byte)
         }
     }
-    
+
     // MARK: - Idempotence
-    
+
     @Suite
     struct `Case Conversion - Idempotence` {
-        
+
         @Test
         func `uppercase is idempotent on strings`() {
             let str = "Hello World 123!"
@@ -97,7 +97,7 @@ struct `Case Conversion Tests` {
             let upper2 = upper1.ascii(case: .upper)
             #expect(upper1 == upper2, "Applying uppercase twice should be idempotent")
         }
-        
+
         @Test
         func `lowercase is idempotent on strings`() {
             let str = "Hello World 123!"
@@ -105,7 +105,7 @@ struct `Case Conversion Tests` {
             let lower2 = lower1.ascii(case: .lower)
             #expect(lower1 == lower2, "Applying lowercase twice should be idempotent")
         }
-        
+
         @Test
         func `uppercase is idempotent on bytes`() {
             let bytes = [UInt8](ascii: "Hello World 123!")!
@@ -113,7 +113,7 @@ struct `Case Conversion Tests` {
             let upper2 = upper1.ascii(case: .upper)
             #expect(upper1 == upper2, "Applying uppercase twice should be idempotent")
         }
-        
+
         @Test
         func `lowercase is idempotent on bytes`() {
             let bytes = [UInt8](ascii: "Hello World 123!")!
@@ -122,12 +122,12 @@ struct `Case Conversion Tests` {
             #expect(lower1 == lower2, "Applying lowercase twice should be idempotent")
         }
     }
-    
+
     // MARK: - Mathematical Properties
-    
+
     @Suite
     struct `Case Conversion - Mathematical Properties` {
-        
+
         @Test
         func `conversion offset is exactly 32`() {
             let a = UInt8(ascii: "a")!
@@ -135,7 +135,7 @@ struct `Case Conversion Tests` {
             #expect(a - A == 32)
             #expect(a - A == INCITS_4_1986.CaseConversion.offset)
         }
-        
+
         @Test(arguments: Array(zip(UInt8.ascii.a...UInt8.ascii.z, UInt8.ascii.A...UInt8.ascii.Z)))
         func `all letter pairs have correct offset`(lower: UInt8, upper: UInt8) {
             #expect(

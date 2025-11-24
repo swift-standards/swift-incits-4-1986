@@ -102,8 +102,8 @@ extension StringProtocol {
     /// If you need an owned String, explicitly convert: `String(result)`.
     ///
     /// Convenience method that delegates to `INCITS_4_1986.trimming(_:of:)`.
-    public static func trimming(_ string: Self, of characterSet: Set<Character>) -> Self.SubSequence {
-        INCITS_4_1986.trimming(string, of: characterSet)
+    public static func trimming(_ string: Self, of characterSet: Set<Character>) -> String {
+        String(INCITS_4_1986.trimming(string, of: characterSet))
     }
 
     /// Trims characters from both ends of the string
@@ -112,13 +112,13 @@ extension StringProtocol {
     /// If you need an owned String, explicitly convert: `String(result)`.
     ///
     /// Convenience method that delegates to `INCITS_4_1986.trimming(_:of:)`.
-    public func trimming(_ characterSet: Set<Character>) -> Self.SubSequence {
-        INCITS_4_1986.trimming(self, of: characterSet)
+    public func trimming(_ characterSet: Set<Character>) -> String {
+        String(INCITS_4_1986.trimming(self, of: characterSet))
     }
 }
 
 extension StringProtocol {
-    
+
     /// Normalizes ASCII line endings in string to the specified style
     ///
     /// Convenience method that delegates to byte-level `normalized(_:to:)`.
@@ -134,7 +134,7 @@ extension StringProtocol {
     ) -> S {
         return .init(decoding: INCITS_4_1986.normalized([UInt8](s.utf8), to: lineEnding), as: UTF8.self)
     }
-    
+
     /// Normalizes ASCII line endings to the specified style
     ///
     /// Converts all line endings to a consistent format. Recognizes and normalizes
@@ -209,7 +209,6 @@ extension StringProtocol {
         self.init(decoding: [UInt8](ascii: lineEnding), as: UTF8.self)
     }
 }
-
 
 extension StringProtocol {
     /// Creates a string from ASCII bytes with validation
