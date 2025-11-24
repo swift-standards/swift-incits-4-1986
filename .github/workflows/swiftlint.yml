@@ -16,12 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Cache parent SwiftLint config
-        run: |
-          mkdir -p .swiftlint/RemoteConfigCache/v1/
-          curl -sSL -o ".swiftlint/RemoteConfigCache/v1/https:__raw.githubusercontent.com_swift-standards_swift-standards_main_.swiftlint.yml.yml" \
-            https://raw.githubusercontent.com/swift-standards/swift-standards/main/.swiftlint.yml
-
       - name: Restore swiftlint cache
         id: cache-swiftlint-restore
         uses: actions/cache/restore@v4
