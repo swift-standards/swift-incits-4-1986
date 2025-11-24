@@ -3,7 +3,5 @@
 
 parent_config: https://raw.githubusercontent.com/swift-standards/swift-standards/main/.swiftlint.yml
 
-# Package-specific overrides
-# Disable type_name validation because test suites use lowercase method names like "detect()", "isAllASCII()"
-disabled_rules:
-  - type_name
+# Package-specific overrides (if needed)
+# Add any swift-incits-4-1986 specific rules here
