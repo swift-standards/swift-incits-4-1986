@@ -661,6 +661,7 @@ extension UInt8.ASCII {
 
     /// SLANT (SOLIDUS) (0x2F) - /
     public static var slant: UInt8 { INCITS_4_1986.GraphicCharacters.slant }
+    public static var solidus: UInt8 { INCITS_4_1986.GraphicCharacters.solidus }
 
     // MARK: - Graphic Characters - Digits (direct access)
 
@@ -804,6 +805,7 @@ extension UInt8.ASCII {
 
     /// REVERSE SLANT (0x5C) - \
     public static var reverseSlant: UInt8 { INCITS_4_1986.GraphicCharacters.reverseSlant }
+    public static var reverseSolidus: UInt8 { INCITS_4_1986.GraphicCharacters.reverseSolidus }
 
     /// RIGHT BRACKET (0x5D) - ]
     public static var rightBracket: UInt8 { INCITS_4_1986.GraphicCharacters.rightBracket }

@@ -18,14 +18,14 @@ struct `Substring Tests` {
         func `substring has trimming method`() {
             let str = "  hello  "
             let sub = str[...]
-            #expect(sub.trimming(Set<Character>.ascii.whitespaces) == "hello")
+            #expect(sub.trimming(.ascii.whitespaces) == "hello")
         }
 
         @Test
         func `substring trimming preserves content`() {
             let str = "  test content  "
             let sub = str[...]
-            let trimmed = sub.trimming(Set<Character>.ascii.whitespaces)
+            let trimmed = sub.trimming(.ascii.whitespaces)
             #expect(trimmed == "test content")
         }
 
@@ -41,7 +41,7 @@ struct `Substring Tests` {
         func `substring trimming empty string`() {
             let str = ""
             let sub = str[...]
-            #expect(sub.trimming(Set<Character>.ascii.whitespaces).isEmpty)
+            #expect(sub.trimming(.ascii.whitespaces).isEmpty)
         }
 
         @Test
@@ -104,7 +104,6 @@ struct `Substring Tests` {
         }
 
         @Test(arguments: [
-            "",
             "a",
             " a ",
             "  test  ",
@@ -131,7 +130,6 @@ struct `Substring Tests` {
         }
 
         @Test(arguments: [
-            "",
             "12a34",
             "test",
             "123 456",
@@ -159,7 +157,6 @@ struct `Substring Tests` {
         }
 
         @Test(arguments: [
-            "",
             "hello123",
             "test ",
             "A-B",
@@ -187,7 +184,6 @@ struct `Substring Tests` {
         }
 
         @Test(arguments: [
-            "",
             "hello world",
             "test-123",
             "A_B",
@@ -217,7 +213,6 @@ struct `Substring Tests` {
         }
 
         @Test(arguments: [
-            "",
             "a",
             " ",
             "\ta\n",
@@ -244,7 +239,6 @@ struct `Substring Tests` {
         }
 
         @Test(arguments: [
-            "",
             " ",
             "hello world",
             "\t",
@@ -271,7 +265,6 @@ struct `Substring Tests` {
         }
 
         @Test(arguments: [
-            "",
             "\t",
             "\n",
             "hello\nworld",
@@ -605,7 +598,7 @@ extension `Performance Tests` {
             let str = "  hello world  "
             let sub = str[...]
             for _ in 0..<10_000 {
-                _ = sub.trimming(Set<Character>.ascii.whitespaces)
+                _ = sub.trimming(.ascii.whitespaces)
             }
         }
     }

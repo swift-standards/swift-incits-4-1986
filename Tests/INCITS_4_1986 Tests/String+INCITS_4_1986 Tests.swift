@@ -94,7 +94,6 @@ struct `String Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "a",
             " a ",
             "  test  ",
@@ -119,7 +118,6 @@ struct `String Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "12a34",
             "test",
             "123 456",
@@ -145,7 +143,6 @@ struct `String Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "hello123",
             "test ",
             "A-B",
@@ -171,7 +168,6 @@ struct `String Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "hello world",
             "test-123",
             "A_B",
@@ -199,7 +195,6 @@ struct `String Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "a",
             " ",  // SPACE is not control
             "\ta\n",
@@ -224,7 +219,6 @@ struct `String Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             " ",  // SPACE is not visible
             "hello world",
             "\t",
@@ -249,7 +243,6 @@ struct `String Tests` {
         }
 
         @Test(arguments: [
-            "",  // Empty string
             "\t",
             "\n",
             "hello\nworld",

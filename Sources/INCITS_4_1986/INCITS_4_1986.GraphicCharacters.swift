@@ -121,6 +121,7 @@ extension INCITS_4_1986.GraphicCharacters {
 
     /// SLANT (SOLIDUS) (0x2F) - /
     public static let slant: UInt8 = 0x2F
+    public static let solidus: UInt8 = slant
 }
 
 extension INCITS_4_1986.GraphicCharacters {
@@ -264,6 +265,7 @@ extension INCITS_4_1986.GraphicCharacters {
 
     /// REVERSE SLANT (0x5C) - \
     public static let reverseSlant: UInt8 = 0x5C
+    public static let reverseSolidus: UInt8 = reverseSlant
 
     /// RIGHT BRACKET (0x5D) - ]
     public static let rightBracket: UInt8 = 0x5D

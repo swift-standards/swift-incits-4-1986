@@ -5,7 +5,7 @@
 
 import Standards
 
-extension Set<Character> {
+extension Set {
     /// Convenient access to INCITS 4-1986 (US-ASCII) character constants
     ///
     /// Returns the INCITS_4_1986 namespace for accessing ASCII constants without conflicts.
