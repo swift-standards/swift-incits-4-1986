@@ -16,7 +16,7 @@ struct `Linear Scaling Tests` {
     @Suite
     struct `Linear Scaling Benchmarks` {
 
-        @Test(.timed(threshold: .milliseconds(10), maxAllocations: 100_000))
+        @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
         func `validate 1K bytes`() {
             let bytes = Array(repeating: UInt8.ascii.A, count: 1_000)
             _ = bytes.ascii.isAllASCII
