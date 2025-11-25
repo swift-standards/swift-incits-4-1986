@@ -401,15 +401,35 @@ public extension UInt8.ASCII.Serializing where Self: CustomStringConvertible {
 }
 
 public extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue: CustomStringConvertible {
-    /// Optimized CustomStringConvertible for RawRepresentable<String> types
+    /// Optimized CustomStringConvertible for RawRepresentable types with CustomStringConvertible raw values
     ///
-    /// For types that store a String internally, avoid unnecessary
-    /// byte round-tripping and return the raw value directly.
+    /// For types that store a CustomStringConvertible value internally,
+    /// return the raw value's description directly.
     ///
     /// This extension takes precedence over the general CustomStringConvertible
-    /// extension due to its more specific constraint (RawRepresentable<String>).
+    /// extension due to its more specific constraint (RawRepresentable with CustomStringConvertible RawValue).
     var description: String {
         rawValue.description
+    }
+}
+
+public extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue == [UInt8] {
+    /// UTF-8 decoded description for byte-array backed types
+    ///
+    /// For types where `rawValue` is `[UInt8]`, decode the bytes as UTF-8
+    /// rather than returning the array's default description (e.g., "[72, 101, 108, 108, 111]").
+    ///
+    /// This extension takes precedence over the general CustomStringConvertible
+    /// extension due to its more specific constraint (`RawValue == [UInt8]`).
+    ///
+    /// ## Category Theory
+    ///
+    /// Composes as:
+    /// ```
+    /// Self → [UInt8] (rawValue) → String (UTF-8 interpretation)
+    /// ```
+    var description: String {
+        String(decoding: rawValue, as: UTF8.self)
     }
 }
 

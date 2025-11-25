@@ -165,6 +165,187 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     }
 }
 
+// MARK: - Byte Collection: Comparison
+
+public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
+    /// Compares two byte sequences for ASCII case-insensitive equality
+    ///
+    /// Performs element-wise comparison using ASCII case-insensitive rules.
+    /// Only ASCII letters (A-Z, a-z) are compared case-insensitively;
+    /// all other bytes must match exactly.
+    ///
+    /// ## Performance
+    ///
+    /// This method is O(n) and performs **zero allocations**. Unlike `lowercased() == other`,
+    /// this compares bytes directly without creating intermediate arrays.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let header = Array("Content-Type".utf8)
+    /// let lower = Array("content-type".utf8)
+    ///
+    /// header.ascii.elementsEqualCaseInsensitive(lower)  // true
+    /// header.ascii.elementsEqualCaseInsensitive([UInt8]("CONTENT-TYPE".utf8))  // true
+    /// header.ascii.elementsEqualCaseInsensitive([UInt8]("Content-Length".utf8))  // false
+    /// ```
+    ///
+    /// - Parameter other: The byte sequence to compare against
+    /// - Returns: `true` if sequences are equal ignoring ASCII case, `false` otherwise
+    @inlinable
+    func elementsEqualCaseInsensitive<Other: Collection>(
+        _ other: Other
+    ) -> Bool where Other.Element == UInt8 {
+        guard source.count == other.count else { return false }
+
+        var sourceIterator = source.makeIterator()
+        var otherIterator = other.makeIterator()
+
+        while let s = sourceIterator.next(), let o = otherIterator.next() {
+            // Use single-byte lowercased() - no allocation
+            guard s.ascii.lowercased() == o.ascii.lowercased() else {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    /// Checks if collection starts with prefix using ASCII case-insensitive comparison
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let header = Array("Content-Type: text/plain".utf8)
+    /// header.ascii.hasPrefix(caseInsensitive: Array("content-type".utf8))  // true
+    /// ```
+    ///
+    /// - Parameter prefix: The prefix to check for
+    /// - Returns: `true` if collection starts with prefix (case-insensitive)
+    @inlinable
+    func hasPrefix<Prefix: Collection>(
+        caseInsensitive prefix: Prefix
+    ) -> Bool where Prefix.Element == UInt8 {
+        guard source.count >= prefix.count else { return false }
+
+        var sourceIndex = source.startIndex
+        for prefixByte in prefix {
+            guard source[sourceIndex].ascii.lowercased() == prefixByte.ascii.lowercased() else {
+                return false
+            }
+            sourceIndex = source.index(after: sourceIndex)
+        }
+
+        return true
+    }
+}
+
+// MARK: - Byte Collection: Line Operations
+
+public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
+    /// A range representing a line within a byte collection
+    ///
+    /// Contains the start and end indices of a line, excluding the line ending.
+    typealias LineRange = Range<Source.Index>
+
+    /// Returns index ranges for all lines in the byte collection (zero-copy)
+    ///
+    /// Splits the collection at ASCII line endings (CRLF, CR, or LF) and returns
+    /// the index ranges of each line. This enables zero-copy access to lines
+    /// by using slices rather than copying bytes.
+    ///
+    /// ## Performance
+    ///
+    /// This method is O(n) and performs **minimal allocations** - only the array
+    /// of ranges is allocated, not the line contents themselves. Access lines
+    /// via `source[range]` to get zero-copy slices.
+    ///
+    /// ## Line Ending Handling
+    ///
+    /// Recognizes all ASCII line endings per INCITS 4-1986:
+    /// - CRLF (0x0D 0x0A) - Windows/Internet style
+    /// - LF (0x0A) - Unix style
+    /// - CR (0x0D) - Classic Mac style
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let text = Array("Hello\r\nWorld\nFoo".utf8)
+    /// let ranges = text.ascii.lineRanges()
+    ///
+    /// for range in ranges {
+    ///     let line = text[range]  // Zero-copy slice!
+    ///     print(String(decoding: line, as: UTF8.self))
+    /// }
+    /// // Prints: "Hello", "World", "Foo"
+    /// ```
+    ///
+    /// - Parameter estimatedLineCount: Optional hint for number of lines to reserve capacity
+    /// - Returns: Array of index ranges, one per line (excluding line endings)
+    @inlinable
+    func lineRanges(estimatedLineCount: Int? = nil) -> [LineRange] {
+        var ranges: [LineRange] = []
+        if let estimate = estimatedLineCount {
+            ranges.reserveCapacity(estimate)
+        }
+
+        var lineStart = source.startIndex
+        var index = source.startIndex
+
+        while index < source.endIndex {
+            let byte = source[index]
+
+            if byte == UInt8.ascii.cr {
+                // End current line (excluding CR)
+                ranges.append(lineStart..<index)
+
+                // Check for CRLF
+                let next = source.index(after: index)
+                if next < source.endIndex && source[next] == UInt8.ascii.lf {
+                    // CRLF - skip both
+                    index = source.index(after: next)
+                } else {
+                    // Just CR
+                    index = next
+                }
+                lineStart = index
+            } else if byte == UInt8.ascii.lf {
+                // End current line (excluding LF)
+                ranges.append(lineStart..<index)
+                index = source.index(after: index)
+                lineStart = index
+            } else {
+                index = source.index(after: index)
+            }
+        }
+
+        // Add final line if there's content after the last line ending
+        if lineStart < source.endIndex {
+            ranges.append(lineStart..<source.endIndex)
+        }
+
+        return ranges
+    }
+
+    /// Splits the byte collection into lines (allocating copies)
+    ///
+    /// Convenience method that returns actual byte arrays for each line.
+    /// Use `lineRanges()` if you need zero-copy access.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let text = Array("Hello\r\nWorld".utf8)
+    /// let lines = text.ascii.lines()  // [[72, 101, 108, 108, 111], [87, 111, 114, 108, 100]]
+    /// ```
+    ///
+    /// - Returns: Array of byte arrays, one per line
+    @inlinable
+    func lines() -> [[UInt8]] {
+        lineRanges().map { Array(source[$0]) }
+    }
+}
+
 // MARK: - Byte Collection: Predicates
 
 public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
