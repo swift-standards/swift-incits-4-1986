@@ -458,13 +458,18 @@ struct `Edge Cases Tests` {
     struct `Edge Cases - Whitespace Set` {
 
         @Test
-        func `whitespace set is exactly 4 characters`() {
-            #expect(Set<Character>.ascii.whitespaces.count == 4)
+        func `INCITS whitespace set is exactly 4 characters`() {
+            #expect(INCITS_4_1986.whitespaces.count == 4)
+        }
+        
+        @Test
+        func `whitespace set is exactly 5 characters`() {
+            #expect(Set<Character>.ascii.whitespaces.count == 5)
         }
 
         @Test
         func `whitespace set contains only ASCII whitespace`() {
-            let ws = Set<Character>.ascii.whitespaces
+            let ws = INCITS_4_1986.whitespaces.compactMap { String.init(ascii: [$0]) }
             #expect(ws.contains(" "))
             #expect(ws.contains("\t"))
             #expect(ws.contains("\n"))

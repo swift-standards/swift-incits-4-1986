@@ -85,6 +85,12 @@ extension UInt8.ASCII {
         /// - Returns: A function that converts Self to [UInt8]
         static var serialize: @Sendable (Self) -> [UInt8] { get }
     }
+    
+    public protocol RawRepresentable:
+        UInt8.ASCII.Serializing,
+        Swift.RawRepresentable {
+        
+    }
 }
 
 extension UInt8.ASCII.Serializing {
@@ -113,7 +119,7 @@ extension UInt8.ASCII.Serializing {
     }
 }
 
-extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self.RawValue == String {
+extension UInt8.ASCII.RawRepresentable where Self.RawValue == String {
     /// Default RawRepresentable implementation for string-based raw values
     ///
     /// Automatically provided for types that conform to both
@@ -158,7 +164,7 @@ extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self.RawValue ==
     }
 }
 
-extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self.RawValue == [UInt8] {
+extension UInt8.ASCII.RawRepresentable where Self.RawValue == [UInt8] {
     /// Default RawRepresentable implementation for byte array raw values
     ///
     /// Automatically provided for types that conform to both
@@ -201,7 +207,7 @@ extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self.RawValue ==
     }
 }
 
-extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self.RawValue: LosslessStringConvertible {
+extension UInt8.ASCII.RawRepresentable where Self.RawValue: LosslessStringConvertible {
     /// Default RawRepresentable implementation for losslessly string-convertible raw values
     ///
     /// Automatically provided for types that conform to both

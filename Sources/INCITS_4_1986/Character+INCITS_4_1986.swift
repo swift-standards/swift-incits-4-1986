@@ -63,19 +63,6 @@ extension Character {
 }
 
 extension Character.ASCII {
-
-    /// Access to SPACE constant
-    public typealias SPACE = INCITS_4_1986.SPACE
-
-    /// Access to Control Characters constants
-    public typealias ControlCharacters = INCITS_4_1986.ControlCharacters
-
-    /// Access to Graphic Characters constants
-    public typealias GraphicCharacters = INCITS_4_1986.GraphicCharacters
-}
-
-extension Character.ASCII {
-
     /// Creates a Character from an ASCII byte without validation
     ///
     /// Converts a UInt8 byte to a Character, assuming the byte is valid ASCII without validation.

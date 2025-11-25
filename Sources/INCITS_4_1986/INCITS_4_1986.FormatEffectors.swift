@@ -19,7 +19,7 @@ extension INCITS_4_1986 {
 }
 
 extension INCITS_4_1986 {
-    /// Normalizes ASCII line endings in byte array to the specified style
+    /// Normalizes ASCII line endings in byte collection to the specified style
     ///
     /// Canonical byte-level operation. Converts all line endings to target format.
     ///
@@ -36,15 +36,19 @@ extension INCITS_4_1986 {
     /// ```swift
     /// let bytes: [UInt8] = [0x6C, 0x0A, 0x6D]  // "l\nm"
     /// INCITS_4_1986.normalized(bytes, to: .crlf)  // [0x6C, 0x0D, 0x0A, 0x6D]
+    ///
+    /// // Works with slices
+    /// let slice = bytes[start..<end]
+    /// INCITS_4_1986.normalized(slice, to: .lf)
     /// ```
-    public static func normalized(
-        _ bytes: [UInt8],
+    public static func normalized<C: Collection>(
+        _ bytes: C,
         to lineEnding: INCITS_4_1986.FormatEffectors.LineEnding
-    ) -> [UInt8] {
+    ) -> [UInt8] where C.Element == UInt8 {
         // Fast path: if no line ending characters exist, return as-is
         // Single pass check is faster than two separate contains() calls
         if !bytes.contains(where: { $0 == .ascii.cr || $0 == .ascii.lf }) {
-            return bytes
+            return Array(bytes)
         }
 
         // Determine target line ending sequence inline
@@ -55,29 +59,28 @@ extension INCITS_4_1986 {
         var result = [UInt8]()
         result.reserveCapacity(bytes.count + (lineEnding == .crlf ? bytes.count / 10 : 0))
 
-        var i = 0
-        while i < bytes.count {
-            let byte = bytes[i]
+        var iterator = bytes.makeIterator()
+        var lookahead: UInt8? = iterator.next()
+
+        while let byte = lookahead {
+            lookahead = iterator.next()
 
             if byte == cr {
                 // Check for CRLF sequence
-                if i + 1 < bytes.count && bytes[i + 1] == lf {
+                if lookahead == lf {
                     // CRLF → target
                     result.append(contentsOf: target)
-                    i += 2
+                    lookahead = iterator.next()  // consume the LF
                 } else {
                     // CR → target
                     result.append(contentsOf: target)
-                    i += 1
                 }
             } else if byte == lf {
                 // LF → target
                 result.append(contentsOf: target)
-                i += 1
             } else {
                 // Regular byte, preserve as-is
                 result.append(byte)
-                i += 1
             }
         }
 

@@ -108,7 +108,8 @@ extension INCITS_4_1986.ByteArrayClassification {
     ///
     /// Returns `true` for arrays with no letters.
     @inlinable
-    public static func isAllLowercase(_ bytes: [UInt8]) -> Bool {
+    public static func isAllLowercase<Bytes: Collection>(_ bytes: Bytes) -> Bool
+    where Bytes.Element == UInt8 {
         bytes.allSatisfy { byte in
             guard INCITS_4_1986.CharacterClassification.isLetter(byte) else { return true }
             return INCITS_4_1986.CharacterClassification.isLowercase(byte)

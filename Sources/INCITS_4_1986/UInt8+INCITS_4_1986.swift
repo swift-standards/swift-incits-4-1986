@@ -144,6 +144,36 @@ extension UInt8 {
 }
 
 extension UInt8.ASCII {
+    // MARK: - ASCII Validation
+
+    /// Tests if this byte is valid ASCII (0x00-0x7F)
+    ///
+    /// Per INCITS 4-1986, valid ASCII bytes are in the range 0-127 (0x00-0x7F).
+    /// Bytes with the high bit set (>= 0x80) are not valid ASCII.
+    ///
+    /// Use this predicate before calling other `.ascii` methods when processing
+    /// untrusted byte data to ensure correct semantics.
+    ///
+    /// ## Usage
+    ///
+    /// ```swift
+    /// UInt8(0x41).ascii.isASCII  // true ('A')
+    /// UInt8(0x7F).ascii.isASCII  // true (DEL - last ASCII character)
+    /// UInt8(0x80).ascii.isASCII  // false (first non-ASCII byte)
+    /// UInt8(0xFF).ascii.isASCII  // false
+    ///
+    /// // Validate before using other .ascii methods
+    /// if byte.ascii.isASCII && byte.ascii.isWhitespace { ... }
+    /// ```
+    ///
+    /// ## See Also
+    ///
+    /// - ``INCITS_4_1986/isASCII(_:)``
+    @_transparent
+    public var isASCII: Bool {
+        INCITS_4_1986.isASCII(self.byte)
+    }
+
     // MARK: - Character Classification
 
     /// Tests if byte is ASCII whitespace
@@ -350,6 +380,16 @@ extension UInt8.ASCII {
     public var isLowercase: Bool {
         INCITS_4_1986.CharacterClassification.isLowercase(self.byte)
     }
+    
+    @inlinable
+    public func lowercased() -> UInt8 {
+        INCITS_4_1986.CaseConversion.convert(self.byte, to: .lower)
+    }
+    
+    @inlinable
+    public func uppercased() -> UInt8 {
+        INCITS_4_1986.CaseConversion.convert(self.byte, to: .upper)
+    }
 }
 
 extension UInt8.ASCII {
@@ -493,20 +533,6 @@ extension UInt8.ASCII {
 }
 
 extension UInt8.ASCII {
-    // MARK: - Nested Namespaces
-
-    /// Access to SPACE constant
-    public typealias SPACE = INCITS_4_1986.SPACE
-
-    /// Access to Control Characters constants
-    public typealias ControlCharacters = INCITS_4_1986.ControlCharacters
-
-    /// Access to Graphic Characters constants
-    public typealias GraphicCharacters = INCITS_4_1986.GraphicCharacters
-}
-
-extension UInt8.ASCII {
-
     // MARK: - Control Characters (direct access)
 
     /// NULL character (0x00)
@@ -804,6 +830,7 @@ extension UInt8.ASCII {
 
     /// LEFT BRACKET (0x5B) - [
     public static var leftBracket: UInt8 { INCITS_4_1986.GraphicCharacters.leftBracket }
+    public static var leftSquareBracket: UInt8 { INCITS_4_1986.GraphicCharacters.leftBracket }
 
     /// REVERSE SLANT (0x5C) - \
     public static var reverseSlant: UInt8 { INCITS_4_1986.GraphicCharacters.reverseSlant }
@@ -812,6 +839,7 @@ extension UInt8.ASCII {
 
     /// RIGHT BRACKET (0x5D) - ]
     public static var rightBracket: UInt8 { INCITS_4_1986.GraphicCharacters.rightBracket }
+    public static var rightSquareBracket: UInt8 { INCITS_4_1986.GraphicCharacters.rightBracket }
 
     /// CIRCUMFLEX ACCENT (0x5E) - ^
     public static var circumflexAccent: UInt8 { INCITS_4_1986.GraphicCharacters.circumflexAccent }
@@ -927,4 +955,5 @@ extension UInt8.ASCII {
 
     /// COMMERCIAL AT (0x40) - @
     public static var at: UInt8 { INCITS_4_1986.GraphicCharacters.commercialAt }
+    public static var atSign: UInt8 { INCITS_4_1986.GraphicCharacters.commercialAt }
 }

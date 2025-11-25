@@ -6,119 +6,38 @@
 //
 
 extension StringProtocol {
+    
+    public typealias ASCII = INCITS_4_1986.ASCII<Self>
+    
     /// Access to ASCII type-level constants and methods
-    public static var ascii: INCITS_4_1986.ASCII<Self>.Type {
-        INCITS_4_1986.ASCII<Self>.self
+    public static var ascii: ASCII.Type {
+        ASCII.self
     }
 
     /// Access to ASCII instance methods for this string
-    public var ascii: INCITS_4_1986.ASCII<Self> {
-        INCITS_4_1986.ASCII(self)
-    }
-}
-
-extension INCITS_4_1986.ASCII {
-    /// Returns the string if all characters are ASCII, nil otherwise
     ///
-    /// Validates that all characters are in the ASCII range.
-    ///
-    /// ```swift
-    /// let valid = "Hello"
-    /// valid.ascii()  // Optional("Hello")
-    ///
-    /// let invalid = "Hello🌍"
-    /// invalid.ascii()  // nil
-    /// ```
-    @inlinable
-    public func callAsFunction() -> S? {
-        INCITS_4_1986.StringClassification.isAllASCII(self.value) ? self.value : nil
-    }
-
-    /// Converts ASCII letters to specified case
-    ///
-    /// Transforms all ASCII letters (A-Z, a-z) to the specified case, leaving
-    /// all other characters unchanged. This is a **Unicode-safe** operation: non-ASCII characters
-    /// (including emoji and accented letters) are preserved exactly as-is.
-    ///
-    /// ## Algorithm
-    ///
-    /// Only the 52 ASCII letters defined in INCITS 4-1986 are affected:
-    /// - **Uppercase**: A-Z (0x41-0x5A)
-    /// - **Lowercase**: a-z (0x61-0x7A)
-    ///
-    /// All other characters, including digits, punctuation, whitespace, and non-ASCII Unicode
-    /// characters, pass through unchanged.
-    ///
-    /// ## Performance
-    ///
-    /// This method uses an optimized UTF-8 fast path when possible, providing better performance
-    /// than Foundation's `uppercased()`/`lowercased()` for ASCII-only or ASCII-heavy strings.
+    /// Provides instance-level access to ASCII validation and transformation methods.
+    /// Returns a generic `INCITS_4_1986.ASCII` wrapper that works directly with the
+    /// string without copying.
     ///
     /// ## Usage
     ///
     /// ```swift
-    /// // Works with String
-    /// "Hello World".ascii(case: .upper)  // "HELLO WORLD"
-    ///
-    /// // Works with Substring
-    /// "Hello World"[...].ascii(case: .lower)  // "hello world"
-    ///
-    /// // Unicode safety - non-ASCII preserved
-    /// "hello🌍".ascii(case: .upper)      // "HELLO🌍"
+    /// "hello".ascii.isAllASCII     // true
+    /// "hello".ascii.uppercased()   // "HELLO"
+    /// "HELLO🌍".ascii.lowercased() // "hello🌍"
     /// ```
-    ///
-    /// - Parameter case: The target case (`.upper` or `.lower`)
-    /// - Returns: New string with ASCII letters converted to the specified case
     ///
     /// ## See Also
     ///
-    /// - ``INCITS_4_1986/ascii(_:case:)``
+    /// - ``INCITS_4_1986/ASCII``
     @inlinable
-    public func callAsFunction(case: Character.Case) -> S {
-        INCITS_4_1986.convert(self.value, to: `case`)
-    }
-
-    /// Converts ASCII letters to uppercase
-    ///
-    /// Convenience method for `ascii(case: .upper)`.
-    @inlinable
-    public func uppercased() -> S {
-        INCITS_4_1986.convert(self.value, to: .upper)
-    }
-
-    /// Converts ASCII letters to lowercase
-    ///
-    /// Convenience method for `ascii(case: .lower)`.
-    @inlinable
-    public func lowercased() -> S {
-        INCITS_4_1986.convert(self.value, to: .lower)
+    public var ascii: ASCII {
+        INCITS_4_1986.ASCII(self)
     }
 }
 
 extension StringProtocol {
-    /// Trims characters from both ends of the string
-    ///
-    /// Returns a zero-copy view (SubSequence) with the specified characters trimmed.
-    /// If you need an owned String, explicitly convert: `String(result)`.
-    ///
-    /// Convenience method that delegates to `INCITS_4_1986.trimming(_:of:)`.
-    public static func trimming(_ string: Self, of characterSet: Set<Character>) -> String {
-        String(INCITS_4_1986.trimming(string, of: characterSet))
-    }
-
-    /// Trims characters from both ends of the string
-    ///
-    /// Returns a zero-copy view (SubSequence) with the specified characters trimmed.
-    /// If you need an owned String, explicitly convert: `String(result)`.
-    ///
-    /// Convenience method that delegates to `INCITS_4_1986.trimming(_:of:)`.
-    public func trimming(_ characterSet: Set<Character>) -> String {
-        String(INCITS_4_1986.trimming(self, of: characterSet))
-    }
-}
-
-extension StringProtocol {
-
     /// Normalizes ASCII line endings in string to the specified style
     ///
     /// Convenience method that delegates to byte-level `normalized(_:to:)`.
@@ -256,61 +175,24 @@ extension StringProtocol {
         guard bytes.ascii.isAllASCII else { return nil }
         self.init(decoding: bytes, as: UTF8.self)
     }
-}
-
-extension INCITS_4_1986.ASCII {
-    /// Creates a string from bytes without ASCII validation
+    
+    /// Creates a single-character string from an ASCII byte with validation
     ///
-    /// Constructs a String from a byte array, assuming all bytes are valid ASCII without validation.
-    /// This method provides optimal performance when the caller can guarantee ASCII validity.
-    ///
-    /// ## Performance
-    ///
-    /// This method skips the O(n) ASCII validation check, making it more efficient than the
-    /// failable initializer `String(ascii:)` when you know all bytes are valid ASCII.
-    ///
-    /// ## Safety
-    ///
-    /// **Important**: This method does not validate the input. Passing non-ASCII bytes (>= 0x80)
-    /// will not cause a runtime error, but the resulting string may contain multi-byte UTF-8
-    /// sequences that were not intended.
+    /// Returns `nil` if the byte is outside the valid ASCII range (0x00-0x7F).
     ///
     /// ## Usage
     ///
     /// ```swift
-    /// // When you know bytes are ASCII
-    /// let bytes: [UInt8] = [104, 101, 108, 108, 111]
-    /// let text = String.ascii.unchecked(bytes)  // "hello"
-    ///
-    /// // Using INCITS constants (known ASCII)
-    /// let greeting: [UInt8] = [
-    ///     INCITS_4_1986.GraphicCharacters.H,
-    ///     INCITS_4_1986.GraphicCharacters.i,
-    ///     INCITS_4_1986.SPACE.sp
-    /// ]
-    /// let text = String.ascii.unchecked(greeting)  // "Hi "
+    /// String(ascii: 0x41)  // "A"
+    /// String(ascii: 0x20)  // " "
+    /// String(ascii: 0xFF)  // nil (not ASCII)
     /// ```
     ///
-    /// - Parameter bytes: Array of bytes to decode as ASCII (assumed valid, no checking performed)
-    /// - Returns: String decoded from the bytes
-    ///
-    /// ## See Also
-    ///
-    /// - ``StringProtocol/init(ascii:)``
-    /// - ``INCITS_4_1986``
-    public static func unchecked(_ bytes: [UInt8]) -> S {
-        S(decoding: bytes, as: UTF8.self)
-    }
-
-    /// Detects the line ending style used in the string
-    ///
-    /// Returns the first line ending type found, or `nil` if no line endings are present.
-    /// Prioritizes CRLF detection since it contains both CR and LF.
-    ///
-    /// ## See Also
-    ///
-    /// - ``INCITS_4_1986/LineEndingDetection/detect(_:)``
-    public func detectedLineEnding() -> INCITS_4_1986.FormatEffectors.LineEnding? {
-        INCITS_4_1986.LineEndingDetection.detect(self.value)
+    /// - Parameter byte: The byte to validate and decode as ASCII
+    /// - Returns: Single-character string if byte is valid ASCII, `nil` otherwise
+    public init?(ascii byte: UInt8) {
+        guard byte.ascii.isASCII else { return nil }
+        self.init(decoding: CollectionOfOne(byte), as: UTF8.self)
     }
 }
+

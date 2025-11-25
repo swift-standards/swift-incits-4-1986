@@ -36,7 +36,7 @@ struct `Set<Character>` {
 
         @Test
         func `whitespace set has exactly 4 characters`() {
-            #expect(Set<Character>.ascii.whitespaces.count == 4)
+            #expect(INCITS_4_1986.whitespaces.count == 4)
         }
 
         @Test(arguments: ["a", "Z", "0", "!", "@", "#"])
@@ -46,8 +46,8 @@ struct `Set<Character>` {
 
         @Test
         func `whitespace set matches expected characters`() {
-            let expected: Set<Character> = [" ", "\t", "\n", "\r"]
-            #expect(Set<Character>.ascii.whitespaces == expected)
+            let expected: [Character] = [" ", "\t", "\n", "\r"].sorted()
+            #expect(INCITS_4_1986.whitespaces.compactMap(Character.init).sorted() == expected)
         }
 
         @Test

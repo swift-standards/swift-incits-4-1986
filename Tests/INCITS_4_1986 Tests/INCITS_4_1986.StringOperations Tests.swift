@@ -28,8 +28,9 @@ struct `StringOperator Tests` {
 
         @Test
         func `trim both ends`() {
-            #expect("  hello  ".trimming(Set<Character>.ascii.whitespaces) == "hello")
-            #expect("\t\nhello\r\n".trimming(Set<Character>.ascii.whitespaces) == "hello")
+            #expect("  hello  ".trimming(.ascii.whitespaces) == "hello")
+            // CRLF is a single grapheme in Swift - use predicate for grapheme-aware trimming
+            #expect("\t\nhello\r\n".trimming(where: Set<Character>.ascii.isWhitespace) == "hello")
         }
 
         @Test

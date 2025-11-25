@@ -56,7 +56,7 @@ extension INCITS_4_1986.CaseConversion {
 }
 
 extension INCITS_4_1986 {
-    /// Converts ASCII letters in byte array to specified case
+    /// Converts ASCII letters in byte collection to specified case
     ///
     /// Non-ASCII bytes and non-letter bytes pass through unchanged.
     ///
@@ -66,14 +66,21 @@ extension INCITS_4_1986 {
     /// - Difference between cases: 32 (0x20)
     ///
     /// Mathematical Properties:
-    /// - **Idempotence**: `ascii(ascii(b, case: c), case: c) == ascii(b, case: c)`
+    /// - **Idempotence**: `convert(convert(b, to: c), to: c) == convert(b, to: c)`
     /// - **Functoriality**: Preserves array structure (maps over elements)
     ///
     /// Example:
     /// ```swift
-    /// INCITS_4_1986.ascii(Array("Hello".utf8), case: .upper)  // "HELLO" bytes
+    /// INCITS_4_1986.convert(Array("Hello".utf8), to: .upper)  // "HELLO" bytes
+    ///
+    /// // Works with slices
+    /// let slice = bytes[start..<end]
+    /// INCITS_4_1986.convert(slice, to: .lower)
     /// ```
-    public static func convert(_ bytes: [UInt8], to case: Character.Case) -> [UInt8] {
+    public static func convert<C: Collection>(
+        _ bytes: C,
+        to case: Character.Case
+    ) -> [UInt8] where C.Element == UInt8 {
         bytes.map { CaseConversion.convert($0, to: `case`) }
     }
 
