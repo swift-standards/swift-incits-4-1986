@@ -10,12 +10,10 @@ import Testing
 
 @Suite
 struct `INCITS_4_1986.StringClassification Tests` {
-
     // MARK: - ASCII Validation Tests
 
     @Suite
     struct `isAllASCII Tests` {
-
         @Test(arguments: [
             "Hello",
             "test123",
@@ -23,8 +21,8 @@ struct `INCITS_4_1986.StringClassification Tests` {
             "abcdefghijklmnopqrstuvwxyz",
             "0123456789",
             "!@#$%^&*()",
-            "",  // Empty string
-            " \t\n\r"  // Whitespace
+            "", // Empty string
+            " \t\n\r", // Whitespace
         ])
         func `returns true for ASCII-only strings`(str: String) {
             #expect(INCITS_4_1986.StringClassification.isAllASCII(str))
@@ -35,8 +33,8 @@ struct `INCITS_4_1986.StringClassification Tests` {
             "café",
             "日本語",
             "Ñoño",
-            "test\u{80}",  // First non-ASCII byte
-            "test\u{FF}"   // High byte
+            "test\u{80}", // First non-ASCII byte
+            "test\u{FF}" // High byte
         ])
         func `returns false for strings with non-ASCII`(str: String) {
             #expect(!INCITS_4_1986.StringClassification.isAllASCII(str))
@@ -45,14 +43,13 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `containsNonASCII Tests` {
-
         @Test(arguments: [
             "Hello🌍",
             "café",
             "日本語",
             "Ñoño",
             "test\u{80}",
-            "test\u{FF}"
+            "test\u{FF}",
         ])
         func `returns true for strings with non-ASCII`(str: String) {
             #expect(INCITS_4_1986.StringClassification.containsNonASCII(str))
@@ -74,7 +71,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `isAllWhitespace Tests` {
-
         @Test(arguments: [
             " ",
             "  ",
@@ -82,7 +78,7 @@ struct `INCITS_4_1986.StringClassification Tests` {
             "\n",
             "\r",
             " \t\n\r",
-            "    \t\t\n\n"
+            "    \t\t\n\n",
         ])
         func `returns true for all-whitespace strings`(str: String) {
             #expect(INCITS_4_1986.StringClassification.isAllWhitespace(str))
@@ -101,12 +97,11 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `isAllDigits Tests` {
-
         @Test(arguments: [
             "0",
             "123",
             "0123456789",
-            "999"
+            "999",
         ])
         func `returns true for all-digit strings`(str: String) {
             #expect(INCITS_4_1986.StringClassification.isAllDigits(str))
@@ -125,13 +120,12 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `isAllLetters Tests` {
-
         @Test(arguments: [
             "a",
             "ABC",
             "hello",
             "WORLD",
-            "AbCdEfG"
+            "AbCdEfG",
         ])
         func `returns true for all-letter strings`(str: String) {
             #expect(INCITS_4_1986.StringClassification.isAllLetters(str))
@@ -141,7 +135,7 @@ struct `INCITS_4_1986.StringClassification Tests` {
             "hello123",
             "test ",
             "Hello-World",
-            "café"  // Non-ASCII
+            "café" // Non-ASCII
         ])
         func `returns false for non-letter strings`(str: String) {
             #expect(!INCITS_4_1986.StringClassification.isAllLetters(str))
@@ -150,13 +144,12 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `isAllAlphanumeric Tests` {
-
         @Test(arguments: [
             "abc123",
             "TEST123",
             "0123456789",
             "abcdefghijklmnopqrstuvwxyz",
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
         ])
         func `returns true for all-alphanumeric strings`(str: String) {
             #expect(INCITS_4_1986.StringClassification.isAllAlphanumeric(str))
@@ -175,7 +168,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `isAllControl Tests` {
-
         @Test(arguments: [
             "\t",
             "\n",
@@ -183,7 +175,7 @@ struct `INCITS_4_1986.StringClassification Tests` {
             "\u{00}",
             "\u{1F}",
             "\u{7F}",
-            "\t\n\r"
+            "\t\n\r",
         ])
         func `returns true for all-control strings`(str: String) {
             #expect(INCITS_4_1986.StringClassification.isAllControl(str))
@@ -191,7 +183,7 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
         @Test(arguments: [
             "a",
-            " ",  // SPACE is not control
+            " ", // SPACE is not control
             "\tA",
             "test\n"
         ])
@@ -202,20 +194,19 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `isAllVisible Tests` {
-
         @Test(arguments: [
             "!",
             "abc",
             "ABC123",
             "!@#$%^&*()",
-            "~"
+            "~",
         ])
         func `returns true for all-visible strings`(str: String) {
             #expect(INCITS_4_1986.StringClassification.isAllVisible(str))
         }
 
         @Test(arguments: [
-            " ",  // SPACE is not visible
+            " ", // SPACE is not visible
             "hello ",
             " world",
             "test\n"
@@ -227,13 +218,12 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `isAllPrintable Tests` {
-
         @Test(arguments: [
             " ",
             "Hello World",
             "ABC 123",
             "!@#$%^&*()",
-            "test test"
+            "test test",
         ])
         func `returns true for all-printable strings`(str: String) {
             #expect(INCITS_4_1986.StringClassification.isAllPrintable(str))
@@ -252,14 +242,13 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `containsHexDigit Tests` {
-
         @Test(arguments: [
             "0x1A",
             "ABC",
             "123",
             "0123456789",
             "ABCDEF",
-            "abcdef"
+            "abcdef",
         ])
         func `returns true for strings with hex digits`(str: String) {
             #expect(INCITS_4_1986.StringClassification.containsHexDigit(str))
@@ -281,14 +270,13 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `isAllLowercase Tests` {
-
         @Test(arguments: [
             "hello",
             "world",
             "abcdefghijklmnopqrstuvwxyz",
-            "hello123",  // Digits ignored
-            "test-case",  // Non-letters ignored
-            "123"  // No letters, so all letters are lowercase
+            "hello123", // Digits ignored
+            "test-case", // Non-letters ignored
+            "123", // No letters, so all letters are lowercase
         ])
         func `returns true when all letters are lowercase`(str: String) {
             #expect(INCITS_4_1986.StringClassification.isAllLowercase(str))
@@ -307,14 +295,13 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `isAllUppercase Tests` {
-
         @Test(arguments: [
             "HELLO",
             "WORLD",
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            "HELLO123",  // Digits ignored
-            "TEST-CASE",  // Non-letters ignored
-            "123"  // No letters, so all letters are uppercase
+            "HELLO123", // Digits ignored
+            "TEST-CASE", // Non-letters ignored
+            "123", // No letters, so all letters are uppercase
         ])
         func `returns true when all letters are uppercase`(str: String) {
             #expect(INCITS_4_1986.StringClassification.isAllUppercase(str))
@@ -335,7 +322,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `Empty String Behavior` {
-
         @Test
         func `empty string is all ASCII`() {
             #expect(INCITS_4_1986.StringClassification.isAllASCII(""))
@@ -405,7 +391,6 @@ struct `INCITS_4_1986.StringClassification Tests` {
 
     @Suite
     struct `Non-ASCII Character Handling` {
-
         @Test
         func `non-ASCII characters fail letter test`() {
             #expect(!INCITS_4_1986.StringClassification.isAllLetters("café"))

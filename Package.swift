@@ -18,31 +18,31 @@ let package = Package(
         .macOS(.v15),
         .iOS(.v18),
         .tvOS(.v18),
-        .watchOS(.v11)
+        .watchOS(.v11),
     ],
     products: [
         .library(
             name: "INCITS 4 1986",
             targets: ["INCITS 4 1986"]
-        )
+        ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-standards/swift-standards.git", from: "0.1.0")
+        .package(url: "https://github.com/swift-standards/swift-standards.git", from: "0.3.1"),
     ],
     targets: [
         .target(
             name: "INCITS 4 1986",
             dependencies: [
-                .product(name: "Standards", package: "swift-standards")
+                .product(name: "Standards", package: "swift-standards"),
             ]
         ),
         .testTarget(
             name: "INCITS 4 1986".tests,
             dependencies: [
                 "INCITS 4 1986",
-                .product(name: "StandardsTestSupport", package: "swift-standards")
+                .product(name: "StandardsTestSupport", package: "swift-standards"),
             ]
-        )
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
@@ -57,6 +57,6 @@ for target in package.targets where ![.system, .binary, .plugin].contains(target
     target.swiftSettings = existing + [
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
-        .enableUpcomingFeature("MemberImportVisibility")
+        .enableUpcomingFeature("MemberImportVisibility"),
     ]
 }

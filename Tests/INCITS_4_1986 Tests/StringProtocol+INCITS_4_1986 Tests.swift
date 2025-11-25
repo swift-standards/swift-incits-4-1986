@@ -10,10 +10,8 @@ import Testing
 
 @Suite
 struct `StringProtocol+INCITS_4_1986 Tests` {
-
     @Suite
     struct `ASCII Namespace Access` {
-
         @Test
         func `String has static ascii property`() {
             #expect(String.ascii.lf == "\n")
@@ -37,14 +35,13 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
         @Test
         func `Substring instance has ascii property`() {
             let str = "Hello World"
-            let sub = str[str.startIndex..<str.index(str.startIndex, offsetBy: 5)]
+            let sub = str[str.startIndex ..< str.index(str.startIndex, offsetBy: 5)]
             #expect(sub.ascii.isAllASCII)
         }
     }
 
     @Suite
     struct `Delegation Tests` {
-
         @Test
         func `String delegates isAllASCII to StringClassification`() {
             #expect("Hello".ascii.isAllASCII == INCITS_4_1986.StringClassification.isAllASCII("Hello"))
@@ -54,7 +51,7 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
         @Test
         func `Substring delegates isAllASCII to StringClassification`() {
             let str = "Hello World"
-            let sub = str[str.startIndex..<str.index(str.startIndex, offsetBy: 5)]
+            let sub = str[str.startIndex ..< str.index(str.startIndex, offsetBy: 5)]
             #expect(sub.ascii.isAllASCII == INCITS_4_1986.StringClassification.isAllASCII(sub))
         }
 
@@ -74,7 +71,6 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
 
     @Suite
     struct `Case Conversion Tests` {
-
         @Test
         func `ascii(case:) method works for String`() {
             #expect("Hello".ascii(case: .upper) == "HELLO")
@@ -84,7 +80,7 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
         @Test
         func `ascii(case:) method works for Substring`() {
             let str = "Hello World"
-            let sub = str[str.startIndex..<str.index(str.startIndex, offsetBy: 5)]
+            let sub = str[str.startIndex ..< str.index(str.startIndex, offsetBy: 5)]
             #expect(sub.ascii(case: .upper) == "HELLO")
             #expect(sub.ascii(case: .lower) == "hello")
         }
@@ -102,7 +98,6 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
 
     @Suite
     struct `Line Ending Conversion Tests` {
-
         @Test
         func `ascii(lineEnding:) creates correct string for LF`() {
             #expect(String(ascii: .lf) == "\n")
@@ -121,7 +116,6 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
 
     @Suite
     struct `ASCII Byte Conversion Tests` {
-
         @Test
         func `ascii(_:) creates string from valid ASCII bytes`() {
             let bytes: [UInt8] = [72, 101, 108, 108, 111] // "Hello"
@@ -143,7 +137,6 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
 
     @Suite
     struct `Normalization Tests` {
-
         @Test
         func `normalized(to:) method normalizes line endings`() {
             let str = "line1\nline2\r\nline3\rline4"
@@ -162,7 +155,6 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
 
     @Suite
     struct `Trimming Tests` {
-
         @Test
         func `trimming(_:) removes characters from both ends`() {
             let str = "  hello  "

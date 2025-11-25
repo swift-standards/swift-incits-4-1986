@@ -6,7 +6,7 @@
 
 import Standards
 
-extension INCITS_4_1986 {
+public extension INCITS_4_1986 {
     /// Case Conversion Operations
     ///
     /// Authoritative implementations for converting ASCII letters between uppercase and lowercase.
@@ -15,10 +15,10 @@ extension INCITS_4_1986 {
     /// - Capital letters: A-Z (0x41-0x5A)
     /// - Small letters: a-z (0x61-0x7A)
     /// - Difference between cases: 32 (0x20)
-    public enum FormatEffectors {}
+    enum FormatEffectors {}
 }
 
-extension INCITS_4_1986 {
+public extension INCITS_4_1986 {
     /// Normalizes ASCII line endings in byte collection to the specified style
     ///
     /// Canonical byte-level operation. Converts all line endings to target format.
@@ -41,7 +41,7 @@ extension INCITS_4_1986 {
     /// let slice = bytes[start..<end]
     /// INCITS_4_1986.normalized(slice, to: .lf)
     /// ```
-    public static func normalized<C: Collection>(
+    static func normalized<C: Collection>(
         _ bytes: C,
         to lineEnding: INCITS_4_1986.FormatEffectors.LineEnding
     ) -> [UInt8] where C.Element == UInt8 {
@@ -70,7 +70,7 @@ extension INCITS_4_1986 {
                 if lookahead == lf {
                     // CRLF → target
                     result.append(contentsOf: target)
-                    lookahead = iterator.next()  // consume the LF
+                    lookahead = iterator.next() // consume the LF
                 } else {
                     // CR → target
                     result.append(contentsOf: target)

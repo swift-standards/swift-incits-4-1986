@@ -9,11 +9,11 @@ import Testing
 @testable import INCITS_4_1986
 
 // MARK: - String Case Conversion
+
 @Suite
 struct `Case Conversion Tests` {
     @Suite
     struct `String Case Conversion - Correctness` {
-
         @Test
         func `String case conversion to uppercase`() {
             #expect("hello".ascii(case: .upper) == "HELLO")
@@ -56,10 +56,9 @@ struct `Case Conversion Tests` {
 
     @Suite
     struct `UInt8 Case Conversion - Correctness` {
-
         @Test(arguments: [
             ("a", "A"), ("b", "B"), ("z", "Z"),
-            ("m", "M"), ("n", "N")
+            ("m", "M"), ("n", "N"),
         ])
         func `lowercase to uppercase`(lower: Character, upper: Character) {
             let lowerByte = UInt8(ascii: lower)!
@@ -89,7 +88,6 @@ struct `Case Conversion Tests` {
 
     @Suite
     struct `Case Conversion - Idempotence` {
-
         @Test
         func `uppercase is idempotent on strings`() {
             let str = "Hello World 123!"
@@ -127,7 +125,6 @@ struct `Case Conversion Tests` {
 
     @Suite
     struct `Case Conversion - Mathematical Properties` {
-
         @Test
         func `conversion offset is exactly 32`() {
             let a = UInt8(ascii: "a")!
@@ -136,29 +133,30 @@ struct `Case Conversion Tests` {
             #expect(a - A == INCITS_4_1986.CaseConversion.offset)
         }
 
-        @Test(arguments: Array(zip(UInt8.ascii.a...UInt8.ascii.z, UInt8.ascii.A...UInt8.ascii.Z)))
+        @Test(arguments: Array(zip(UInt8.ascii.a ... UInt8.ascii.z, UInt8.ascii.A ... UInt8.ascii.Z)))
         func `all letter pairs have correct offset`(lower: UInt8, upper: UInt8) {
             #expect(
                 lower - upper == 32,
-                "Offset between '\(Character(UnicodeScalar(lower)))' and '\(Character(UnicodeScalar(upper)))' should be 32")
+                "Offset between '\(Character(UnicodeScalar(lower)))' and '\(Character(UnicodeScalar(upper)))' should be 32"
+            )
         }
     }
 }
+
 // MARK: - Performance
 
 extension `Performance Tests` {
     @Suite
     struct `Case Conversion - Performance` {
-
         @Test(.timed(threshold: .milliseconds(50)))
         func `uppercase conversion 100K character string`() {
-            let str = String(repeating: "Hello World! ", count: 10_000)
+            let str = String(repeating: "Hello World! ", count: 10000)
             _ = str.ascii(case: .upper)
         }
 
         @Test(.timed(threshold: .milliseconds(50)))
         func `lowercase conversion 100K character string`() {
-            let str = String(repeating: "Hello World! ", count: 10_000)
+            let str = String(repeating: "Hello World! ", count: 10000)
             _ = str.ascii(case: .lower)
         }
 
@@ -171,7 +169,7 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `single byte case conversion 1M times`() {
             let byte = UInt8.ascii.a
-            for _ in 0..<1_000_000 {
+            for _ in 0 ..< 1_000_000 {
                 _ = byte.ascii(case: .upper)
             }
         }

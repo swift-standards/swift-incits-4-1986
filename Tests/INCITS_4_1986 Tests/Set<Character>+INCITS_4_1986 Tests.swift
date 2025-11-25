@@ -10,10 +10,8 @@ import Testing
 
 @Suite
 struct `Set<Character>` {
-
     @Suite
     struct `Set<Character> - whitespaces` {
-
         @Test
         func `whitespace set contains space`() {
             #expect(Set<Character>.ascii.whitespaces.contains(" "))
@@ -79,11 +77,10 @@ struct `Set<Character>` {
 extension `Performance Tests` {
     @Suite
     struct `Set<Character> - Performance` {
-
         @Test(.timed(threshold: .milliseconds(50)))
         func `whitespace set membership check 10K times`() {
             let ws = Set<Character>.ascii.whitespaces
-            for _ in 0..<10_000 {
+            for _ in 0 ..< 10000 {
                 _ = ws.contains(" ")
                 _ = ws.contains("\t")
                 _ = ws.contains("a")
@@ -93,7 +90,7 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(300)))
         func `whitespace set iteration 100K times`() {
             let ws = Set<Character>.ascii.whitespaces
-            for _ in 0..<100_000 {
+            for _ in 0 ..< 100_000 {
                 for _ in ws {
                     // Iterate through all whitespace characters
                 }

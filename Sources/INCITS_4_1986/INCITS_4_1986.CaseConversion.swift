@@ -6,7 +6,7 @@
 
 import Standards
 
-extension INCITS_4_1986 {
+public extension INCITS_4_1986 {
     /// Case Conversion Operations
     ///
     /// Authoritative implementations for converting ASCII letters between uppercase and lowercase.
@@ -15,10 +15,10 @@ extension INCITS_4_1986 {
     /// - Capital letters: A-Z (0x41-0x5A)
     /// - Small letters: a-z (0x61-0x7A)
     /// - Difference between cases: 32 (0x20)
-    public enum CaseConversion {}
+    enum CaseConversion {}
 }
 
-extension INCITS_4_1986.CaseConversion {
+public extension INCITS_4_1986.CaseConversion {
     /// Converts ASCII letter to specified case, returns unchanged if not an ASCII letter
     ///
     /// Per INCITS 4-1986 Table 7 (Graphic Characters), uppercase and lowercase ASCII letters
@@ -44,7 +44,7 @@ extension INCITS_4_1986.CaseConversion {
     ///   - case: The target case (upper or lower)
     /// - Returns: Converted byte if ASCII letter, unchanged otherwise
     @inlinable
-    public static func convert(_ byte: UInt8, to case: Character.Case) -> UInt8 {
+    static func convert(_ byte: UInt8, to case: Character.Case) -> UInt8 {
         let offset = INCITS_4_1986.CaseConversion.offset
         switch `case` {
         case .upper:
@@ -55,7 +55,7 @@ extension INCITS_4_1986.CaseConversion {
     }
 }
 
-extension INCITS_4_1986 {
+public extension INCITS_4_1986 {
     /// Converts ASCII letters in byte collection to specified case
     ///
     /// Non-ASCII bytes and non-letter bytes pass through unchanged.
@@ -77,7 +77,7 @@ extension INCITS_4_1986 {
     /// let slice = bytes[start..<end]
     /// INCITS_4_1986.convert(slice, to: .lower)
     /// ```
-    public static func convert<C: Collection>(
+    static func convert<C: Collection>(
         _ bytes: C,
         to case: Character.Case
     ) -> [UInt8] where C.Element == UInt8 {
@@ -93,12 +93,12 @@ extension INCITS_4_1986 {
     /// INCITS_4_1986.ascii("Hello World", case: .upper)  // "HELLO WORLD"
     /// INCITS_4_1986.ascii("hello🌍", case: .upper)  // "HELLO🌍"
     /// ```
-    public static func convert<S: StringProtocol>(_ string: S, to case: Character.Case) -> S {
+    static func convert<S: StringProtocol>(_ string: S, to case: Character.Case) -> S {
         S(decoding: convert(Array(string.utf8), to: `case`), as: UTF8.self)
     }
 }
 
-extension INCITS_4_1986.CaseConversion {
+public extension INCITS_4_1986.CaseConversion {
     /// ASCII case conversion offset
     ///
     /// The numeric distance between corresponding uppercase and lowercase ASCII letters.
@@ -127,5 +127,5 @@ extension INCITS_4_1986.CaseConversion {
     ///
     /// - ``GraphicCharacters/A``
     /// - ``GraphicCharacters/a``
-    public static let offset: UInt8 = 0x20
+    static let offset: UInt8 = 0x20
 }

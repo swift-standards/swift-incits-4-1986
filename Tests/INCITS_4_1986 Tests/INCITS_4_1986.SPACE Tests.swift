@@ -9,13 +9,11 @@ import Testing
 @testable import INCITS_4_1986
 
 @Suite
-struct `SPACE` {
-
+struct SPACE {
     // MARK: - SPACE Character
 
     @Suite
     struct `Character Tests` {
-
         @Test
         func `SPACE constant is 0x20`() {
             #expect(INCITS_4_1986.SPACE.sp == 0x20)
@@ -52,15 +50,15 @@ struct `SPACE` {
         }
     }
 }
+
 // MARK: - Performance
 
 extension `Performance Tests` {
     @Suite
     struct `SPACE - Performance` {
-
         @Test(.timed(threshold: .milliseconds(2000)))
         func `SPACE access 1M times`() {
-            for _ in 0..<1_000_000 {
+            for _ in 0 ..< 1_000_000 {
                 _ = UInt8.ascii.sp
             }
         }
@@ -68,7 +66,7 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `SPACE whitespace check 1M times`() {
             let sp = UInt8.ascii.sp
-            for _ in 0..<1_000_000 {
+            for _ in 0 ..< 1_000_000 {
                 _ = sp.ascii.isWhitespace
             }
         }

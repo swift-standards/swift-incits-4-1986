@@ -1,4 +1,4 @@
-// PerformanceTests.swift
+// Performance Tests.swift
 // swift-incits-4-1986
 //
 // Top-level performance test suite with serialized execution.

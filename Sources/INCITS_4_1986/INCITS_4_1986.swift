@@ -68,7 +68,7 @@
 /// - ``crlf``
 public enum INCITS_4_1986 {}
 
-extension INCITS_4_1986 {
+public extension INCITS_4_1986 {
     /// Canonical definition of ASCII whitespace bytes
     ///
     /// Single source of truth for ASCII whitespace per INCITS 4-1986.
@@ -102,10 +102,10 @@ extension INCITS_4_1986 {
     /// - ``ControlCharacters/htab``
     /// - ``ControlCharacters/lf``
     /// - ``ControlCharacters/cr``
-    public static let whitespaces: Set<UInt8> = [
+    static let whitespaces: Set<UInt8> = [
         SPACE.sp,
         ControlCharacters.htab,
         ControlCharacters.lf,
-        ControlCharacters.cr
+        ControlCharacters.cr,
     ]
 }

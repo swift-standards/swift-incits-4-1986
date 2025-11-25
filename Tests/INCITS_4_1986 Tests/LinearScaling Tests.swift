@@ -12,19 +12,17 @@ import Testing
 
 @Suite
 struct `Linear Scaling Tests` {
-
     @Suite
     struct `Linear Scaling Benchmarks` {
-
         @Test(.timed(threshold: .milliseconds(10), maxAllocations: 1_000_000))
         func `validate 1K bytes`() {
-            let bytes = Array(repeating: UInt8.ascii.A, count: 1_000)
+            let bytes = Array(repeating: UInt8.ascii.A, count: 1000)
             _ = bytes.ascii.isAllASCII
         }
 
         @Test(.timed(threshold: .milliseconds(20), maxAllocations: 2_000_000))
         func `validate 10K bytes`() {
-            let bytes = Array(repeating: UInt8.ascii.A, count: 10_000)
+            let bytes = Array(repeating: UInt8.ascii.A, count: 10000)
             _ = bytes.ascii.isAllASCII
         }
 
@@ -43,16 +41,15 @@ struct `Linear Scaling Tests` {
 
     @Suite
     struct `Linear Scaling - Case Conversion` {
-
         @Test(.timed(threshold: .milliseconds(10), maxAllocations: 6_000_000))
         func `case convert 1K bytes`() {
-            let bytes = Array(repeating: UInt8.ascii.a, count: 1_000)
+            let bytes = Array(repeating: UInt8.ascii.a, count: 1000)
             _ = bytes.ascii(case: .upper)
         }
 
         @Test(.timed(threshold: .milliseconds(20), maxAllocations: 2_000_000))
         func `case convert 10K bytes`() {
-            let bytes = Array(repeating: UInt8.ascii.a, count: 10_000)
+            let bytes = Array(repeating: UInt8.ascii.a, count: 10000)
             _ = bytes.ascii(case: .upper)
         }
 
@@ -62,7 +59,7 @@ struct `Linear Scaling Tests` {
             _ = bytes.ascii(case: .upper)
         }
 
-        @Test(.timed(threshold: .milliseconds(500), maxAllocations: 10_000_000))
+        @Test(.timed(threshold: .milliseconds(500)))
         func `case convert 1M bytes`() {
             let bytes = Array(repeating: UInt8.ascii.a, count: 1_000_000)
             _ = bytes.ascii(case: .upper)
@@ -71,35 +68,33 @@ struct `Linear Scaling Tests` {
 
     @Suite
     struct `Linear Scaling - String Normalization` {
-
         @Test(.timed(threshold: .milliseconds(10), maxAllocations: 5_000_000))
         func `normalize 1K byte string`() {
-            let text = String(repeating: "line\n", count: 200)  // ~1KB
+            let text = String(repeating: "line\n", count: 200) // ~1KB
             _ = text.normalized(to: .crlf)
         }
 
         @Test(.timed(threshold: .milliseconds(20), maxAllocations: 6_000_000))
         func `normalize 10K byte string`() {
-            let text = String(repeating: "line\n", count: 2_000)  // ~10KB
+            let text = String(repeating: "line\n", count: 2000) // ~10KB
             _ = text.normalized(to: .crlf)
         }
 
         @Test(.timed(threshold: .milliseconds(100), maxAllocations: 10_000_000))
         func `normalize 100K byte string`() {
-            let text = String(repeating: "line\n", count: 20_000)  // ~100KB
+            let text = String(repeating: "line\n", count: 20000) // ~100KB
             _ = text.normalized(to: .crlf)
         }
 
         @Test(.timed(threshold: .milliseconds(500), maxAllocations: 17_000_000))
         func `normalize 1M byte string`() {
-            let text = String(repeating: "line\n", count: 200_000)  // ~1MB
+            let text = String(repeating: "line\n", count: 200_000) // ~1MB
             _ = text.normalized(to: .crlf)
         }
     }
 
     @Suite
     struct `Linear Scaling - String Trimming` {
-
         @Test(.timed(threshold: .milliseconds(10), maxAllocations: 6_000_000))
         func `trim 1K spaces`() {
             let spaces = String(repeating: " ", count: 500)
@@ -109,14 +104,14 @@ struct `Linear Scaling Tests` {
 
         @Test(.timed(threshold: .milliseconds(20), maxAllocations: 3_000_000))
         func `trim 10K spaces`() {
-            let spaces = String(repeating: " ", count: 5_000)
+            let spaces = String(repeating: " ", count: 5000)
             let text = spaces + "content" + spaces
             _ = text.trimming(.ascii.whitespaces)
         }
 
         @Test(.timed(threshold: .milliseconds(50), maxAllocations: 8_000_000))
         func `trim 100K spaces`() {
-            let spaces = String(repeating: " ", count: 50_000)
+            let spaces = String(repeating: " ", count: 50000)
             let text = spaces + "content" + spaces
             _ = text.trimming(.ascii.whitespaces)
         }

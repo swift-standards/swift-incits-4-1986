@@ -10,17 +10,15 @@ import Testing
 
 @Suite
 struct `INCITS_4_1986.LineEndingDetection Tests` {
-
     // MARK: - Line Ending Detection Tests
 
     @Suite
     struct `detect() Method Tests` {
-
         @Test(arguments: [
             ("line1\nline2", INCITS_4_1986.FormatEffectors.LineEnding.lf),
             ("line1\n", INCITS_4_1986.FormatEffectors.LineEnding.lf),
             ("\n", INCITS_4_1986.FormatEffectors.LineEnding.lf),
-            ("test\nmore\nlines", INCITS_4_1986.FormatEffectors.LineEnding.lf)
+            ("test\nmore\nlines", INCITS_4_1986.FormatEffectors.LineEnding.lf),
         ])
         func `detects LF line endings`(input: (String, INCITS_4_1986.FormatEffectors.LineEnding)) {
             let (str, expected) = input
@@ -70,23 +68,22 @@ struct `INCITS_4_1986.LineEndingDetection Tests` {
 
     @Suite
     struct `hasMixedLineEndings() Method Tests` {
-
         @Test(arguments: [
-            "line1\nline2\nline3",     // Consistent LF
-            "line1\rline2\rline3",     // Consistent CR
+            "line1\nline2\nline3", // Consistent LF
+            "line1\rline2\rline3", // Consistent CR
             "line1\r\nline2\r\nline3", // Consistent CRLF
-            "no line endings",          // No line endings
-            ""                          // Empty string
+            "no line endings", // No line endings
+            "", // Empty string
         ])
         func `returns false for consistent or no line endings`(str: String) {
             #expect(!INCITS_4_1986.LineEndingDetection.hasMixedLineEndings(str))
         }
 
         @Test(arguments: [
-            "line1\nline2\r\nline3",    // LF and CRLF
-            "line1\rline2\nline3",      // CR and LF
-            "line1\rline2\r\nline3",    // CR and CRLF
-            "line1\nline2\rline3\r\n"   // All three types
+            "line1\nline2\r\nline3", // LF and CRLF
+            "line1\rline2\nline3", // CR and LF
+            "line1\rline2\r\nline3", // CR and CRLF
+            "line1\nline2\rline3\r\n" // All three types
         ])
         func `returns true for mixed line endings`(str: String) {
             #expect(INCITS_4_1986.LineEndingDetection.hasMixedLineEndings(str))
@@ -118,7 +115,6 @@ struct `INCITS_4_1986.LineEndingDetection Tests` {
 
     @Suite
     struct `Edge Cases` {
-
         @Test
         func `empty string has no line endings`() {
             #expect(INCITS_4_1986.LineEndingDetection.detect("") == nil)
@@ -172,7 +168,6 @@ struct `INCITS_4_1986.LineEndingDetection Tests` {
 
     @Suite
     struct `Detection Priority Tests` {
-
         @Test
         func `CRLF takes precedence in detection`() {
             // When CRLF is present, it should be detected first
@@ -199,7 +194,6 @@ struct `INCITS_4_1986.LineEndingDetection Tests` {
 
     @Suite
     struct `Real World Examples` {
-
         @Test
         func `Unix-style multi-line text`() {
             let text = "#!/bin/bash\necho 'Hello'\necho 'World'\n"

@@ -10,10 +10,8 @@ import Testing
 
 @Suite
 struct `StringOperator Tests` {
-
     @Suite
     struct `String Trimming - Correctness` {
-
         @Test
         func `trim leading whitespace`() {
             #expect("  hello".trimming(Set<Character>.ascii.whitespaces) == "hello")
@@ -57,7 +55,6 @@ struct `StringOperator Tests` {
 
     @Suite
     struct `Substring Trimming - Correctness` {
-
         @Test
         func `trim substring`() {
             let str = "  hello  "
@@ -70,17 +67,16 @@ struct `StringOperator Tests` {
 extension `Performance Tests` {
     @Suite
     struct `String Trimming - Performance` {
-
         @Test(.timed(threshold: .milliseconds(2000)))
         func `trim 10K strings with ASCII whitespace`() {
-            for _ in 0..<10_000 {
+            for _ in 0 ..< 10000 {
                 _ = "  hello world  ".trimming(Set<Character>.ascii.whitespaces)
             }
         }
 
         @Test(.timed(threshold: .milliseconds(50)))
         func `trim large string with many leading spaces`() {
-            let spaces = String(repeating: " ", count: 10_000)
+            let spaces = String(repeating: " ", count: 10000)
             let text = spaces + "content" + spaces
             _ = text.trimming(Set<Character>.ascii.whitespaces)
         }

@@ -1,16 +1,16 @@
-// Character.swift
+// Character+INCITS_4_1986.swift
 // swift-incits-4-1986
 //
 // INCITS 4-1986: US-ASCII character classification
 
 import Standards
 
-extension Character {
+public extension Character {
     /// Character case style for ASCII case conversion
     ///
     /// Enum for ASCII case transformations per INCITS 4-1986.
     /// Only affects ASCII letters ('A'...'Z', 'a'...'z').
-    public enum Case: Sendable {
+    enum Case: Sendable {
         /// Convert to uppercase (A-Z)
         case upper
         /// Convert to lowercase (a-z)
@@ -18,23 +18,23 @@ extension Character {
     }
 }
 
-extension Character {
+public extension Character {
     /// Access to ASCII type-level constants and methods
-    public static var ascii: ASCII.Type {
+    static var ascii: ASCII.Type {
         ASCII.self
     }
 
     /// Access to ASCII instance methods for this character
-    public var ascii: ASCII {
+    var ascii: ASCII {
         ASCII(character: self)
     }
 
-    public struct ASCII {
+    struct ASCII {
         public let character: Character
     }
 }
 
-extension Character {
+public extension Character {
     /// Creates a Character from an ASCII byte with validation
     ///
     /// Converts a UInt8 byte to a Character, returning `nil` if the byte is outside
@@ -56,13 +56,13 @@ extension Character {
     /// - Parameter ascii: Byte value to convert to Character
     /// - Returns: Character if byte is valid ASCII (0x00-0x7F), `nil` otherwise
     @inlinable
-    public init?(ascii byte: UInt8) {
+    init?(ascii byte: UInt8) {
         guard byte <= 0x7F else { return nil }
         self.init(UnicodeScalar(byte))
     }
 }
 
-extension Character.ASCII {
+public extension Character.ASCII {
     /// Creates a Character from an ASCII byte without validation
     ///
     /// Converts a UInt8 byte to a Character, assuming the byte is valid ASCII without validation.
@@ -88,7 +88,7 @@ extension Character.ASCII {
     ///
     /// - ``Character/init(ascii:)``
     @inlinable
-    public static func unchecked(_ byte: UInt8) -> Character {
+    static func unchecked(_ byte: UInt8) -> Character {
         Character(UnicodeScalar(byte))
     }
 
@@ -104,8 +104,8 @@ extension Character.ASCII {
     /// invalid.ascii()  // nil
     /// ```
     @inlinable
-    public func callAsFunction() -> Character? {
-        self.character.isASCII ? self.character : nil
+    func callAsFunction() -> Character? {
+        character.isASCII ? character : nil
     }
 
     /// Converts ASCII letters to specified case
@@ -120,58 +120,58 @@ extension Character.ASCII {
     /// "🌍".ascii(case: .upper) // "🌍"
     /// ```
     @inlinable
-    public func callAsFunction(case: Character.Case) -> Character {
-        guard let byte = UInt8(ascii: self.character) else { return self.character }
+    func callAsFunction(case: Character.Case) -> Character {
+        guard let byte = UInt8(ascii: character) else { return character }
         let converted = byte.ascii(case: `case`)
         return Character(UnicodeScalar(converted))
     }
 
     /// Tests if character is ASCII whitespace (space, tab, LF, CR)
     @_transparent
-    public var isWhitespace: Bool {
-        guard let value = UInt8(ascii: self.character) else { return false }
+    var isWhitespace: Bool {
+        guard let value = UInt8(ascii: character) else { return false }
         return value.ascii.isWhitespace
     }
 
     /// Tests if character is ASCII digit ('0'...'9')
     @_transparent
-    public var isDigit: Bool {
-        guard let value = UInt8(ascii: self.character) else { return false }
+    var isDigit: Bool {
+        guard let value = UInt8(ascii: character) else { return false }
         return value.ascii.isDigit
     }
 
     /// Tests if character is ASCII letter ('A'...'Z' or 'a'...'z')
     @_transparent
-    public var isLetter: Bool {
-        guard let value = UInt8(ascii: self.character) else { return false }
+    var isLetter: Bool {
+        guard let value = UInt8(ascii: character) else { return false }
         return value.ascii.isLetter
     }
 
     /// Tests if character is ASCII alphanumeric (digit or letter)
     @inlinable
-    public var isAlphanumeric: Bool {
-        guard let value = UInt8(ascii: self.character) else { return false }
+    var isAlphanumeric: Bool {
+        guard let value = UInt8(ascii: character) else { return false }
         return value.ascii.isAlphanumeric
     }
 
     /// Tests if character is ASCII hexadecimal digit
     @inlinable
-    public var isHexDigit: Bool {
-        guard let value = UInt8(ascii: self.character) else { return false }
+    var isHexDigit: Bool {
+        guard let value = UInt8(ascii: character) else { return false }
         return value.ascii.isHexDigit
     }
 
     /// Tests if character is ASCII uppercase letter ('A'...'Z')
     @_transparent
-    public var isUppercase: Bool {
-        guard let value = UInt8(ascii: self.character) else { return false }
+    var isUppercase: Bool {
+        guard let value = UInt8(ascii: character) else { return false }
         return value.ascii.isUppercase
     }
 
     /// Tests if character is ASCII lowercase letter ('a'...'z')
     @_transparent
-    public var isLowercase: Bool {
-        guard let value = UInt8(ascii: self.character) else { return false }
+    var isLowercase: Bool {
+        guard let value = UInt8(ascii: character) else { return false }
         return value.ascii.isLowercase
     }
 }

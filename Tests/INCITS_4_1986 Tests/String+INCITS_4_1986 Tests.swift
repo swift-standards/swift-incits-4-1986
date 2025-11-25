@@ -17,7 +17,6 @@ import Testing
 struct `String Tests` {
     @Suite
     struct `String - API Surface` {
-
         @Test
         func `string has ascii conversion method`() {
             let bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.l, .ascii.o]
@@ -49,7 +48,6 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - isAllASCII` {
-
         @Test(arguments: [
             "Hello",
             "test123",
@@ -57,8 +55,8 @@ struct `String Tests` {
             "abcdefghijklmnopqrstuvwxyz",
             "0123456789",
             "!@#$%^&*()",
-            "",  // Empty string is all ASCII
-            " \t\n\r"  // Whitespace
+            "", // Empty string is all ASCII
+            " \t\n\r", // Whitespace
         ])
         func `valid ASCII strings`(str: String) {
             #expect(str.ascii.isAllASCII, "String '\(str)' should be all ASCII")
@@ -69,8 +67,8 @@ struct `String Tests` {
             "café",
             "日本語",
             "Ñoño",
-            "test\u{80}",  // First non-ASCII byte
-            "test\u{FF}"   // High byte
+            "test\u{80}", // First non-ASCII byte
+            "test\u{FF}" // High byte
         ])
         func `strings with non-ASCII characters`(str: String) {
             #expect(!str.ascii.isAllASCII, "String '\(str)' should contain non-ASCII")
@@ -79,7 +77,6 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - isAllWhitespace` {
-
         @Test(arguments: [
             " ",
             "  ",
@@ -87,7 +84,7 @@ struct `String Tests` {
             "\n",
             "\r",
             " \t\n\r",
-            "    \t\t\n\n"
+            "    \t\t\n\n",
         ])
         func `all whitespace strings`(str: String) {
             #expect(str.ascii.isAllWhitespace, "String '\(str)' should be all whitespace")
@@ -106,12 +103,11 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - isAllDigits` {
-
         @Test(arguments: [
             "0",
             "123",
             "0123456789",
-            "999"
+            "999",
         ])
         func `all digit strings`(str: String) {
             #expect(str.ascii.isAllDigits, "String '\(str)' should be all digits")
@@ -130,13 +126,12 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - isAllLetters` {
-
         @Test(arguments: [
             "a",
             "ABC",
             "hello",
             "WORLD",
-            "AbCdEfG"
+            "AbCdEfG",
         ])
         func `all letter strings`(str: String) {
             #expect(str.ascii.isAllLetters, "String '\(str)' should be all letters")
@@ -155,13 +150,12 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - isAllAlphanumeric` {
-
         @Test(arguments: [
             "abc123",
             "ABC",
             "123",
             "Test123",
-            "a1b2c3"
+            "a1b2c3",
         ])
         func `all alphanumeric strings`(str: String) {
             #expect(str.ascii.isAllAlphanumeric, "String '\(str)' should be all alphanumeric")
@@ -180,7 +174,6 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - isAllControl` {
-
         @Test(arguments: [
             "\0",
             "\0\0",
@@ -188,7 +181,7 @@ struct `String Tests` {
             "\n",
             "\r",
             "\t\n\r",
-            "\u{7F}"  // DEL
+            "\u{7F}", // DEL
         ])
         func `all control character strings`(str: String) {
             #expect(str.ascii.isAllControl, "String should be all control characters")
@@ -196,7 +189,7 @@ struct `String Tests` {
 
         @Test(arguments: [
             "a",
-            " ",  // SPACE is not control
+            " ", // SPACE is not control
             "\ta\n",
             "hello"
         ])
@@ -207,19 +200,18 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - isAllVisible` {
-
         @Test(arguments: [
             "!",
             "~",
             "ABC",
-            "abc123!@#"
+            "abc123!@#",
         ])
         func `all visible character strings`(str: String) {
             #expect(str.ascii.isAllVisible, "String '\(str)' should be all visible")
         }
 
         @Test(arguments: [
-            " ",  // SPACE is not visible
+            " ", // SPACE is not visible
             "hello world",
             "\t",
             "test "
@@ -231,12 +223,11 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - isAllPrintable` {
-
         @Test(arguments: [
             " ",
             "hello world",
             "!@#$%",
-            "ABC 123"
+            "ABC 123",
         ])
         func `all printable character strings`(str: String) {
             #expect(str.ascii.isAllPrintable, "String '\(str)' should be all printable")
@@ -255,12 +246,11 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - containsNonASCII` {
-
         @Test(arguments: [
             "Hello🌍",
             "café",
             "日本語",
-            "test\u{80}"
+            "test\u{80}",
         ])
         func `strings containing non-ASCII`(str: String) {
             #expect(str.ascii.containsNonASCII, "String '\(str)' should contain non-ASCII")
@@ -279,7 +269,6 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - containsHexDigit` {
-
         @Test(arguments: [
             "0",
             "9",
@@ -287,9 +276,9 @@ struct `String Tests` {
             "F",
             "a",
             "f",
-            "hello",  // contains 'e'
+            "hello", // contains 'e'
             "FACE",
-            "test0"
+            "test0",
         ])
         func `strings containing hex digits`(str: String) {
             #expect(str.ascii.containsHexDigit, "String '\(str)' should contain hex digit")
@@ -310,13 +299,12 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - isAllLowercase` {
-
         @Test(arguments: [
             "abc",
             "hello",
-            "test123",  // Non-letters don't affect the check
+            "test123", // Non-letters don't affect the check
             "hello world",
-            "a-b-c"
+            "a-b-c",
         ])
         func `all lowercase strings`(str: String) {
             #expect(str.ascii.isAllLowercase, "String '\(str)' should be all lowercase")
@@ -345,13 +333,12 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - isAllUppercase` {
-
         @Test(arguments: [
             "ABC",
             "HELLO",
             "TEST123",
             "HELLO WORLD",
-            "A-B-C"
+            "A-B-C",
         ])
         func `all uppercase strings`(str: String) {
             #expect(str.ascii.isAllUppercase, "String '\(str)' should be all uppercase")
@@ -382,13 +369,12 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - uppercased and lowercased` {
-
         @Test(arguments: [
             ("hello", "HELLO"),
             ("world", "WORLD"),
             ("TeSt", "TEST"),
             ("abc123", "ABC123"),
-            ("", "")
+            ("", ""),
         ])
         func `uppercased converts correctly`(input: String, expected: String) {
             #expect(input.ascii.uppercased() == expected)
@@ -424,7 +410,6 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - Line Ending Constants` {
-
         @Test
         func `lf constant is correct`() {
             let lf: String = .ascii.lf
@@ -458,11 +443,10 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - containsMixedLineEndings` {
-
         @Test(arguments: [
-            "line1\nline2\r\nline3",  // LF and CRLF
-            "line1\rline2\nline3",    // CR and LF
-            "line1\nline2\rline3\r\nline4"  // All three
+            "line1\nline2\r\nline3", // LF and CRLF
+            "line1\rline2\nline3", // CR and LF
+            "line1\nline2\rline3\r\nline4", // All three
         ])
         func `strings with mixed line endings`(str: String) {
             #expect(str.ascii.containsMixedLineEndings, "String should have mixed line endings")
@@ -471,9 +455,9 @@ struct `String Tests` {
         @Test(arguments: [
             "",
             "hello",
-            "line1\nline2\nline3",  // Only LF
-            "line1\rline2\rline3",  // Only CR
-            "line1\r\nline2\r\nline3"  // Only CRLF
+            "line1\nline2\nline3", // Only LF
+            "line1\rline2\rline3", // Only CR
+            "line1\r\nline2\r\nline3" // Only CRLF
         ])
         func `strings with consistent or no line endings`(str: String) {
             #expect(!str.ascii.containsMixedLineEndings, "String should not have mixed line endings")
@@ -482,11 +466,10 @@ struct `String Tests` {
 
     @Suite
     struct `INCITS_4_1986.ASCII - detectedLineEnding` {
-
         @Test(arguments: [
             ("line1\nline2", INCITS_4_1986.FormatEffectors.LineEnding.lf),
             ("line1\n", .lf),
-            ("\n", .lf)
+            ("\n", .lf),
         ])
         func `detects LF`(str: String, expected: INCITS_4_1986.FormatEffectors.LineEnding) {
             #expect(str.ascii.detectedLineEnding() == expected)
@@ -528,11 +511,10 @@ struct `String Tests` {
 extension `Performance Tests` {
     @Suite
     struct `String - Performance` {
-
         @Test(.timed(threshold: .milliseconds(150)))
         func `string to bytes conversion 10K times`() {
             let str = "Hello World!"
-            for _ in 0..<10_000 {
+            for _ in 0 ..< 10000 {
                 _ = [UInt8](ascii: str)
             }
         }
@@ -540,7 +522,7 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(150)))
         func `bytes to string conversion 10K times`() {
             let bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.l, .ascii.o]
-            for _ in 0..<10_000 {
+            for _ in 0 ..< 10000 {
                 _ = String(ascii: bytes)
             }
         }

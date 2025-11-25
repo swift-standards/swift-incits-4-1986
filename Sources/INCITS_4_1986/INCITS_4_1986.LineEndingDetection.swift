@@ -6,7 +6,7 @@
 
 import Standards
 
-extension INCITS_4_1986 {
+public extension INCITS_4_1986 {
     /// Line Ending Detection Operations
     ///
     /// Authoritative implementations for detecting and analyzing line ending styles
@@ -16,10 +16,10 @@ extension INCITS_4_1986 {
     /// - CR (0x0D): CARRIAGE RETURN - moves to first character position
     /// - LF (0x0A): LINE FEED - advances to next line
     /// - CRLF: Combination used by Internet protocols (RFC 9112, RFC 5322)
-    public enum LineEndingDetection {}
+    enum LineEndingDetection {}
 }
 
-extension INCITS_4_1986.LineEndingDetection {
+public extension INCITS_4_1986.LineEndingDetection {
     /// Detects the line ending style used in the string
     ///
     /// Returns the first line ending type found, or `nil` if no line endings are present.
@@ -46,7 +46,7 @@ extension INCITS_4_1986.LineEndingDetection {
     /// - Parameter string: The string to analyze
     /// - Returns: The detected line ending type, or `nil` if none found
     @inlinable
-    public static func detect<S: StringProtocol>(_ string: S) -> INCITS_4_1986.FormatEffectors.LineEnding? {
+    static func detect<S: StringProtocol>(_ string: S) -> INCITS_4_1986.FormatEffectors.LineEnding? {
         // Check CRLF first (two-byte sequence takes precedence)
         // We need to check for the CRLF sequence as a substring
         let crlf = S(decoding: INCITS_4_1986.ControlCharacters.crlf, as: UTF8.self)
@@ -92,7 +92,7 @@ extension INCITS_4_1986.LineEndingDetection {
     /// - Parameter string: The string to analyze
     /// - Returns: `true` if multiple line ending styles are present
     @inlinable
-    public static func hasMixedLineEndings<S: StringProtocol>(_ string: S) -> Bool {
+    static func hasMixedLineEndings<S: StringProtocol>(_ string: S) -> Bool {
         let bytes = Array(string.utf8)
         var hasCRLF = false
         var hasStandaloneCR = false
@@ -106,7 +106,7 @@ extension INCITS_4_1986.LineEndingDetection {
                 // Check if this CR is part of CRLF
                 if i + 1 < bytes.count && bytes[i + 1] == INCITS_4_1986.ControlCharacters.lf {
                     hasCRLF = true
-                    i += 2  // Skip both CR and LF
+                    i += 2 // Skip both CR and LF
                     continue
                 } else {
                     hasStandaloneCR = true

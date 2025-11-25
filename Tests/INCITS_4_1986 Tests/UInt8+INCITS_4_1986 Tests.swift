@@ -13,43 +13,41 @@ import Testing
 
 @Suite
 struct `UInt8 Tests` {
-
     @Suite
     struct `UInt8 - ASCII Predicates` {
-
         @Test(arguments: [UInt8.ascii.htab, UInt8.ascii.lf, UInt8.ascii.cr, UInt8.ascii.sp])
         func `whitespace bytes recognized`(byte: UInt8) {
             #expect(byte.ascii.isWhitespace)
         }
 
-        @Test(arguments: Array(UInt8.ascii.0...UInt8.ascii.9))
+        @Test(arguments: Array(UInt8.ascii.0 ... UInt8.ascii.9))
         func `digit bytes recognized`(byte: UInt8) {
             #expect(byte.ascii.isDigit)
         }
 
-        @Test(arguments: Array(UInt8.ascii.A...UInt8.ascii.Z))
+        @Test(arguments: Array(UInt8.ascii.A ... UInt8.ascii.Z))
         func `uppercase letters recognized`(byte: UInt8) {
             #expect(byte.ascii.isUppercase)
             #expect(byte.ascii.isLetter)
         }
 
-        @Test(arguments: Array(UInt8.ascii.a...UInt8.ascii.z))
+        @Test(arguments: Array(UInt8.ascii.a ... UInt8.ascii.z))
         func `lowercase letters recognized`(byte: UInt8) {
             #expect(byte.ascii.isLowercase)
             #expect(byte.ascii.isLetter)
         }
 
-        @Test(arguments: Array(UInt8.ascii.nul...UInt8.ascii.us) + [UInt8.ascii.del])
+        @Test(arguments: Array(UInt8.ascii.nul ... UInt8.ascii.us) + [UInt8.ascii.del])
         func `control characters recognized`(byte: UInt8) {
             #expect(byte.ascii.isControl)
         }
 
-        @Test(arguments: Array(UInt8.ascii.sp...UInt8.ascii.tilde))
+        @Test(arguments: Array(UInt8.ascii.sp ... UInt8.ascii.tilde))
         func `printable characters recognized`(byte: UInt8) {
             #expect(byte.ascii.isPrintable)
         }
 
-        @Test(arguments: Array(UInt8.ascii.exclamationPoint...UInt8.ascii.tilde))
+        @Test(arguments: Array(UInt8.ascii.exclamationPoint ... UInt8.ascii.tilde))
         func `visible characters recognized`(byte: UInt8) {
             #expect(byte.ascii.isVisible)
         }
@@ -57,7 +55,6 @@ struct `UInt8 Tests` {
 
     @Suite
     struct `UInt8 - Character Conversion` {
-
         @Test
         func `convert ASCII character to byte`() {
             #expect(UInt8(ascii: "A") == UInt8.ascii.A)
@@ -76,11 +73,10 @@ struct `UInt8 Tests` {
 extension `Performance Tests` {
     @Suite
     struct `UInt8 - Performance` {
-
         @Test(.timed(threshold: .milliseconds(2000)))
         func `byte predicate checks 1M times`() {
             let byte: UInt8 = 65
-            for _ in 0..<1_000_000 {
+            for _ in 0 ..< 1_000_000 {
                 _ = byte.ascii.isLetter
                 _ = byte.ascii.isUppercase
                 _ = byte.ascii.isPrintable
@@ -89,7 +85,7 @@ extension `Performance Tests` {
 
         @Test(.timed(threshold: .milliseconds(300)))
         func `character to byte conversion 100K times`() {
-            for _ in 0..<100_000 {
+            for _ in 0 ..< 100_000 {
                 _ = UInt8(ascii: "A" as Character)
                 _ = UInt8(ascii: "0" as Character)
                 _ = UInt8(ascii: " " as Character)

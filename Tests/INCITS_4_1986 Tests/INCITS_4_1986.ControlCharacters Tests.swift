@@ -9,11 +9,11 @@ import Testing
 @testable import INCITS_4_1986
 
 // MARK: - Control Characters - Constants
+
 @Suite
 struct `Control Characters` {
     @Suite
     struct `Constants Tests` {
-
         @Test
         func `NUL character via namespace`() {
             #expect(UInt8.ascii.nul == 0x00)
@@ -44,7 +44,6 @@ struct `Control Characters` {
 
     @Suite
     struct `Coverage Tests` {
-
         @Test(arguments: [
             (0x00, "nul"), (0x01, "soh"), (0x02, "stx"), (0x03, "etx"),
             (0x04, "eot"), (0x05, "enq"), (0x06, "ack"), (0x07, "bel"),
@@ -54,7 +53,7 @@ struct `Control Characters` {
             (0x14, "dc4"), (0x15, "nak"), (0x16, "syn"), (0x17, "etb"),
             (0x18, "can"), (0x19, "em"), (0x1A, "sub"), (0x1B, "esc"),
             (0x1C, "fs"), (0x1D, "gs"), (0x1E, "rs"), (0x1F, "us"),
-            (0x7F, "del")
+            (0x7F, "del"),
         ])
         func `all control characters accessible`(value: UInt8, name: String) {
             #expect(value <= 0x1F || value == 0x7F, "\(name) should be a control character")
@@ -103,7 +102,7 @@ struct `Control Characters` {
         func `control characters recognized by predicate`() {
             let controlChars: [UInt8] = [
                 UInt8.ascii.nul, UInt8.ascii.htab, UInt8.ascii.lf,
-                UInt8.ascii.cr, UInt8.ascii.esc, UInt8.ascii.del
+                UInt8.ascii.cr, UInt8.ascii.esc, UInt8.ascii.del,
             ]
             for byte in controlChars {
                 #expect(byte.ascii.isControl, "0x\(String(byte, radix: 16)) should be control")
@@ -120,15 +119,15 @@ struct `Control Characters` {
         }
     }
 }
+
 // MARK: - Performance
 
 extension `Performance Tests` {
     @Suite
     struct `Control Characters - Performance` {
-
         @Test(.timed(threshold: .milliseconds(200)))
         func `control character access 100K times`() {
-            for _ in 0..<100_000 {
+            for _ in 0 ..< 100_000 {
                 _ = UInt8.ascii.lf
                 _ = UInt8.ascii.cr
                 _ = UInt8.ascii.htab
@@ -138,9 +137,9 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `control character classification 1M times`() {
             let testBytes: [UInt8] = [
-                UInt8.ascii.nul, UInt8.ascii.htab, UInt8.ascii.lf, UInt8.ascii.cr, UInt8.ascii.us, UInt8.ascii.del
+                UInt8.ascii.nul, UInt8.ascii.htab, UInt8.ascii.lf, UInt8.ascii.cr, UInt8.ascii.us, UInt8.ascii.del,
             ]
-            for _ in 0..<166_667 {
+            for _ in 0 ..< 166_667 {
                 for byte in testBytes {
                     _ = byte.ascii.isControl
                 }

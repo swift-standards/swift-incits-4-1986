@@ -10,10 +10,8 @@ import Testing
 
 @Suite
 struct `Substring Tests` {
-
     @Suite
     struct `Substring - API Surface` {
-
         @Test
         func `substring has trimming method`() {
             let str = "  hello  "
@@ -56,7 +54,6 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - isAllASCII` {
-
         @Test(arguments: [
             "Hello",
             "test123",
@@ -64,8 +61,8 @@ struct `Substring Tests` {
             "abcdefghijklmnopqrstuvwxyz",
             "0123456789",
             "!@#$%^&*()",
-            "",  // Empty substring
-            " \t\n\r"  // Whitespace
+            "", // Empty substring
+            " \t\n\r", // Whitespace
         ])
         func `valid ASCII substrings`(str: String) {
             let sub = str[...]
@@ -88,7 +85,6 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - isAllWhitespace` {
-
         @Test(arguments: [
             " ",
             "  ",
@@ -96,7 +92,7 @@ struct `Substring Tests` {
             "\n",
             "\r",
             " \t\n\r",
-            "    \t\t\n\n"
+            "    \t\t\n\n",
         ])
         func `all whitespace substrings`(str: String) {
             let sub = str[...]
@@ -117,12 +113,11 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - isAllDigits` {
-
         @Test(arguments: [
             "0",
             "123",
             "0123456789",
-            "999"
+            "999",
         ])
         func `all digit substrings`(str: String) {
             let sub = str[...]
@@ -143,13 +138,12 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - isAllLetters` {
-
         @Test(arguments: [
             "a",
             "ABC",
             "hello",
             "WORLD",
-            "AbCdEfG"
+            "AbCdEfG",
         ])
         func `all letter substrings`(str: String) {
             let sub = str[...]
@@ -170,13 +164,12 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - isAllAlphanumeric` {
-
         @Test(arguments: [
             "abc123",
             "ABC",
             "123",
             "Test123",
-            "a1b2c3"
+            "a1b2c3",
         ])
         func `all alphanumeric substrings`(str: String) {
             let sub = str[...]
@@ -197,7 +190,6 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - isAllControl` {
-
         @Test(arguments: [
             "\0",
             "\0\0",
@@ -205,7 +197,7 @@ struct `Substring Tests` {
             "\n",
             "\r",
             "\t\n\r",
-            "\u{7F}"
+            "\u{7F}",
         ])
         func `all control character substrings`(str: String) {
             let sub = str[...]
@@ -226,12 +218,11 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - isAllVisible` {
-
         @Test(arguments: [
             "!",
             "~",
             "ABC",
-            "abc123!@#"
+            "abc123!@#",
         ])
         func `all visible character substrings`(str: String) {
             let sub = str[...]
@@ -252,12 +243,11 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - isAllPrintable` {
-
         @Test(arguments: [
             " ",
             "hello world",
             "!@#$%",
-            "ABC 123"
+            "ABC 123",
         ])
         func `all printable character substrings`(str: String) {
             let sub = str[...]
@@ -278,12 +268,11 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - containsNonASCII` {
-
         @Test(arguments: [
             "Hello🌍",
             "café",
             "日本語",
-            "test\u{80}"
+            "test\u{80}",
         ])
         func `substrings containing non-ASCII`(str: String) {
             let sub = str[...]
@@ -304,7 +293,6 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - containsHexDigit` {
-
         @Test(arguments: [
             "0",
             "9",
@@ -314,7 +302,7 @@ struct `Substring Tests` {
             "f",
             "hello",
             "FACE",
-            "test0"
+            "test0",
         ])
         func `substrings containing hex digits`(str: String) {
             let sub = str[...]
@@ -337,13 +325,12 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - isAllLowercase` {
-
         @Test(arguments: [
             "abc",
             "hello",
             "test123",
             "hello world",
-            "a-b-c"
+            "a-b-c",
         ])
         func `all lowercase substrings`(str: String) {
             let sub = str[...]
@@ -374,13 +361,12 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - isAllUppercase` {
-
         @Test(arguments: [
             "ABC",
             "HELLO",
             "TEST123",
             "HELLO WORLD",
-            "A-B-C"
+            "A-B-C",
         ])
         func `all uppercase substrings`(str: String) {
             let sub = str[...]
@@ -413,13 +399,12 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring - ASCII Case Conversion` {
-
         @Test(arguments: [
             ("hello", "HELLO"),
             ("world", "WORLD"),
             ("TeSt", "TEST"),
             ("abc123", "ABC123"),
-            ("", "")
+            ("", ""),
         ])
         func `case conversion to upper`(input: String, expected: String) {
             let sub = input[...]
@@ -450,13 +435,12 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - uppercased and lowercased` {
-
         @Test(arguments: [
             ("hello", "HELLO"),
             ("world", "WORLD"),
             ("TeSt", "TEST"),
             ("abc123", "ABC123"),
-            ("", "")
+            ("", ""),
         ])
         func `uppercased converts correctly`(input: String, expected: String) {
             let sub = input[...]
@@ -494,7 +478,6 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - Line Ending Constants` {
-
         @Test
         func `lf constant is correct`() {
             #expect(.ascii.lf == "\n")
@@ -518,11 +501,10 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - containsMixedLineEndings` {
-
         @Test(arguments: [
             "line1\nline2\r\nline3",
             "line1\rline2\nline3",
-            "line1\nline2\rline3\r\nline4"
+            "line1\nline2\rline3\r\nline4",
         ])
         func `substrings with mixed line endings`(str: String) {
             let sub = str[...]
@@ -544,11 +526,10 @@ struct `Substring Tests` {
 
     @Suite
     struct `Substring.ASCII - detectedLineEnding` {
-
         @Test(arguments: [
             ("line1\nline2", INCITS_4_1986.FormatEffectors.LineEnding.lf),
             ("line1\n", INCITS_4_1986.FormatEffectors.LineEnding.lf),
-            ("\n", INCITS_4_1986.FormatEffectors.LineEnding.lf)
+            ("\n", INCITS_4_1986.FormatEffectors.LineEnding.lf),
         ])
         func `detects LF`(str: String, expected: INCITS_4_1986.FormatEffectors.LineEnding) {
             let sub = str[...]
@@ -592,12 +573,11 @@ struct `Substring Tests` {
 extension `Performance Tests` {
     @Suite
     struct `Substring - Performance` {
-
         @Test(.timed(threshold: .milliseconds(2000)))
         func `substring trimming 10K times`() {
             let str = "  hello world  "
             let sub = str[...]
-            for _ in 0..<10_000 {
+            for _ in 0 ..< 10000 {
                 _ = sub.trimming(.ascii.whitespaces)
             }
         }

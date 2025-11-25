@@ -12,13 +12,12 @@ import Testing
 struct `FormatEffectors Tests` {
     @Suite
     struct `Line Ending Normalization - Correctness` {
-
         @Test(arguments: [
             ("hello\nworld", INCITS_4_1986.FormatEffectors.LineEnding.lf, "hello\nworld"),
             ("hello\nworld", .cr, "hello\rworld"),
             ("hello\nworld", .crlf, "hello\r\nworld"),
             ("hello\r\nworld", .lf, "hello\nworld"),
-            ("hello\rworld", .lf, "hello\nworld")
+            ("hello\rworld", .lf, "hello\nworld"),
         ])
         func `line ending normalization`(input: String, to: INCITS_4_1986.FormatEffectors.LineEnding, expected: String) {
             #expect(input.normalized(to: to) == expected)
@@ -35,7 +34,6 @@ struct `FormatEffectors Tests` {
 
     @Suite
     struct `Line Ending Normalization - Idempotence` {
-
         @Test(arguments: [INCITS_4_1986.FormatEffectors.LineEnding.lf, .cr, .crlf])
         func `normalization is idempotent`(ending: INCITS_4_1986.FormatEffectors.LineEnding) {
             let text = "hello\nworld\r\ntest\rend"
@@ -55,11 +53,10 @@ struct `FormatEffectors Tests` {
 extension `Performance Tests` {
     @Suite
     struct `Line Ending Normalization - Performance` {
-
         @Test(.timed(threshold: .milliseconds(50)))
         func `normalize 100K character file with 1K line endings`() {
             let line = String(repeating: "x", count: 100)
-            let text = (0..<1000).map { _ in line }.joined(separator: "\n")
+            let text = (0 ..< 1000).map { _ in line }.joined(separator: "\n")
             _ = text.normalized(to: .crlf)
         }
 
