@@ -1,5 +1,5 @@
 //
-//  UInt8.ASCII.Serializing.swift
+//  UInt8.ASCII.Serializable.swift
 //  swift-incits-4-1986
 //
 //  ASCII Serialization Protocol
@@ -9,7 +9,7 @@
 //
 //  ## Philosophy
 //
-//  Types conforming to Serializing treat [UInt8] as the canonical form.
+//  Types conforming to Serializable treat [UInt8] as the canonical form.
 //  String operations are derived through composition:
 //
 //  ```
@@ -34,7 +34,7 @@
 //  ## Example
 //
 //  ```swift
-//  struct EmailAddress: UInt8.ASCII.Serializing {
+//  struct EmailAddress: UInt8.ASCII.Serializable {
 //      init(ascii bytes: [UInt8]) throws(Error) {
 //          // Parse bytes...
 //      }
@@ -76,7 +76,7 @@ public extension UInt8.ASCII {
     /// Most types are context-free and use `Context = Void` (the default):
     ///
     /// ```swift
-    /// struct Token: UInt8.ASCII.Serializing {
+    /// struct Token: UInt8.ASCII.Serializable {
     ///     init<Bytes>(ascii bytes: Bytes, in context: Void) throws(Error) { ... }
     ///     // Or use the convenience: init<Bytes>(ascii bytes: Bytes) throws(Error)
     /// }
@@ -90,7 +90,7 @@ public extension UInt8.ASCII {
     /// Types that require external information to parse define a custom `Context`:
     ///
     /// ```swift
-    /// struct Multipart: UInt8.ASCII.Serializing {
+    /// struct Multipart: UInt8.ASCII.Serializable {
     ///     struct Context: Sendable {
     ///         let boundary: Boundary
     ///     }
@@ -108,7 +108,8 @@ public extension UInt8.ASCII {
     /// - String parsing via `init(_: some StringProtocol)` when `Context == Void`
     /// - String conversion via `StringProtocol.init(_:)`
     /// - CustomStringConvertible (if type conforms)
-    protocol Serializing {
+    /// - `UInt8.Streaming` conformance (buffer-based serialization)
+    protocol Serializable: UInt8.Serializable {
         /// The error type for parsing failures
         associatedtype Error: Swift.Error
 
@@ -144,7 +145,10 @@ public extension UInt8.ASCII {
         ///   - bytes: The ASCII byte representation
         ///   - context: Parsing context (use `()` for context-free types)
         /// - Throws: Self.Error if the bytes are malformed
-        init<Bytes: Collection>(ascii bytes: Bytes, in context: Context) throws(Error) where Bytes.Element == UInt8
+        init<Bytes: Collection>(
+            ascii bytes: Bytes,
+            in context: Context
+        ) throws(Error) where Bytes.Element == UInt8
 
         /// Serialize to canonical ASCII byte representation (CANONICAL SERIALIZATION)
         ///
@@ -165,13 +169,54 @@ public extension UInt8.ASCII {
     }
 
     protocol RawRepresentable:
-        UInt8.ASCII.Serializing,
+        UInt8.ASCII.Serializable,
         Swift.RawRepresentable {}
+}
+
+// MARK: - UInt8.Streaming Default Implementation
+
+public extension UInt8.ASCII.Serializable {
+    /// Default `UInt8.Streaming` implementation via `static var serialize`
+    ///
+    /// Automatically provided for all `UInt8.ASCII.Serializable` types.
+    /// Bridges the static serialization function to the streaming protocol.
+    ///
+    /// ## Category Theory
+    ///
+    /// This bridges two equivalent representations:
+    /// - `static var serialize: (Self) -> [UInt8]` (functional style)
+    /// - `func serialize(into:)` (streaming/imperative style)
+    ///
+    /// Both represent the same transformation `Self → [UInt8]`,
+    /// just with different calling conventions.
+    ///
+    /// ## Usage
+    ///
+    /// This enables ASCII types to be used in streaming contexts:
+    ///
+    /// ```swift
+    /// struct HTMLEmail: UInt8.Streaming {
+    ///     let email: RFC_5322.EmailAddress  // conforms to ASCII.Serializable
+    ///
+    ///     func serialize<Buffer: RangeReplaceableCollection>(
+    ///         into buffer: inout Buffer
+    ///     ) where Buffer.Element == UInt8 {
+    ///         buffer.append(contentsOf: "<a href=\"mailto:".utf8)
+    ///         email.serialize(into: &buffer)  // Uses this default impl
+    ///         buffer.append(contentsOf: "\">".utf8)
+    ///     }
+    /// }
+    /// ```
+    func serialize<Buffer: RangeReplaceableCollection>(
+        into buffer: inout Buffer
+    ) where Buffer.Element == UInt8 {
+        buffer.append(contentsOf: Self.serialize(self))
+    }
 }
 
 // MARK: - Context-Free Convenience
 
-public extension UInt8.ASCII.Serializing where Context == Void {
+public extension UInt8.ASCII.Serializable where Context == Void {
     /// Parse from canonical ASCII byte representation (context-free convenience)
     ///
     /// This convenience initializer is available for context-free types
@@ -196,7 +241,7 @@ public extension UInt8.ASCII.Serializing where Context == Void {
     }
 }
 
-public extension UInt8.ASCII.Serializing where Context == Void {
+public extension UInt8.ASCII.Serializable where Context == Void {
     /// Parse from string representation (STRING CONVENIENCE)
     ///
     /// Automatically provided for context-free types (`Context == Void`).
@@ -226,7 +271,7 @@ public extension UInt8.ASCII.RawRepresentable where Self.RawValue == String, Con
     /// Default RawRepresentable implementation for string-based raw values
     ///
     /// Automatically provided for context-free types that conform to both
-    /// Serializing and RawRepresentable where RawValue is String.
+    /// Serializable and RawRepresentable where RawValue is String.
     ///
     /// This provides the failable initializer that attempts to parse
     /// the raw string value through the canonical byte transformation.
@@ -251,7 +296,7 @@ public extension UInt8.ASCII.RawRepresentable where Self.RawValue == String, Con
     /// Default RawRepresentable rawValue implementation
     ///
     /// Automatically provided for types that conform to both
-    /// Serializing and RawRepresentable where RawValue is String.
+    /// Serializable and RawRepresentable where RawValue is String.
     ///
     /// Converts the type to its string representation through
     /// canonical byte serialization.
@@ -271,7 +316,7 @@ public extension UInt8.ASCII.RawRepresentable where Self.RawValue == [UInt8], Co
     /// Default RawRepresentable implementation for byte array raw values
     ///
     /// Automatically provided for context-free types that conform to both
-    /// Serializing and RawRepresentable where RawValue is [UInt8].
+    /// Serializable and RawRepresentable where RawValue is [UInt8].
     ///
     /// This provides direct access to the canonical byte representation
     /// without any string conversion overhead.
@@ -314,7 +359,7 @@ public extension UInt8.ASCII.RawRepresentable where Self.RawValue: LosslessStrin
     /// Default RawRepresentable implementation for losslessly string-convertible raw values
     ///
     /// Automatically provided for context-free types that conform to both
-    /// Serializing and RawRepresentable where RawValue conforms to LosslessStringConvertible.
+    /// Serializable and RawRepresentable where RawValue conforms to LosslessStringConvertible.
     ///
     /// This supports types like Int, Double, UInt, etc. that can be converted
     /// to/from strings without loss of information.
@@ -369,7 +414,7 @@ public extension StringProtocol {
     ///
     /// String display composes as:
     /// ```
-    /// Serializing → [UInt8] (ASCII) → String (UTF-8 interpretation)
+    /// Serializable → [UInt8] (ASCII) → String (UTF-8 interpretation)
     /// ```
     ///
     /// ## Example
@@ -379,17 +424,17 @@ public extension StringProtocol {
     /// let string = String(value)  // Uses this initializer
     /// ```
     ///
-    /// - Parameter value: Any type conforming to UInt8.ASCII.Serializing
-    init<T: UInt8.ASCII.Serializing>(_ value: T) {
+    /// - Parameter value: Any type conforming to UInt8.ASCII.Serializable
+    init<T: UInt8.ASCII.Serializable>(_ value: T) {
         self = Self(decoding: T.serialize(value), as: UTF8.self)
     }
 }
 
-public extension UInt8.ASCII.Serializing where Self: CustomStringConvertible {
+public extension UInt8.ASCII.Serializable where Self: CustomStringConvertible {
     /// Default CustomStringConvertible implementation via byte serialization
     ///
     /// Automatically provided for types that conform to both
-    /// Serializing and CustomStringConvertible.
+    /// Serializable and CustomStringConvertible.
     ///
     /// Composes through canonical byte representation:
     /// ```
@@ -400,7 +445,7 @@ public extension UInt8.ASCII.Serializing where Self: CustomStringConvertible {
     }
 }
 
-public extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue: CustomStringConvertible {
+public extension UInt8.ASCII.Serializable where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue: CustomStringConvertible {
     /// Optimized CustomStringConvertible for RawRepresentable types with CustomStringConvertible raw values
     ///
     /// For types that store a CustomStringConvertible value internally,
@@ -413,7 +458,7 @@ public extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self: Cus
     }
 }
 
-public extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue == [UInt8] {
+public extension UInt8.ASCII.Serializable where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue == [UInt8] {
     /// UTF-8 decoded description for byte-array backed types
     ///
     /// For types where `rawValue` is `[UInt8]`, decode the bytes as UTF-8
@@ -435,12 +480,12 @@ public extension UInt8.ASCII.Serializing where Self: RawRepresentable, Self: Cus
 
 // MARK: - Optional ExpressibleBy*Literal Support
 
-public extension UInt8.ASCII.Serializing where Self: ExpressibleByStringLiteral, Context == Void {
+public extension UInt8.ASCII.Serializable where Self: ExpressibleByStringLiteral, Context == Void {
     /// Default ExpressibleByStringLiteral implementation
     ///
     /// **Warning**: Uses force-try. Will crash at runtime if the literal is invalid.
     ///
-    /// Automatically provided when a context-free type conforms to both Serializing and
+    /// Automatically provided when a context-free type conforms to both Serializable and
     /// ExpressibleByStringLiteral. Types can override this for custom behavior
     /// (e.g., using an unchecked initializer).
     ///
@@ -454,7 +499,7 @@ public extension UInt8.ASCII.Serializing where Self: ExpressibleByStringLiteral,
     /// ## Example
     ///
     /// ```swift
-    /// struct Token: UInt8.ASCII.Serializing, ExpressibleByStringLiteral {
+    /// struct Token: UInt8.ASCII.Serializable, ExpressibleByStringLiteral {
     ///     // init(stringLiteral:) provided automatically!
     /// }
     ///
@@ -470,20 +515,20 @@ public extension UInt8.ASCII.Serializing where Self: ExpressibleByStringLiteral,
     /// }
     /// ```
     init(stringLiteral value: String) {
-        // Uses the Serializing protocol's init(_: StringProtocol)
+        // Uses the Serializable protocol's init(_: StringProtocol)
         // which composes through init(ascii:)
         // swiftlint:disable:next force_try
         try! self.init(value)
     }
 }
 
-public extension UInt8.ASCII.Serializing where Self: ExpressibleByIntegerLiteral, Context == Void {
+public extension UInt8.ASCII.Serializable where Self: ExpressibleByIntegerLiteral, Context == Void {
     /// Default ExpressibleByIntegerLiteral implementation
     ///
     /// **Warning**: Uses force-try. Will crash at runtime if the integer
     /// string representation is invalid for this type.
     ///
-    /// Automatically provided when a context-free type conforms to both Serializing and
+    /// Automatically provided when a context-free type conforms to both Serializable and
     /// ExpressibleByIntegerLiteral. Converts integer to string, then parses
     /// through the canonical transformation.
     ///
@@ -497,7 +542,7 @@ public extension UInt8.ASCII.Serializing where Self: ExpressibleByIntegerLiteral
     /// ## Example
     ///
     /// ```swift
-    /// struct Port: UInt8.ASCII.Serializing, ExpressibleByIntegerLiteral {
+    /// struct Port: UInt8.ASCII.Serializable, ExpressibleByIntegerLiteral {
     ///     // init(integerLiteral:) provided automatically!
     /// }
     ///
@@ -516,13 +561,13 @@ public extension UInt8.ASCII.Serializing where Self: ExpressibleByIntegerLiteral
     }
 }
 
-public extension UInt8.ASCII.Serializing where Self: ExpressibleByFloatLiteral, Context == Void {
+public extension UInt8.ASCII.Serializable where Self: ExpressibleByFloatLiteral, Context == Void {
     /// Default ExpressibleByFloatLiteral implementation
     ///
     /// **Warning**: Uses force-try. Will crash at runtime if the float
     /// string representation is invalid for this type.
     ///
-    /// Automatically provided when a context-free type conforms to both Serializing and
+    /// Automatically provided when a context-free type conforms to both Serializable and
     /// ExpressibleByFloatLiteral. Converts float to string, then parses
     /// through the canonical transformation.
     ///
@@ -536,7 +581,7 @@ public extension UInt8.ASCII.Serializing where Self: ExpressibleByFloatLiteral, 
     /// ## Example
     ///
     /// ```swift
-    /// struct Quality: UInt8.ASCII.Serializing, ExpressibleByFloatLiteral {
+    /// struct Quality: UInt8.ASCII.Serializable, ExpressibleByFloatLiteral {
     ///     // init(floatLiteral:) provided automatically!
     /// }
     ///
