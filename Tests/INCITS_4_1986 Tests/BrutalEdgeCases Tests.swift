@@ -14,7 +14,7 @@ import Testing
 struct Brutal {
     @Suite
     struct `Brutal - Every Single Byte Value` {
-        @Test(arguments: Array(UInt8(0) ... UInt8(255)))
+        @Test(arguments: Array(UInt8(0)...UInt8(255)))
         func `exhaustive byte classification`(byte: UInt8) {
             // Every byte must be either ASCII or not - no exceptions
             let isASCII = byte <= 0x7F
@@ -33,7 +33,7 @@ struct Brutal {
             }
         }
 
-        @Test(arguments: Array(UInt8(0) ... UInt8(255)))
+        @Test(arguments: Array(UInt8(0)...UInt8(255)))
         func `case conversion idempotence for every byte`(byte: UInt8) {
             let upper = byte.ascii(case: .upper)
             let upperAgain = upper.ascii(case: .upper)
@@ -44,7 +44,7 @@ struct Brutal {
             #expect(lower == lowerAgain, "Lowercase idempotence failed for 0x\(String(byte, radix: 16))")
         }
 
-        @Test(arguments: Array(UInt8(0) ... UInt8(255)))
+        @Test(arguments: Array(UInt8(0)...UInt8(255)))
         func `case conversion involution for every byte`(byte: UInt8) {
             // For letters: upper->lower->upper should return to original
             if byte.ascii.isLetter {
@@ -60,7 +60,7 @@ struct Brutal {
 
     @Suite
     struct `Brutal - Predicate Consistency` {
-        @Test(arguments: Array(UInt8(0) ... UInt8(127)))
+        @Test(arguments: Array(UInt8(0)...UInt8(127)))
         func `control and printable are mutually exclusive`(byte: UInt8) {
             let isControl = byte.ascii.isControl
             let isPrintable = byte.ascii.isPrintable
@@ -76,7 +76,7 @@ struct Brutal {
             }
         }
 
-        @Test(arguments: Array(UInt8(0) ... UInt8(127)))
+        @Test(arguments: Array(UInt8(0)...UInt8(127)))
         func `every ASCII byte is either control or printable`(byte: UInt8) {
             let isControl = byte.ascii.isControl
             let isPrintable = byte.ascii.isPrintable
@@ -88,21 +88,21 @@ struct Brutal {
             )
         }
 
-        @Test(arguments: Array(UInt8(0) ... UInt8(127)))
+        @Test(arguments: Array(UInt8(0)...UInt8(127)))
         func `letter implies alphanumeric`(byte: UInt8) {
             if byte.ascii.isLetter {
                 #expect(byte.ascii.isAlphanumeric, "Letter 0x\(String(byte, radix: 16)) must be alphanumeric")
             }
         }
 
-        @Test(arguments: Array(UInt8(0) ... UInt8(127)))
+        @Test(arguments: Array(UInt8(0)...UInt8(127)))
         func `digit implies alphanumeric`(byte: UInt8) {
             if byte.ascii.isDigit {
                 #expect(byte.ascii.isAlphanumeric, "Digit 0x\(String(byte, radix: 16)) must be alphanumeric")
             }
         }
 
-        @Test(arguments: Array(UInt8(0) ... UInt8(127)))
+        @Test(arguments: Array(UInt8(0)...UInt8(127)))
         func `uppercase and lowercase are mutually exclusive`(byte: UInt8) {
             let isUpper = byte.ascii.isUppercase
             let isLower = byte.ascii.isLowercase
@@ -127,9 +127,9 @@ struct Brutal {
         func `UTF-8 multi-byte sequences rejected`() {
             // These are valid UTF-8 but NOT ASCII
             let multiByteSequences: [[UInt8]] = [
-                [0xC3, 0xA9], // é (2-byte)
-                [0xE2, 0x82, 0xAC], // € (3-byte)
-                [0xF0, 0x9F, 0x98, 0x80], // 😀 (4-byte)
+                [0xC3, 0xA9],  // é (2-byte)
+                [0xE2, 0x82, 0xAC],  // € (3-byte)
+                [0xF0, 0x9F, 0x98, 0x80],  // 😀 (4-byte)
             ]
 
             for seq in multiByteSequences {
@@ -154,24 +154,24 @@ struct Brutal {
         @Test
         func `look-alike characters not confused with ASCII`() {
             // Cyrillic 'а' looks like Latin 'a' but is U+0430 (multi-byte UTF-8)
-            let cyrillicA = "а" // U+0430
+            let cyrillicA = "а"  // U+0430
             #expect(UInt8(ascii: Character(cyrillicA)) == nil, "Cyrillic 'а' should not convert to ASCII")
 
             // Greek 'Α' looks like Latin 'A' but is U+0391
-            let greekA = "Α" // U+0391
+            let greekA = "Α"  // U+0391
             #expect(UInt8(ascii: Character(greekA)) == nil, "Greek 'Α' should not convert to ASCII")
         }
 
         @Test
         func `zero-width characters rejected`() {
-            let zeroWidth = "\u{200B}" // Zero-width space
+            let zeroWidth = "\u{200B}"  // Zero-width space
             #expect(UInt8(ascii: Character(zeroWidth)) == nil, "Zero-width space should be rejected")
         }
 
         @Test
         func `combining characters rejected`() {
             // Combining diacritical marks
-            let combining = "\u{0301}" // Combining acute accent
+            let combining = "\u{0301}"  // Combining acute accent
             #expect(UInt8(ascii: Character(combining)) == nil, "Combining character should be rejected")
         }
 
@@ -219,7 +219,7 @@ struct Brutal {
         @Test
         func `alternating valid and invalid bytes`() {
             let size = 1000
-            let alternating = (0 ..< size).map { $0 % 2 == 0 ? UInt8.ascii.A : UInt8(0x80) }
+            let alternating = (0..<size).map { $0 % 2 == 0 ? UInt8.ascii.A : UInt8(0x80) }
             #expect(!alternating.ascii.isAllASCII, "Alternating pattern should fail")
         }
     }
@@ -274,7 +274,7 @@ struct Brutal {
         @Test
         func `line endings in every ASCII position`() {
             var text = ""
-            for _ in 0 ..< 100 {
+            for _ in 0..<100 {
                 text += "x\rx\nx\r\n"
             }
             let normalized = text.normalized(to: .lf)
@@ -285,7 +285,7 @@ struct Brutal {
         func `normalize already normalized text - idempotence stress test`() {
             var text = "line1\nline2\nline3"
             // Apply 100 times - should remain stable
-            for _ in 0 ..< 100 {
+            for _ in 0..<100 {
                 text = text.normalized(to: .lf)
             }
             #expect(text == "line1\nline2\nline3", "Repeated normalization should be stable")
@@ -354,7 +354,7 @@ struct Brutal {
         @Test
         func `case conversion with every non-letter byte`() {
             // All non-letters should remain unchanged
-            let nonLetters = Array(UInt8(0) ... UInt8(127)).filter { !$0.ascii.isLetter }
+            let nonLetters = Array(UInt8(0)...UInt8(127)).filter { !$0.ascii.isLetter }
             for byte in nonLetters {
                 #expect(
                     byte.ascii(case: .upper) == byte,
@@ -369,13 +369,13 @@ struct Brutal {
 
         @Test
         func `case conversion round-trip for all letters`() {
-            for byte in UInt8.ascii.A ... UInt8.ascii.Z {
+            for byte in UInt8.ascii.A...UInt8.ascii.Z {
                 let lower = byte.ascii(case: .lower)
                 let backToUpper = lower.ascii(case: .upper)
                 #expect(backToUpper == byte, "Round-trip failed for 0x\(String(byte, radix: 16))")
             }
 
-            for byte in UInt8.ascii.a ... UInt8.ascii.z {
+            for byte in UInt8.ascii.a...UInt8.ascii.z {
                 let upper = byte.ascii(case: .upper)
                 let backToLower = upper.ascii(case: .lower)
                 #expect(backToLower == byte, "Round-trip failed for 0x\(String(byte, radix: 16))")
@@ -401,13 +401,13 @@ struct Brutal {
             var bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.l, .ascii.o]
 
             // Apply uppercase 1000 times
-            for _ in 0 ..< 1000 {
+            for _ in 0..<1000 {
                 bytes = bytes.ascii(case: .upper)
             }
             #expect(bytes == [UInt8.ascii.H, .ascii.E, .ascii.L, .ascii.L, .ascii.O])
 
             // Now lowercase 1000 times
-            for _ in 0 ..< 1000 {
+            for _ in 0..<1000 {
                 bytes = bytes.ascii(case: .lower)
             }
             #expect(bytes == [UInt8.ascii.h, .ascii.e, .ascii.l, .ascii.l, .ascii.o])
@@ -420,13 +420,13 @@ struct Brutal {
     struct `Brutal - Validation Exhaustive` {
         @Test
         func `every valid ASCII byte in one array`() {
-            let allValidASCII = Array(UInt8(0) ... UInt8(127))
+            let allValidASCII = Array(UInt8(0)...UInt8(127))
             #expect(allValidASCII.ascii.isAllASCII, "All 128 ASCII bytes should validate")
         }
 
         @Test
         func `every invalid byte tested individually`() {
-            for byte in UInt8(128) ... UInt8(255) {
+            for byte in UInt8(128)...UInt8(255) {
                 #expect(![byte].ascii.isAllASCII, "Byte 0x\(String(byte, radix: 16)) should fail")
             }
         }
@@ -434,7 +434,7 @@ struct Brutal {
         @Test
         func `non-ASCII byte at every position in array`() {
             let size = 100
-            for position in 0 ..< size {
+            for position in 0..<size {
                 var bytes = Array(repeating: UInt8.ascii.A, count: size)
                 bytes[position] = 0x80
                 #expect(!bytes.ascii.isAllASCII, "Should detect non-ASCII at position \(position)")
@@ -443,7 +443,7 @@ struct Brutal {
 
         @Test
         func `validation with every possible first byte`() {
-            for firstByte in UInt8(0) ... UInt8(255) {
+            for firstByte in UInt8(0)...UInt8(255) {
                 let array = [firstByte, UInt8.ascii.A, UInt8.ascii.B]
                 let expected = firstByte <= 0x7F
                 #expect(
@@ -455,7 +455,7 @@ struct Brutal {
 
         @Test
         func `validation with every possible last byte`() {
-            for lastByte in UInt8(0) ... UInt8(255) {
+            for lastByte in UInt8(0)...UInt8(255) {
                 let array = [UInt8.ascii.A, UInt8.ascii.B, lastByte]
                 let expected = lastByte <= 0x7F
                 #expect(
@@ -472,7 +472,7 @@ struct Brutal {
     struct `Brutal - String Conversion Edge Cases` {
         @Test
         func `round-trip every ASCII character`() {
-            for byte in UInt8(0) ... UInt8(127) {
+            for byte in UInt8(0)...UInt8(127) {
                 if let str = String(ascii: [byte]) {
                     if let backToBytes = [UInt8](ascii: str) {
                         #expect(backToBytes == [byte], "Round-trip failed for 0x\(String(byte, radix: 16))")
@@ -483,7 +483,7 @@ struct Brutal {
 
         @Test
         func `string conversion fails for non-ASCII`() {
-            for byte in UInt8(128) ... UInt8(255) {
+            for byte in UInt8(128)...UInt8(255) {
                 #expect(
                     String(ascii: [byte]) == nil, "Non-ASCII byte 0x\(String(byte, radix: 16)) should fail conversion"
                 )
@@ -513,7 +513,7 @@ struct Brutal {
 
         @Test
         func `all control characters convert and round-trip`() {
-            let controls = Array(UInt8.ascii.nul ... UInt8.ascii.us) + [UInt8.ascii.del]
+            let controls = Array(UInt8.ascii.nul...UInt8.ascii.us) + [UInt8.ascii.del]
 
             if let str = String(ascii: controls) {
                 if let backToBytes = [UInt8](ascii: str) {
@@ -567,8 +567,8 @@ extension `Performance Tests` {
 
         @Test(.timed(threshold: .milliseconds(100)))
         func `normalize 100K byte string with 10K line endings`() {
-            let line = "xxxxxxxxxx\n" // 11 bytes
-            let text = String(repeating: line, count: 10000) // ~110KB
+            let line = "xxxxxxxxxx\n"  // 11 bytes
+            let text = String(repeating: line, count: 10000)  // ~110KB
             _ = text.normalized(to: .crlf)
         }
 
@@ -581,7 +581,7 @@ extension `Performance Tests` {
 
         @Test(.timed(threshold: .milliseconds(500)))
         func `character to byte conversion - 100K ASCII characters`() {
-            for _ in 0 ..< 100_000 {
+            for _ in 0..<100_000 {
                 _ = UInt8(ascii: "A" as Character)
                 _ = UInt8(ascii: "z" as Character)
                 _ = UInt8(ascii: "0" as Character)
@@ -592,8 +592,8 @@ extension `Performance Tests` {
         func `predicate checks on every ASCII byte - 1.28M checks`() {
             // 10K iterations × 128 bytes = 1.28M operations
             // Expected ~270ms based on 4.7M ops/sec
-            for _ in 0 ..< 10000 {
-                for byte in UInt8(0) ... UInt8(127) {
+            for _ in 0..<10000 {
+                for byte in UInt8(0)...UInt8(127) {
                     _ = byte.ascii.isLetter
                 }
             }

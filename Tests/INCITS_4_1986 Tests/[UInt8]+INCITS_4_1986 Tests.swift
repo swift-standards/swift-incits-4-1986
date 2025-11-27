@@ -23,9 +23,9 @@ struct `[UInt8] Tests` {
 
         @Test
         func `byte array has case conversion method`() {
-            let bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.l, .ascii.o] // "Hello"
+            let bytes: [UInt8] = [UInt8.ascii.H, .ascii.e, .ascii.l, .ascii.l, .ascii.o]  // "Hello"
             let upper = bytes.ascii(case: .upper)
-            #expect(upper == [UInt8.ascii.H, .ascii.E, .ascii.L, .ascii.L, .ascii.O]) // "HELLO"
+            #expect(upper == [UInt8.ascii.H, .ascii.E, .ascii.L, .ascii.L, .ascii.O])  // "HELLO"
         }
 
         @Test
@@ -46,10 +46,10 @@ struct `[UInt8] Tests` {
         @Test
         func `byte array has whitespaces constant`() {
             let ws = [UInt8].ascii.whitespaces
-            #expect(ws.contains(UInt8.ascii.sp)) // Space
-            #expect(ws.contains(UInt8.ascii.htab)) // Tab
-            #expect(ws.contains(UInt8.ascii.lf)) // LF
-            #expect(ws.contains(UInt8.ascii.cr)) // CR
+            #expect(ws.contains(UInt8.ascii.sp))  // Space
+            #expect(ws.contains(UInt8.ascii.htab))  // Tab
+            #expect(ws.contains(UInt8.ascii.lf))  // LF
+            #expect(ws.contains(UInt8.ascii.cr))  // CR
         }
     }
 }
@@ -59,15 +59,15 @@ extension `Performance Tests` {
     struct `[UInt8] - Performance` {
         @Test(.timed(threshold: .milliseconds(150)))
         func `byte array string conversion 10K times`() {
-            for _ in 0 ..< 10000 {
+            for _ in 0..<10000 {
                 _ = [UInt8](ascii: "Hello World!")
             }
         }
 
         @Test(.timed(threshold: .milliseconds(2000)))
         func `byte array case conversion 10K arrays`() {
-            let bytes: [UInt8] = Array(repeating: 0x41, count: 100) // "AAA..."
-            for _ in 0 ..< 10000 {
+            let bytes: [UInt8] = Array(repeating: 0x41, count: 100)  // "AAA..."
+            for _ in 0..<10000 {
                 _ = bytes.ascii(case: Character.Case.lower)
             }
         }
@@ -77,7 +77,7 @@ extension `Performance Tests` {
         )
         func `byte array validation 10K arrays`() {
             let bytes: [UInt8] = Array(repeating: 0x41, count: 1000)
-            for _ in 0 ..< 10000 {
+            for _ in 0..<10000 {
                 _ = bytes.ascii.isAllASCII
             }
         }

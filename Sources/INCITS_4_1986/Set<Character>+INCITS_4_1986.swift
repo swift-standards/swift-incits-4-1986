@@ -5,7 +5,7 @@
 
 import Standards
 
-public extension Set {
+extension Set {
     /// Convenient access to INCITS 4-1986 (US-ASCII) character constants
     ///
     /// Returns the INCITS_4_1986 namespace for accessing ASCII constants without conflicts.
@@ -15,14 +15,14 @@ public extension Set {
     /// let whitespaces: Set<Character> = .ascii.whitespaceCharacters
     /// let trimmed = " hello ".trimming(.ascii.whitespaceCharacters)
     /// ```
-    static var ascii: ASCII.Type {
+    public static var ascii: ASCII.Type {
         ASCII.self
     }
 
-    enum ASCII {}
+    public enum ASCII {}
 }
 
-public extension Set<Character>.ASCII {
+extension Set<Character>.ASCII {
     /// ASCII whitespace characters as Set<Character>
     ///
     /// Derived from the canonical byte-level definition in `INCITS_4_1986.whitespaces`.
@@ -41,10 +41,11 @@ public extension Set<Character>.ASCII {
     /// ## See Also
     ///
     /// - ``isWhitespace(_:)``
-    static let whitespaces: Set<Character> = {
-        var set = Set(INCITS_4_1986.whitespaces.map {
-            Character(UnicodeScalar($0))
-        })
+    public static let whitespaces: Set<Character> = {
+        var set = Set(
+            INCITS_4_1986.whitespaces.map {
+                Character(UnicodeScalar($0))
+            })
         set.insert(Character(.init(.ascii.crlf)))
         return set
     }()
@@ -77,7 +78,7 @@ public extension Set<Character>.ASCII {
     ///
     /// - Parameter char: The Character to test
     /// - Returns: `true` if all Unicode scalars in the Character are ASCII whitespace
-    static func isWhitespace(_ char: Character) -> Bool {
+    public static func isWhitespace(_ char: Character) -> Bool {
         char.unicodeScalars.allSatisfy { scalar in
             scalar.value < 128 && INCITS_4_1986.whitespaces.contains(UInt8(scalar.value))
         }

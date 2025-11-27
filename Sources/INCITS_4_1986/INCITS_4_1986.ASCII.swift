@@ -5,7 +5,7 @@
 
 import Standards
 
-public extension INCITS_4_1986 {
+extension INCITS_4_1986 {
     /// Generic ASCII operations wrapper
     ///
     /// Provides ASCII-related operations for byte collections and strings per INCITS 4-1986 (US-ASCII).
@@ -33,7 +33,7 @@ public extension INCITS_4_1986 {
     /// ## See Also
     ///
     /// - ``INCITS_4_1986``
-    struct ASCII<Source> {
+    public struct ASCII<Source> {
         /// The wrapped source (bytes or string)
         public let source: Source
 
@@ -47,10 +47,10 @@ public extension INCITS_4_1986 {
 
 // MARK: - Byte Collection: Validation
 
-public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
+extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
     /// The wrapped byte collection (alias for source)
     @inlinable
-    var bytes: Source { source }
+    public var bytes: Source { source }
 
     /// Returns true if all bytes are valid ASCII (0x00-0x7F)
     ///
@@ -64,7 +64,7 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     /// [104, 255, 108].ascii.isAllASCII            // false (0xFF invalid)
     /// ```
     @inlinable
-    var isAllASCII: Bool {
+    public var isAllASCII: Bool {
         INCITS_4_1986.isAllASCII(source)
     }
 
@@ -80,14 +80,14 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     /// invalid.ascii()  // nil
     /// ```
     @inlinable
-    func callAsFunction() -> [UInt8]? {
+    public func callAsFunction() -> [UInt8]? {
         isAllASCII ? Array(source) : nil
     }
 }
 
 // MARK: - Byte Collection: Case Conversion
 
-public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
+extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
     /// Converts ASCII letters to specified case
     ///
     /// Enables call syntax: `bytes.ascii(case: .upper)`
@@ -95,7 +95,7 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     /// - Parameter case: Target case (`.upper` or `.lower`)
     /// - Returns: New byte array with ASCII letters converted
     @inlinable
-    func callAsFunction(case: Character.Case) -> [UInt8] {
+    public func callAsFunction(case: Character.Case) -> [UInt8] {
         INCITS_4_1986.convert(source, to: `case`)
     }
 
@@ -117,7 +117,7 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     ///
     /// - Returns: New byte array with ASCII letters converted to uppercase
     @inlinable
-    func uppercased() -> [UInt8] {
+    public func uppercased() -> [UInt8] {
         INCITS_4_1986.convert(source, to: .upper)
     }
 
@@ -138,7 +138,7 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     ///
     /// - Returns: New byte array with ASCII letters converted to lowercase
     @inlinable
-    func lowercased() -> [UInt8] {
+    public func lowercased() -> [UInt8] {
         INCITS_4_1986.convert(source, to: .lower)
     }
 
@@ -160,14 +160,14 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     /// - Parameter characterSet: The set of ASCII byte values to trim
     /// - Returns: A subsequence with the specified bytes trimmed from both ends
     @inlinable
-    func trimming(_ characterSet: Set<UInt8>) -> Source.SubSequence {
+    public func trimming(_ characterSet: Set<UInt8>) -> Source.SubSequence {
         source.trimming(characterSet)
     }
 }
 
 // MARK: - Byte Collection: Comparison
 
-public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
+extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
     /// Compares two byte sequences for ASCII case-insensitive equality
     ///
     /// Performs element-wise comparison using ASCII case-insensitive rules.
@@ -193,7 +193,7 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     /// - Parameter other: The byte sequence to compare against
     /// - Returns: `true` if sequences are equal ignoring ASCII case, `false` otherwise
     @inlinable
-    func elementsEqualCaseInsensitive<Other: Collection>(
+    public func elementsEqualCaseInsensitive<Other: Collection>(
         _ other: Other
     ) -> Bool where Other.Element == UInt8 {
         guard source.count == other.count else { return false }
@@ -223,7 +223,7 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     /// - Parameter prefix: The prefix to check for
     /// - Returns: `true` if collection starts with prefix (case-insensitive)
     @inlinable
-    func hasPrefix<Prefix: Collection>(
+    public func hasPrefix<Prefix: Collection>(
         caseInsensitive prefix: Prefix
     ) -> Bool where Prefix.Element == UInt8 {
         guard source.count >= prefix.count else { return false }
@@ -242,11 +242,11 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
 
 // MARK: - Byte Collection: Line Operations
 
-public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
+extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
     /// A range representing a line within a byte collection
     ///
     /// Contains the start and end indices of a line, excluding the line ending.
-    typealias LineRange = Range<Source.Index>
+    public typealias LineRange = Range<Source.Index>
 
     /// Returns index ranges for all lines in the byte collection (zero-copy)
     ///
@@ -283,7 +283,7 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     /// - Parameter estimatedLineCount: Optional hint for number of lines to reserve capacity
     /// - Returns: Array of index ranges, one per line (excluding line endings)
     @inlinable
-    func lineRanges(estimatedLineCount: Int? = nil) -> [LineRange] {
+    public func lineRanges(estimatedLineCount: Int? = nil) -> [LineRange] {
         var ranges: [LineRange] = []
         if let estimate = estimatedLineCount {
             ranges.reserveCapacity(estimate)
@@ -341,89 +341,89 @@ public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element ==
     ///
     /// - Returns: Array of byte arrays, one per line
     @inlinable
-    func lines() -> [[UInt8]] {
+    public func lines() -> [[UInt8]] {
         lineRanges().map { Array(source[$0]) }
     }
 }
 
 // MARK: - Byte Collection: Predicates
 
-public extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
+extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 {
     /// Returns true if all bytes are ASCII whitespace characters
     ///
     /// Tests whether every byte is one of: SPACE (0x20), TAB (0x09), LF (0x0A), CR (0x0D).
     @inlinable
-    var isAllWhitespace: Bool {
+    public var isAllWhitespace: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllWhitespace(source)
     }
 
     /// Returns true if all bytes are ASCII digits (0-9)
     @inlinable
-    var isAllDigits: Bool {
+    public var isAllDigits: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllDigits(source)
     }
 
     /// Returns true if all bytes are ASCII letters (A-Z, a-z)
     @inlinable
-    var isAllLetters: Bool {
+    public var isAllLetters: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllLetters(source)
     }
 
     /// Returns true if all bytes are ASCII alphanumeric (A-Z, a-z, 0-9)
     @inlinable
-    var isAllAlphanumeric: Bool {
+    public var isAllAlphanumeric: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllAlphanumeric(source)
     }
 
     /// Returns true if all bytes are ASCII control characters (0x00-0x1F or 0x7F)
     @inlinable
-    var isAllControl: Bool {
+    public var isAllControl: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllControl(source)
     }
 
     /// Returns true if all bytes are ASCII visible characters (0x21-0x7E)
     @inlinable
-    var isAllVisible: Bool {
+    public var isAllVisible: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllVisible(source)
     }
 
     /// Returns true if all bytes are ASCII printable characters (0x20-0x7E)
     @inlinable
-    var isAllPrintable: Bool {
+    public var isAllPrintable: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllPrintable(source)
     }
 
     /// Returns true if all ASCII letters are lowercase (non-letters ignored)
     @inlinable
-    var isAllLowercase: Bool {
+    public var isAllLowercase: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllLowercase(source)
     }
 
     /// Returns true if all ASCII letters are uppercase (non-letters ignored)
     @inlinable
-    var isAllUppercase: Bool {
+    public var isAllUppercase: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllUppercase(source)
     }
 
     /// Returns true if collection contains any non-ASCII bytes (>= 0x80)
     @inlinable
-    var containsNonASCII: Bool {
+    public var containsNonASCII: Bool {
         INCITS_4_1986.ByteArrayClassification.containsNonASCII(source)
     }
 
     /// Returns true if collection contains at least one hex digit (0-9, A-F, a-f)
     @inlinable
-    var containsHexDigit: Bool {
+    public var containsHexDigit: Bool {
         INCITS_4_1986.ByteArrayClassification.containsHexDigit(source)
     }
 }
 
 // MARK: - StringProtocol: Validation
 
-public extension INCITS_4_1986.ASCII where Source: StringProtocol {
+extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// The wrapped string (alias for source)
     @inlinable
-    var value: Source { source }
+    public var value: Source { source }
 
     /// Returns true if all characters are valid ASCII
     ///
@@ -434,7 +434,7 @@ public extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// "hello🌍".ascii.isAllASCII  // false
     /// ```
     @inlinable
-    var isAllASCII: Bool {
+    public var isAllASCII: Bool {
         INCITS_4_1986.StringClassification.isAllASCII(source)
     }
 
@@ -445,14 +445,14 @@ public extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// "Hello🌍".ascii()  // nil
     /// ```
     @inlinable
-    func callAsFunction() -> Source? {
+    public func callAsFunction() -> Source? {
         isAllASCII ? source : nil
     }
 }
 
 // MARK: - StringProtocol: Case Conversion
 
-public extension INCITS_4_1986.ASCII where Source: StringProtocol {
+extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// Converts ASCII letters to specified case
     ///
     /// Transforms all ASCII letters (A-Z, a-z) to the specified case, leaving
@@ -469,7 +469,7 @@ public extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// - Parameter case: The target case (`.upper` or `.lower`)
     /// - Returns: New string with ASCII letters converted to the specified case
     @inlinable
-    func callAsFunction(case: Character.Case) -> Source {
+    public func callAsFunction(case: Character.Case) -> Source {
         INCITS_4_1986.convert(source, to: `case`)
     }
 
@@ -484,7 +484,7 @@ public extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// "hello🌍".ascii.uppercased()  // "HELLO🌍"
     /// ```
     @inlinable
-    func uppercased() -> Source {
+    public func uppercased() -> Source {
         INCITS_4_1986.convert(source, to: .upper)
     }
 
@@ -499,7 +499,7 @@ public extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// "HELLO🌍".ascii.lowercased()  // "hello🌍"
     /// ```
     @inlinable
-    func lowercased() -> Source {
+    public func lowercased() -> Source {
         INCITS_4_1986.convert(source, to: .lower)
     }
 
@@ -512,109 +512,109 @@ public extension INCITS_4_1986.ASCII where Source: StringProtocol {
     ///
     /// - ``INCITS_4_1986/LineEndingDetection/detect(_:)``
     @inlinable
-    func detectedLineEnding() -> INCITS_4_1986.FormatEffectors.LineEnding? {
+    public func detectedLineEnding() -> INCITS_4_1986.FormatEffectors.LineEnding? {
         INCITS_4_1986.LineEndingDetection.detect(source)
     }
 }
 
 // MARK: - StringProtocol: Predicates
 
-public extension INCITS_4_1986.ASCII where Source: StringProtocol {
+extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// Returns true if all characters are ASCII whitespace
     @inlinable
-    var isAllWhitespace: Bool {
+    public var isAllWhitespace: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllWhitespace(source.utf8)
     }
 
     /// Returns true if all characters are ASCII digits (0-9)
     @inlinable
-    var isAllDigits: Bool {
+    public var isAllDigits: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllDigits(source.utf8)
     }
 
     /// Returns true if all characters are ASCII letters (A-Z, a-z)
     @inlinable
-    var isAllLetters: Bool {
+    public var isAllLetters: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllLetters(source.utf8)
     }
 
     /// Returns true if all characters are ASCII alphanumeric (A-Z, a-z, 0-9)
     @inlinable
-    var isAllAlphanumeric: Bool {
+    public var isAllAlphanumeric: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllAlphanumeric(source.utf8)
     }
 
     /// Returns true if all characters are ASCII control characters (0x00-0x1F or 0x7F)
     @inlinable
-    var isAllControl: Bool {
+    public var isAllControl: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllControl(source.utf8)
     }
 
     /// Returns true if all characters are ASCII visible characters (0x21-0x7E)
     @inlinable
-    var isAllVisible: Bool {
+    public var isAllVisible: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllVisible(source.utf8)
     }
 
     /// Returns true if all characters are ASCII printable characters (0x20-0x7E)
     @inlinable
-    var isAllPrintable: Bool {
+    public var isAllPrintable: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllPrintable(source.utf8)
     }
 
     /// Returns true if all ASCII letters are lowercase (non-letters ignored)
     @inlinable
-    var isAllLowercase: Bool {
+    public var isAllLowercase: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllLowercase(source.utf8)
     }
 
     /// Returns true if all ASCII letters are uppercase (non-letters ignored)
     @inlinable
-    var isAllUppercase: Bool {
+    public var isAllUppercase: Bool {
         INCITS_4_1986.ByteArrayClassification.isAllUppercase(source.utf8)
     }
 
     /// Returns true if string contains any non-ASCII characters (>= 0x80)
     @inlinable
-    var containsNonASCII: Bool {
+    public var containsNonASCII: Bool {
         INCITS_4_1986.ByteArrayClassification.containsNonASCII(source.utf8)
     }
 
     /// Returns true if string contains at least one hex digit (0-9, A-F, a-f)
     @inlinable
-    var containsHexDigit: Bool {
+    public var containsHexDigit: Bool {
         INCITS_4_1986.ByteArrayClassification.containsHexDigit(source.utf8)
     }
 
     /// Returns true if string contains mixed line ending styles
     @inlinable
-    var containsMixedLineEndings: Bool {
+    public var containsMixedLineEndings: Bool {
         INCITS_4_1986.LineEndingDetection.hasMixedLineEndings(source)
     }
 }
 
 // MARK: - StringProtocol: Static Constants
 
-public extension INCITS_4_1986.ASCII where Source: StringProtocol {
+extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// Line Feed character as a string
-    static var lf: Source {
+    public static var lf: Source {
         Source(decoding: [UInt8.ascii.lf], as: UTF8.self)
     }
 
     /// Carriage Return character as a string
-    static var cr: Source {
+    public static var cr: Source {
         Source(decoding: [UInt8.ascii.cr], as: UTF8.self)
     }
 
     /// CRLF sequence as a string
-    static var crlf: Source {
+    public static var crlf: Source {
         Source(decoding: INCITS_4_1986.ControlCharacters.crlf, as: UTF8.self)
     }
 }
 
 // MARK: - StringProtocol: Static Methods
 
-public extension INCITS_4_1986.ASCII where Source: StringProtocol {
+extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// Creates a string from bytes without ASCII validation
     ///
     /// Constructs a String from a byte array, assuming all bytes are valid ASCII without validation.
@@ -628,7 +628,7 @@ public extension INCITS_4_1986.ASCII where Source: StringProtocol {
     ///
     /// - Parameter bytes: Array of bytes to decode as ASCII (assumed valid, no checking performed)
     /// - Returns: String decoded from the bytes
-    static func unchecked(_ bytes: [UInt8]) -> Source {
+    public static func unchecked(_ bytes: [UInt8]) -> Source {
         Source(decoding: bytes, as: UTF8.self)
     }
 }

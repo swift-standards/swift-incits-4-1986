@@ -68,7 +68,7 @@ struct `Case Conversion Tests` {
 
         @Test(arguments: [
             ("A", "a"), ("B", "b"), ("Z", "z"),
-            ("M", "m"), ("N", "n")
+            ("M", "m"), ("N", "n"),
         ])
         func `uppercase to lowercase`(upper: Character, lower: Character) {
             let upperByte = UInt8(ascii: upper)!
@@ -133,7 +133,7 @@ struct `Case Conversion Tests` {
             #expect(a - A == INCITS_4_1986.CaseConversion.offset)
         }
 
-        @Test(arguments: Array(zip(UInt8.ascii.a ... UInt8.ascii.z, UInt8.ascii.A ... UInt8.ascii.Z)))
+        @Test(arguments: Array(zip(UInt8.ascii.a...UInt8.ascii.z, UInt8.ascii.A...UInt8.ascii.Z)))
         func `all letter pairs have correct offset`(lower: UInt8, upper: UInt8) {
             #expect(
                 lower - upper == 32,
@@ -169,7 +169,7 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `single byte case conversion 1M times`() {
             let byte = UInt8.ascii.a
-            for _ in 0 ..< 1_000_000 {
+            for _ in 0..<1_000_000 {
                 _ = byte.ascii(case: .upper)
             }
         }

@@ -69,7 +69,7 @@ extension `Performance Tests` {
     struct `String Trimming - Performance` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `trim 10K strings with ASCII whitespace`() {
-            for _ in 0 ..< 10000 {
+            for _ in 0..<10000 {
                 _ = "  hello world  ".trimming(Set<Character>.ascii.whitespaces)
             }
         }

@@ -50,7 +50,7 @@
 //  Created by Coen ten Thije Boonkkamp on 24/11/2025.
 //
 
-public extension UInt8.ASCII {
+extension UInt8.ASCII {
     /// Protocol for types with canonical ASCII byte-level transformations
     ///
     /// Types conforming to this protocol work at the byte level as the primitive form,
@@ -109,7 +109,7 @@ public extension UInt8.ASCII {
     /// - String conversion via `StringProtocol.init(_:)`
     /// - CustomStringConvertible (if type conforms)
     /// - `UInt8.Streaming` conformance (buffer-based serialization)
-    protocol Serializable: UInt8.Serializable {
+    public protocol Serializable: UInt8.Serializable {
         /// The error type for parsing failures
         associatedtype Error: Swift.Error
 
@@ -167,15 +167,15 @@ public extension UInt8.ASCII {
         /// - Returns: A function that converts Self to [UInt8]
         static var serialize: @Sendable (Self) -> [UInt8] { get }
     }
+}
 
-    protocol RawRepresentable:
-        UInt8.ASCII.Serializable,
-        Swift.RawRepresentable {}
+extension UInt8.ASCII {
+    public protocol RawRepresentable: UInt8.ASCII.Serializable, Swift.RawRepresentable {}
 }
 
 // MARK: - UInt8.Streaming Default Implementation
 
-public extension UInt8.ASCII.Serializable {
+extension UInt8.ASCII.Serializable {
     /// Default `UInt8.Streaming` implementation via `static var serialize`
     ///
     /// Automatically provided for all `UInt8.ASCII.Serializable` types.
@@ -207,7 +207,7 @@ public extension UInt8.ASCII.Serializable {
     ///     }
     /// }
     /// ```
-    func serialize<Buffer: RangeReplaceableCollection>(
+    public func serialize<Buffer: RangeReplaceableCollection>(
         into buffer: inout Buffer
     ) where Buffer.Element == UInt8 {
         buffer.append(contentsOf: Self.serialize(self))
@@ -216,7 +216,7 @@ public extension UInt8.ASCII.Serializable {
 
 // MARK: - Context-Free Convenience
 
-public extension UInt8.ASCII.Serializable where Context == Void {
+extension UInt8.ASCII.Serializable where Context == Void {
     /// Parse from canonical ASCII byte representation (context-free convenience)
     ///
     /// This convenience initializer is available for context-free types
@@ -236,12 +236,12 @@ public extension UInt8.ASCII.Serializable where Context == Void {
     ///
     /// - Parameter bytes: The ASCII byte representation
     /// - Throws: Self.Error if the bytes are malformed
-    init<Bytes: Collection>(ascii bytes: Bytes) throws(Error) where Bytes.Element == UInt8 {
+    public init<Bytes: Collection>(ascii bytes: Bytes) throws(Error) where Bytes.Element == UInt8 {
         try self.init(ascii: bytes, in: ())
     }
 }
 
-public extension UInt8.ASCII.Serializable where Context == Void {
+extension UInt8.ASCII.Serializable where Context == Void {
     /// Parse from string representation (STRING CONVENIENCE)
     ///
     /// Automatically provided for context-free types (`Context == Void`).
@@ -262,12 +262,12 @@ public extension UInt8.ASCII.Serializable where Context == Void {
     ///
     /// - Parameter string: The string representation to parse
     /// - Throws: Self.Error if the string is malformed
-    init(_ string: some StringProtocol) throws(Error) {
+    public init(_ string: some StringProtocol) throws(Error) {
         try self.init(ascii: Array(string.utf8))
     }
 }
 
-public extension UInt8.ASCII.RawRepresentable where Self.RawValue == String, Context == Void {
+extension UInt8.ASCII.RawRepresentable where Self.RawValue == String, Context == Void {
     /// Default RawRepresentable implementation for string-based raw values
     ///
     /// Automatically provided for context-free types that conform to both
@@ -289,7 +289,7 @@ public extension UInt8.ASCII.RawRepresentable where Self.RawValue == String, Con
     /// let addr = EmailAddress(rawValue: "user@example.com")
     /// // Internally calls: init(ascii: Array("user@example.com".utf8))
     /// ```
-    init?(rawValue: String) {
+    public init?(rawValue: String) {
         try? self.init(ascii: Array(rawValue.utf8))
     }
 
@@ -307,12 +307,12 @@ public extension UInt8.ASCII.RawRepresentable where Self.RawValue == String, Con
     /// ```
     /// Self → [UInt8] (ASCII) → String (UTF-8 interpretation)
     /// ```
-    var rawValue: String {
+    public var rawValue: String {
         String(decoding: Self.serialize(self), as: UTF8.self)
     }
 }
 
-public extension UInt8.ASCII.RawRepresentable where Self.RawValue == [UInt8], Context == Void {
+extension UInt8.ASCII.RawRepresentable where Self.RawValue == [UInt8], Context == Void {
     /// Default RawRepresentable implementation for byte array raw values
     ///
     /// Automatically provided for context-free types that conform to both
@@ -335,7 +335,7 @@ public extension UInt8.ASCII.RawRepresentable where Self.RawValue == [UInt8], Co
     /// let bytes: [UInt8] = [0x41, 0x42, 0x43]  // "ABC"
     /// let value = SomeType(rawValue: bytes)
     /// ```
-    init?(rawValue: [UInt8]) {
+    public init?(rawValue: [UInt8]) {
         try? self.init(ascii: rawValue)
     }
 
@@ -350,12 +350,12 @@ public extension UInt8.ASCII.RawRepresentable where Self.RawValue == [UInt8], Co
     /// ```
     /// Self → [UInt8] (via serialize)
     /// ```
-    var rawValue: [UInt8] {
+    public var rawValue: [UInt8] {
         Self.serialize(self)
     }
 }
 
-public extension UInt8.ASCII.RawRepresentable where Self.RawValue: LosslessStringConvertible, Context == Void {
+extension UInt8.ASCII.RawRepresentable where Self.RawValue: LosslessStringConvertible, Context == Void {
     /// Default RawRepresentable implementation for losslessly string-convertible raw values
     ///
     /// Automatically provided for context-free types that conform to both
@@ -383,7 +383,7 @@ public extension UInt8.ASCII.RawRepresentable where Self.RawValue: LosslessStrin
     ///
     /// This extension is less specific than the String-specialized version,
     /// so types with RawValue == String will use that extension instead.
-    init?(rawValue: RawValue) {
+    public init?(rawValue: RawValue) {
         try? self.init(ascii: Array(String(rawValue).utf8))
     }
 
@@ -398,14 +398,14 @@ public extension UInt8.ASCII.RawRepresentable where Self.RawValue: LosslessStrin
     /// ```
     /// Self → [UInt8] (ASCII) → String → RawValue
     /// ```
-    var rawValue: RawValue {
+    public var rawValue: RawValue {
         let string = String(decoding: Self.serialize(self), as: UTF8.self)
         // Safe to force unwrap: LosslessStringConvertible guarantees round-trip
         return RawValue(string)!
     }
 }
 
-public extension StringProtocol {
+extension StringProtocol {
     /// String representation of an ASCII-serializable value
     ///
     /// Composes through canonical byte representation for academic correctness.
@@ -425,12 +425,12 @@ public extension StringProtocol {
     /// ```
     ///
     /// - Parameter value: Any type conforming to UInt8.ASCII.Serializable
-    init<T: UInt8.ASCII.Serializable>(_ value: T) {
+    public init<T: UInt8.ASCII.Serializable>(_ value: T) {
         self = Self(decoding: T.serialize(value), as: UTF8.self)
     }
 }
 
-public extension UInt8.ASCII.Serializable where Self: CustomStringConvertible {
+extension UInt8.ASCII.Serializable where Self: CustomStringConvertible {
     /// Default CustomStringConvertible implementation via byte serialization
     ///
     /// Automatically provided for types that conform to both
@@ -440,12 +440,13 @@ public extension UInt8.ASCII.Serializable where Self: CustomStringConvertible {
     /// ```
     /// Self → [UInt8] (ASCII) → String (UTF-8 interpretation)
     /// ```
-    var description: String {
+    public var description: String {
         String(decoding: Self.serialize(self), as: UTF8.self)
     }
 }
 
-public extension UInt8.ASCII.Serializable where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue: CustomStringConvertible {
+extension UInt8.ASCII.Serializable
+where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue: CustomStringConvertible {
     /// Optimized CustomStringConvertible for RawRepresentable types with CustomStringConvertible raw values
     ///
     /// For types that store a CustomStringConvertible value internally,
@@ -453,12 +454,13 @@ public extension UInt8.ASCII.Serializable where Self: RawRepresentable, Self: Cu
     ///
     /// This extension takes precedence over the general CustomStringConvertible
     /// extension due to its more specific constraint (RawRepresentable with CustomStringConvertible RawValue).
-    var description: String {
+    public var description: String {
         rawValue.description
     }
 }
 
-public extension UInt8.ASCII.Serializable where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue == [UInt8] {
+extension UInt8.ASCII.Serializable
+where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue == [UInt8] {
     /// UTF-8 decoded description for byte-array backed types
     ///
     /// For types where `rawValue` is `[UInt8]`, decode the bytes as UTF-8
@@ -473,14 +475,15 @@ public extension UInt8.ASCII.Serializable where Self: RawRepresentable, Self: Cu
     /// ```
     /// Self → [UInt8] (rawValue) → String (UTF-8 interpretation)
     /// ```
-    var description: String {
+    public var description: String {
         String(decoding: rawValue, as: UTF8.self)
     }
 }
 
 // MARK: - Optional ExpressibleBy*Literal Support
 
-public extension UInt8.ASCII.Serializable where Self: ExpressibleByStringLiteral, Context == Void {
+extension UInt8.ASCII.Serializable
+where Self: ExpressibleByStringLiteral, Context == Void {
     /// Default ExpressibleByStringLiteral implementation
     ///
     /// **Warning**: Uses force-try. Will crash at runtime if the literal is invalid.
@@ -514,7 +517,7 @@ public extension UInt8.ASCII.Serializable where Self: ExpressibleByStringLiteral
     ///     self.init(unchecked: value)
     /// }
     /// ```
-    init(stringLiteral value: String) {
+    public init(stringLiteral value: String) {
         // Uses the Serializable protocol's init(_: StringProtocol)
         // which composes through init(ascii:)
         // swiftlint:disable:next force_try
@@ -522,7 +525,7 @@ public extension UInt8.ASCII.Serializable where Self: ExpressibleByStringLiteral
     }
 }
 
-public extension UInt8.ASCII.Serializable where Self: ExpressibleByIntegerLiteral, Context == Void {
+extension UInt8.ASCII.Serializable where Self: ExpressibleByIntegerLiteral, Context == Void {
     /// Default ExpressibleByIntegerLiteral implementation
     ///
     /// **Warning**: Uses force-try. Will crash at runtime if the integer
@@ -555,13 +558,13 @@ public extension UInt8.ASCII.Serializable where Self: ExpressibleByIntegerLitera
     /// - Port numbers
     /// - Content-Length headers
     /// - Numeric identifiers
-    init(integerLiteral value: Int) {
+    public init(integerLiteral value: Int) {
         // swiftlint:disable:next force_try
         try! self.init(String(value))
     }
 }
 
-public extension UInt8.ASCII.Serializable where Self: ExpressibleByFloatLiteral, Context == Void {
+extension UInt8.ASCII.Serializable where Self: ExpressibleByFloatLiteral, Context == Void {
     /// Default ExpressibleByFloatLiteral implementation
     ///
     /// **Warning**: Uses force-try. Will crash at runtime if the float
@@ -595,7 +598,7 @@ public extension UInt8.ASCII.Serializable where Self: ExpressibleByFloatLiteral,
     /// - Floating-point metrics
     /// - Decimal percentages
 
-    init(floatLiteral value: Double) {
+    public init(floatLiteral value: Double) {
         // swiftlint:disable:next force_try
         try! self.init(String(value))
     }

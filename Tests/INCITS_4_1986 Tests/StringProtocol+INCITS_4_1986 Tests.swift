@@ -35,7 +35,7 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
         @Test
         func `Substring instance has ascii property`() {
             let str = "Hello World"
-            let sub = str[str.startIndex ..< str.index(str.startIndex, offsetBy: 5)]
+            let sub = str[str.startIndex..<str.index(str.startIndex, offsetBy: 5)]
             #expect(sub.ascii.isAllASCII)
         }
     }
@@ -51,7 +51,7 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
         @Test
         func `Substring delegates isAllASCII to StringClassification`() {
             let str = "Hello World"
-            let sub = str[str.startIndex ..< str.index(str.startIndex, offsetBy: 5)]
+            let sub = str[str.startIndex..<str.index(str.startIndex, offsetBy: 5)]
             #expect(sub.ascii.isAllASCII == INCITS_4_1986.StringClassification.isAllASCII(sub))
         }
 
@@ -80,7 +80,7 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
         @Test
         func `ascii(case:) method works for Substring`() {
             let str = "Hello World"
-            let sub = str[str.startIndex ..< str.index(str.startIndex, offsetBy: 5)]
+            let sub = str[str.startIndex..<str.index(str.startIndex, offsetBy: 5)]
             #expect(sub.ascii(case: .upper) == "HELLO")
             #expect(sub.ascii(case: .lower) == "hello")
         }
@@ -118,7 +118,7 @@ struct `StringProtocol+INCITS_4_1986 Tests` {
     struct `ASCII Byte Conversion Tests` {
         @Test
         func `ascii(_:) creates string from valid ASCII bytes`() {
-            let bytes: [UInt8] = [72, 101, 108, 108, 111] // "Hello"
+            let bytes: [UInt8] = [72, 101, 108, 108, 111]  // "Hello"
             #expect(String(ascii: bytes) == "Hello")
         }
 

@@ -29,7 +29,7 @@ struct `INCITS_4_1986.LineEndingDetection Tests` {
             ("line1\rline2", INCITS_4_1986.FormatEffectors.LineEnding.cr),
             ("line1\r", INCITS_4_1986.FormatEffectors.LineEnding.cr),
             ("\r", INCITS_4_1986.FormatEffectors.LineEnding.cr),
-            ("test\rmore\rlines", INCITS_4_1986.FormatEffectors.LineEnding.cr)
+            ("test\rmore\rlines", INCITS_4_1986.FormatEffectors.LineEnding.cr),
         ])
         func `detects CR line endings`(input: (String, INCITS_4_1986.FormatEffectors.LineEnding)) {
             let (str, expected) = input
@@ -40,7 +40,7 @@ struct `INCITS_4_1986.LineEndingDetection Tests` {
             ("line1\r\nline2", INCITS_4_1986.FormatEffectors.LineEnding.crlf),
             ("line1\r\n", INCITS_4_1986.FormatEffectors.LineEnding.crlf),
             ("\r\n", INCITS_4_1986.FormatEffectors.LineEnding.crlf),
-            ("test\r\nmore\r\nlines", INCITS_4_1986.FormatEffectors.LineEnding.crlf)
+            ("test\r\nmore\r\nlines", INCITS_4_1986.FormatEffectors.LineEnding.crlf),
         ])
         func `detects CRLF line endings`(input: (String, INCITS_4_1986.FormatEffectors.LineEnding)) {
             let (str, expected) = input
@@ -51,7 +51,7 @@ struct `INCITS_4_1986.LineEndingDetection Tests` {
             "no line endings",
             "test",
             "",
-            "hello world"
+            "hello world",
         ])
         func `returns nil when no line endings present`(str: String) {
             #expect(INCITS_4_1986.LineEndingDetection.detect(str) == nil)
@@ -69,21 +69,21 @@ struct `INCITS_4_1986.LineEndingDetection Tests` {
     @Suite
     struct `hasMixedLineEndings() Method Tests` {
         @Test(arguments: [
-            "line1\nline2\nline3", // Consistent LF
-            "line1\rline2\rline3", // Consistent CR
-            "line1\r\nline2\r\nline3", // Consistent CRLF
-            "no line endings", // No line endings
-            "", // Empty string
+            "line1\nline2\nline3",  // Consistent LF
+            "line1\rline2\rline3",  // Consistent CR
+            "line1\r\nline2\r\nline3",  // Consistent CRLF
+            "no line endings",  // No line endings
+            "",  // Empty string
         ])
         func `returns false for consistent or no line endings`(str: String) {
             #expect(!INCITS_4_1986.LineEndingDetection.hasMixedLineEndings(str))
         }
 
         @Test(arguments: [
-            "line1\nline2\r\nline3", // LF and CRLF
-            "line1\rline2\nline3", // CR and LF
-            "line1\rline2\r\nline3", // CR and CRLF
-            "line1\nline2\rline3\r\n" // All three types
+            "line1\nline2\r\nline3",  // LF and CRLF
+            "line1\rline2\nline3",  // CR and LF
+            "line1\rline2\r\nline3",  // CR and CRLF
+            "line1\nline2\rline3\r\n",  // All three types
         ])
         func `returns true for mixed line endings`(str: String) {
             #expect(INCITS_4_1986.LineEndingDetection.hasMixedLineEndings(str))

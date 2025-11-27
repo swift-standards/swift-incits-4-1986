@@ -58,7 +58,7 @@ extension `Performance Tests` {
     struct `SPACE - Performance` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `SPACE access 1M times`() {
-            for _ in 0 ..< 1_000_000 {
+            for _ in 0..<1_000_000 {
                 _ = UInt8.ascii.sp
             }
         }
@@ -66,7 +66,7 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `SPACE whitespace check 1M times`() {
             let sp = UInt8.ascii.sp
-            for _ in 0 ..< 1_000_000 {
+            for _ in 0..<1_000_000 {
                 _ = sp.ascii.isWhitespace
             }
         }

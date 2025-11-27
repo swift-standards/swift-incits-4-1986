@@ -3,7 +3,7 @@
 //
 // Section 4.2: SPACE (INCITS 4-1986)
 
-public extension INCITS_4_1986 {
+extension INCITS_4_1986 {
     /// Section 4.2: SPACE (0x20)
     ///
     /// Namespace for the SPACE character, which uniquely serves both as a graphic character and a control character.
@@ -77,10 +77,10 @@ public extension INCITS_4_1986 {
     /// - ``INCITS_4_1986/whitespaces``
     /// - ``GraphicCharacters``
     /// - ``ControlCharacters``
-    enum SPACE {}
+    public enum SPACE {}
 }
 
-public extension INCITS_4_1986.SPACE {
+extension INCITS_4_1986.SPACE {
     /// SPACE (0x20) - The dual-nature whitespace character
     ///
     /// The authoritative definition of the SPACE character in US-ASCII.
@@ -123,5 +123,5 @@ public extension INCITS_4_1986.SPACE {
     ///
     /// - ``INCITS_4_1986/whitespaces``
     /// - ``INCITS_4_1986/SPACE``
-    static let sp: UInt8 = 0x20
+    public static let sp: UInt8 = 0x20
 }

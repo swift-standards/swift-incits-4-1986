@@ -5,11 +5,11 @@
 //  Created by Coen ten Thije Boonkkamp on 22/11/2025.
 //
 
-public extension StringProtocol {
-    typealias ASCII = INCITS_4_1986.ASCII<Self>
+extension StringProtocol {
+    public typealias ASCII = INCITS_4_1986.ASCII<Self>
 
     /// Access to ASCII type-level constants and methods
-    static var ascii: ASCII.Type {
+    public static var ascii: ASCII.Type {
         ASCII.self
     }
 
@@ -31,12 +31,12 @@ public extension StringProtocol {
     ///
     /// - ``INCITS_4_1986/ASCII``
     @inlinable
-    var ascii: ASCII {
+    public var ascii: ASCII {
         INCITS_4_1986.ASCII(self)
     }
 }
 
-public extension StringProtocol {
+extension StringProtocol {
     /// Normalizes ASCII line endings in string to the specified style
     ///
     /// Convenience method that delegates to byte-level `normalized(_:to:)`.
@@ -46,7 +46,7 @@ public extension StringProtocol {
     /// INCITS_4_1986.normalized("line1\nline2\r\nline3", to: .crlf)
     /// // "line1\r\nline2\r\nline3"
     /// ```
-    static func normalized<S: StringProtocol>(
+    public static func normalized<S: StringProtocol>(
         _ s: S,
         to lineEnding: INCITS_4_1986.FormatEffectors.LineEnding
     ) -> S {
@@ -76,14 +76,14 @@ public extension StringProtocol {
     /// ## See Also
     ///
     /// - ``INCITS_4_1986/normalized(_:to:as:)``
-    func normalized(
+    public func normalized(
         to lineEnding: INCITS_4_1986.FormatEffectors.LineEnding
     ) -> Self {
         Self.normalized(self, to: lineEnding)
     }
 }
 
-public extension StringProtocol {
+extension StringProtocol {
     /// Creates some StringProtocol from a line ending constant
     ///
     /// Transforms a line ending enumeration value into its corresponding
@@ -123,12 +123,12 @@ public extension StringProtocol {
     /// - ``LineEnding``
     /// - ``INCITS_4_1986/crlf``
     /// - ``normalized(to:as:)``
-    init(ascii lineEnding: INCITS_4_1986.FormatEffectors.LineEnding) {
+    public init(ascii lineEnding: INCITS_4_1986.FormatEffectors.LineEnding) {
         self.init(decoding: [UInt8](ascii: lineEnding), as: UTF8.self)
     }
 }
 
-public extension StringProtocol {
+extension StringProtocol {
     /// Creates a string from ASCII bytes with validation
     ///
     /// Constructs a String from a byte array, returning `nil` if any byte is outside the valid
@@ -170,7 +170,7 @@ public extension StringProtocol {
     ///
     /// - ``String/ascii/unchecked(_:)``
     /// - ``INCITS_4_1986``
-    init?(ascii bytes: [UInt8]) {
+    public init?(ascii bytes: [UInt8]) {
         guard bytes.ascii.isAllASCII else { return nil }
         self.init(decoding: bytes, as: UTF8.self)
     }
@@ -189,7 +189,7 @@ public extension StringProtocol {
     ///
     /// - Parameter byte: The byte to validate and decode as ASCII
     /// - Returns: Single-character string if byte is valid ASCII, `nil` otherwise
-    init?(ascii byte: UInt8) {
+    public init?(ascii byte: UInt8) {
         guard byte.ascii.isASCII else { return nil }
         self.init(decoding: CollectionOfOne(byte), as: UTF8.self)
     }

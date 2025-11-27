@@ -61,8 +61,8 @@ struct `Substring Tests` {
             "abcdefghijklmnopqrstuvwxyz",
             "0123456789",
             "!@#$%^&*()",
-            "", // Empty substring
-            " \t\n\r", // Whitespace
+            "",  // Empty substring
+            " \t\n\r",  // Whitespace
         ])
         func `valid ASCII substrings`(str: String) {
             let sub = str[...]
@@ -75,7 +75,7 @@ struct `Substring Tests` {
             "日本語",
             "Ñoño",
             "test\u{80}",
-            "test\u{FF}"
+            "test\u{FF}",
         ])
         func `substrings with non-ASCII characters`(str: String) {
             let sub = str[...]
@@ -103,7 +103,7 @@ struct `Substring Tests` {
             "a",
             " a ",
             "  test  ",
-            "\thello\t"
+            "\thello\t",
         ])
         func `substrings with non-whitespace`(str: String) {
             let sub = str[...]
@@ -128,7 +128,7 @@ struct `Substring Tests` {
             "12a34",
             "test",
             "123 456",
-            "1.23"
+            "1.23",
         ])
         func `substrings with non-digits`(str: String) {
             let sub = str[...]
@@ -154,7 +154,7 @@ struct `Substring Tests` {
             "hello123",
             "test ",
             "A-B",
-            "hello_world"
+            "hello_world",
         ])
         func `substrings with non-letters`(str: String) {
             let sub = str[...]
@@ -180,7 +180,7 @@ struct `Substring Tests` {
             "hello world",
             "test-123",
             "A_B",
-            "test!"
+            "test!",
         ])
         func `substrings with non-alphanumeric`(str: String) {
             let sub = str[...]
@@ -208,7 +208,7 @@ struct `Substring Tests` {
             "a",
             " ",
             "\ta\n",
-            "hello"
+            "hello",
         ])
         func `substrings with non-control`(str: String) {
             let sub = str[...]
@@ -233,7 +233,7 @@ struct `Substring Tests` {
             " ",
             "hello world",
             "\t",
-            "test "
+            "test ",
         ])
         func `substrings with non-visible`(str: String) {
             let sub = str[...]
@@ -258,7 +258,7 @@ struct `Substring Tests` {
             "\t",
             "\n",
             "hello\nworld",
-            "\0"
+            "\0",
         ])
         func `substrings with non-printable`(str: String) {
             let sub = str[...]
@@ -283,7 +283,7 @@ struct `Substring Tests` {
             "",
             "Hello",
             "test123",
-            "!@#$%"
+            "!@#$%",
         ])
         func `pure ASCII substrings`(str: String) {
             let sub = str[...]
@@ -313,7 +313,7 @@ struct `Substring Tests` {
             "",
             "xyz",
             "!!!",
-            "   "
+            "   ",
         ])
         func `substrings without hex digits`(str: String) {
             let sub = str[...]
@@ -341,7 +341,7 @@ struct `Substring Tests` {
             "ABC",
             "Hello",
             "tEst",
-            "WORLD"
+            "WORLD",
         ])
         func `substrings with uppercase letters`(str: String) {
             let sub = str[...]
@@ -377,7 +377,7 @@ struct `Substring Tests` {
             "abc",
             "Hello",
             "TeSt",
-            "world"
+            "world",
         ])
         func `substrings with lowercase letters`(str: String) {
             let sub = str[...]
@@ -416,7 +416,7 @@ struct `Substring Tests` {
             ("WORLD", "world"),
             ("TeSt", "test"),
             ("ABC123", "abc123"),
-            ("", "")
+            ("", ""),
         ])
         func `case conversion to lower`(input: String, expected: String) {
             let sub = input[...]
@@ -452,7 +452,7 @@ struct `Substring Tests` {
             ("WORLD", "world"),
             ("TeSt", "test"),
             ("ABC123", "abc123"),
-            ("", "")
+            ("", ""),
         ])
         func `lowercased converts correctly`(input: String, expected: String) {
             let sub = input[...]
@@ -516,7 +516,7 @@ struct `Substring Tests` {
             "hello",
             "line1\nline2\nline3",
             "line1\rline2\rline3",
-            "line1\r\nline2\r\nline3"
+            "line1\r\nline2\r\nline3",
         ])
         func `substrings with consistent or no line endings`(str: String) {
             let sub = str[...]
@@ -539,7 +539,7 @@ struct `Substring Tests` {
         @Test(arguments: [
             ("line1\rline2", INCITS_4_1986.FormatEffectors.LineEnding.cr),
             ("line1\r", INCITS_4_1986.FormatEffectors.LineEnding.cr),
-            ("\r", INCITS_4_1986.FormatEffectors.LineEnding.cr)
+            ("\r", INCITS_4_1986.FormatEffectors.LineEnding.cr),
         ])
         func `detects CR`(str: String, expected: INCITS_4_1986.FormatEffectors.LineEnding) {
             let sub = str[...]
@@ -549,7 +549,7 @@ struct `Substring Tests` {
         @Test(arguments: [
             ("line1\r\nline2", INCITS_4_1986.FormatEffectors.LineEnding.crlf),
             ("line1\r\n", INCITS_4_1986.FormatEffectors.LineEnding.crlf),
-            ("\r\n", INCITS_4_1986.FormatEffectors.LineEnding.crlf)
+            ("\r\n", INCITS_4_1986.FormatEffectors.LineEnding.crlf),
         ])
         func `detects CRLF`(str: String, expected: INCITS_4_1986.FormatEffectors.LineEnding) {
             let sub = str[...]
@@ -577,7 +577,7 @@ extension `Performance Tests` {
         func `substring trimming 10K times`() {
             let str = "  hello world  "
             let sub = str[...]
-            for _ in 0 ..< 10000 {
+            for _ in 0..<10000 {
                 _ = sub.trimming(.ascii.whitespaces)
             }
         }

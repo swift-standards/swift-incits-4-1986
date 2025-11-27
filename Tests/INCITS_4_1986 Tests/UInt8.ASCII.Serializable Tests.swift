@@ -67,10 +67,6 @@ extension DelimitedMessage: UInt8.ASCII.Serializable {
     /// Context required for parsing - the delimiter byte
     struct Context: Sendable {
         let delimiter: UInt8
-
-        init(delimiter: UInt8) {
-            self.delimiter = delimiter
-        }
     }
 
     enum Error: Swift.Error, Sendable, Equatable {
@@ -184,7 +180,7 @@ struct ContextFreeSerializableTests {
 
     @Test("Invalid input throws error")
     func invalidInput() {
-        let bytes: [UInt8] = Array("hello world".utf8) // space is invalid
+        let bytes: [UInt8] = Array("hello world".utf8)  // space is invalid
 
         #expect(throws: Token.Error.self) {
             try Token(ascii: bytes)

@@ -51,8 +51,8 @@ struct `INCITS_4_1986.NumericParsing Tests` {
             INCITS_4_1986.GraphicCharacters.A,
             INCITS_4_1986.GraphicCharacters.a,
             INCITS_4_1986.SPACE.sp,
-            UInt8(0x2F), // Before '0'
-            UInt8(0x3A) // After '9'
+            UInt8(0x2F),  // Before '0'
+            UInt8(0x3A),  // After '9'
         ])
         func `returns nil for non-digit bytes`(byte: UInt8) {
             #expect(INCITS_4_1986.NumericParsing.digit(byte) == nil)
@@ -93,7 +93,7 @@ struct `INCITS_4_1986.NumericParsing Tests` {
 
         @Test
         func `parses all decimal digits 0-9`() {
-            for i in UInt8(0) ... UInt8(9) {
+            for i in UInt8(0)...UInt8(9) {
                 let digitByte = INCITS_4_1986.GraphicCharacters.`0` + i
                 #expect(INCITS_4_1986.NumericParsing.hexDigit(digitByte) == i)
             }
@@ -101,7 +101,7 @@ struct `INCITS_4_1986.NumericParsing Tests` {
 
         @Test
         func `parses all uppercase hex letters A-F`() {
-            for i in UInt8(0) ... UInt8(5) {
+            for i in UInt8(0)...UInt8(5) {
                 let letterByte = INCITS_4_1986.GraphicCharacters.A + i
                 #expect(INCITS_4_1986.NumericParsing.hexDigit(letterByte) == 10 + i)
             }
@@ -109,7 +109,7 @@ struct `INCITS_4_1986.NumericParsing Tests` {
 
         @Test
         func `parses all lowercase hex letters a-f`() {
-            for i in UInt8(0) ... UInt8(5) {
+            for i in UInt8(0)...UInt8(5) {
                 let letterByte = INCITS_4_1986.GraphicCharacters.a + i
                 #expect(INCITS_4_1986.NumericParsing.hexDigit(letterByte) == 10 + i)
             }
@@ -121,7 +121,7 @@ struct `INCITS_4_1986.NumericParsing Tests` {
             INCITS_4_1986.GraphicCharacters.Z,
             INCITS_4_1986.GraphicCharacters.z,
             INCITS_4_1986.SPACE.sp,
-            INCITS_4_1986.ControlCharacters.lf
+            INCITS_4_1986.ControlCharacters.lf,
         ])
         func `returns nil for non-hex bytes`(byte: UInt8) {
             #expect(INCITS_4_1986.NumericParsing.hexDigit(byte) == nil)
@@ -132,7 +132,7 @@ struct `INCITS_4_1986.NumericParsing Tests` {
     struct `Round Trip Properties` {
         @Test
         func `digit round-trip for 0-9`() {
-            for value in UInt8(0) ... UInt8(9) {
+            for value in UInt8(0)...UInt8(9) {
                 let digitByte = INCITS_4_1986.GraphicCharacters.`0` + value
                 let parsed = INCITS_4_1986.NumericParsing.digit(digitByte)
                 #expect(parsed == value)
@@ -198,7 +198,7 @@ struct `INCITS_4_1986.NumericParsing Tests` {
     struct `Case Insensitivity` {
         @Test
         func `uppercase and lowercase hex letters parse to same value`() {
-            for i in UInt8(0) ... UInt8(5) {
+            for i in UInt8(0)...UInt8(5) {
                 let upperByte = INCITS_4_1986.GraphicCharacters.A + i
                 let lowerByte = INCITS_4_1986.GraphicCharacters.a + i
 

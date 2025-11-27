@@ -5,7 +5,7 @@
 //  Created by Coen ten Thije Boonkkamp on 24/11/2025.
 //
 
-public extension Set<UInt8>.ASCII {
+extension Set<UInt8>.ASCII {
     /// ASCII whitespace characters as Set<UInt8>
     ///
     /// Derived from the canonical byte-level definition in `INCITS_4_1986.whitespaces`.
@@ -20,7 +20,7 @@ public extension Set<UInt8>.ASCII {
     ///
     /// The ASCII-only definition enables optimized byte-level processing
     /// in string trimming operations without Unicode normalization overhead.
-    static let whitespaces: Set<UInt8> = Set(
+    public static let whitespaces: Set<UInt8> = Set(
         INCITS_4_1986.whitespaces
     )
 }

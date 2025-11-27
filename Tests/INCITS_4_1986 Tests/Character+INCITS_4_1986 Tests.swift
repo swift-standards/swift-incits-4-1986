@@ -38,14 +38,14 @@ struct `Character Tests` {
 
     @Suite
     struct `Character - ASCII Letters` {
-        @Test(arguments: Array(UInt8.ascii.A ... UInt8.ascii.Z))
+        @Test(arguments: Array(UInt8.ascii.A...UInt8.ascii.Z))
         func `uppercase letters A-Z are recognized`(ascii: UInt8) {
             let char = Character(UnicodeScalar(ascii))
             #expect(char.ascii.isLetter, "Character '\(char)' should be a letter")
             #expect(char.ascii.isUppercase, "Character '\(char)' should be uppercase")
         }
 
-        @Test(arguments: Array(UInt8.ascii.a ... UInt8.ascii.z))
+        @Test(arguments: Array(UInt8.ascii.a...UInt8.ascii.z))
         func `lowercase letters a-z are recognized`(ascii: UInt8) {
             let char = Character(UnicodeScalar(ascii))
             #expect(char.ascii.isLetter, "Character '\(char)' should be a letter")
@@ -86,14 +86,14 @@ struct `Character Tests` {
 
     @Suite
     struct `Character - ASCII Case` {
-        @Test(arguments: Array(UInt8.ascii.A ... UInt8.ascii.Z))
+        @Test(arguments: Array(UInt8.ascii.A...UInt8.ascii.Z))
         func `uppercase letters A-Z are recognized`(ascii: UInt8) {
             let char = Character(UnicodeScalar(ascii))
             #expect(char.ascii.isUppercase, "Character '\(char)' should be uppercase")
             #expect(!char.ascii.isLowercase, "Character '\(char)' should not be lowercase")
         }
 
-        @Test(arguments: Array(UInt8.ascii.a ... UInt8.ascii.z))
+        @Test(arguments: Array(UInt8.ascii.a...UInt8.ascii.z))
         func `lowercase letters a-z are recognized`(ascii: UInt8) {
             let char = Character(UnicodeScalar(ascii))
             #expect(char.ascii.isLowercase, "Character '\(char)' should be lowercase")
@@ -121,7 +121,7 @@ struct `Character Tests` {
             #expect(char.ascii() == nil)
         }
 
-        @Test(arguments: Array(0x00 ... 0x7F))
+        @Test(arguments: Array(0x00...0x7F))
         func `all ASCII bytes validate`(byte: UInt8) {
             let char = Character(UnicodeScalar(byte))
             #expect(char.ascii() != nil)
@@ -170,7 +170,7 @@ struct `Character Tests` {
             #expect(Character(ascii: 0x80) == nil)
         }
 
-        @Test(arguments: Array(0x00 ... 0x7F))
+        @Test(arguments: Array(0x00...0x7F))
         func `init(ascii:) works for all ASCII bytes`(byte: UInt8) {
             #expect(Character(ascii: byte) != nil)
         }
@@ -197,7 +197,7 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `character whitespace check 1M times`() {
             let char: Character = " "
-            for _ in 0 ..< 1_000_000 {
+            for _ in 0..<1_000_000 {
                 _ = char.ascii.isWhitespace
             }
         }
@@ -205,7 +205,7 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `character digit check 1M times`() {
             let char: Character = "5"
-            for _ in 0 ..< 1_000_000 {
+            for _ in 0..<1_000_000 {
                 _ = char.ascii.isDigit
             }
         }
@@ -213,7 +213,7 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `character letter check 1M times`() {
             let char: Character = "A"
-            for _ in 0 ..< 1_000_000 {
+            for _ in 0..<1_000_000 {
                 _ = char.ascii.isLetter
             }
         }

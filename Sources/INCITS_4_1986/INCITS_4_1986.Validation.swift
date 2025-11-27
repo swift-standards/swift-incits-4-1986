@@ -6,7 +6,7 @@
 
 import Standards
 
-public extension INCITS_4_1986 {
+extension INCITS_4_1986 {
     /// Returns true if the byte is valid ASCII (0x00-0x7F)
     ///
     /// Per INCITS 4-1986 Section 4: The coded character set consists of
@@ -21,7 +21,7 @@ public extension INCITS_4_1986 {
     /// INCITS_4_1986.isASCII(0xFF)  // false
     /// ```
     @_transparent
-    static func isASCII(_ byte: UInt8) -> Bool {
+    public static func isASCII(_ byte: UInt8) -> Bool {
         byte <= 0x7F
     }
 
@@ -39,7 +39,7 @@ public extension INCITS_4_1986 {
     /// let slice = bytes[start..<end]
     /// INCITS_4_1986.isAllASCII(slice)
     /// ```
-    static func isAllASCII<C: Collection>(
+    public static func isAllASCII<C: Collection>(
         _ bytes: C
     ) -> Bool where C.Element == UInt8 {
         bytes.allSatisfy(isASCII)

@@ -15,7 +15,7 @@
 //
 // Stdlib extensions that delegate to authoritative INCITS 4-1986 implementations
 
-public extension Collection where Element == UInt8 {
+extension Collection where Element == UInt8 {
     /// Access to ASCII instance methods for this byte collection
     ///
     /// Provides instance-level access to ASCII validation and transformation methods.
@@ -37,7 +37,7 @@ public extension Collection where Element == UInt8 {
     /// - ``INCITS_4_1986/ASCII``
     /// - ``INCITS_4_1986``
     @inlinable
-    var ascii: INCITS_4_1986.ASCII<Self> {
+    public var ascii: INCITS_4_1986.ASCII<Self> {
         INCITS_4_1986.ASCII(self)
     }
 }

@@ -6,7 +6,7 @@
 
 import Standards
 
-public extension INCITS_4_1986 {
+extension INCITS_4_1986 {
     /// String Classification Operations
     ///
     /// Authoritative implementations of string-level classification tests per INCITS 4-1986.
@@ -14,10 +14,10 @@ public extension INCITS_4_1986 {
     ///
     /// These operations test properties of entire strings, delegating to the byte-level
     /// character classification operations for individual character tests.
-    enum StringClassification {}
+    public enum StringClassification {}
 }
 
-public extension INCITS_4_1986.StringClassification {
+extension INCITS_4_1986.StringClassification {
     // MARK: - ASCII Validation
 
     /// Tests if all bytes in the UTF-8 representation are valid ASCII (0x00-0x7F)
@@ -36,7 +36,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if all bytes are in the ASCII range (0x00-0x7F)
     @inlinable
-    static func isAllASCII<S: StringProtocol>(_ string: S) -> Bool {
+    public static func isAllASCII<S: StringProtocol>(_ string: S) -> Bool {
         string.utf8.allSatisfy { $0 <= 0x7F }
     }
 
@@ -56,7 +56,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if any byte is outside the ASCII range (>= 0x80)
     @inlinable
-    static func containsNonASCII<S: StringProtocol>(_ string: S) -> Bool {
+    public static func containsNonASCII<S: StringProtocol>(_ string: S) -> Bool {
         string.utf8.contains { $0 > 0x7F }
     }
 
@@ -79,7 +79,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if all characters are ASCII whitespace (vacuous truth for empty strings)
     @inlinable
-    static func isAllWhitespace<S: StringProtocol>(_ string: S) -> Bool {
+    public static func isAllWhitespace<S: StringProtocol>(_ string: S) -> Bool {
         string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isWhitespace(byte)
@@ -101,7 +101,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if all characters are ASCII digits (vacuous truth for empty strings)
     @inlinable
-    static func isAllDigits<S: StringProtocol>(_ string: S) -> Bool {
+    public static func isAllDigits<S: StringProtocol>(_ string: S) -> Bool {
         string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isDigit(byte)
@@ -123,7 +123,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if all characters are ASCII letters (vacuous truth for empty strings)
     @inlinable
-    static func isAllLetters<S: StringProtocol>(_ string: S) -> Bool {
+    public static func isAllLetters<S: StringProtocol>(_ string: S) -> Bool {
         string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isLetter(byte)
@@ -145,7 +145,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if all characters are ASCII alphanumeric (vacuous truth for empty strings)
     @inlinable
-    static func isAllAlphanumeric<S: StringProtocol>(_ string: S) -> Bool {
+    public static func isAllAlphanumeric<S: StringProtocol>(_ string: S) -> Bool {
         string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isAlphanumeric(byte)
@@ -167,7 +167,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if all characters are ASCII control characters (vacuous truth for empty strings)
     @inlinable
-    static func isAllControl<S: StringProtocol>(_ string: S) -> Bool {
+    public static func isAllControl<S: StringProtocol>(_ string: S) -> Bool {
         string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isControl(byte)
@@ -189,7 +189,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if all characters are ASCII visible characters (vacuous truth for empty strings)
     @inlinable
-    static func isAllVisible<S: StringProtocol>(_ string: S) -> Bool {
+    public static func isAllVisible<S: StringProtocol>(_ string: S) -> Bool {
         string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isVisible(byte)
@@ -211,7 +211,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if all characters are ASCII printable characters (vacuous truth for empty strings)
     @inlinable
-    static func isAllPrintable<S: StringProtocol>(_ string: S) -> Bool {
+    public static func isAllPrintable<S: StringProtocol>(_ string: S) -> Bool {
         string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isPrintable(byte)
@@ -233,7 +233,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if the string contains at least one hex digit
     @inlinable
-    static func containsHexDigit<S: StringProtocol>(_ string: S) -> Bool {
+    public static func containsHexDigit<S: StringProtocol>(_ string: S) -> Bool {
         string.contains { char in
             guard let byte = UInt8(ascii: char) else { return false }
             return INCITS_4_1986.CharacterClassification.isHexDigit(byte)
@@ -259,7 +259,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if all ASCII letters are lowercase (non-letters ignored)
     @inlinable
-    static func isAllLowercase<S: StringProtocol>(_ string: S) -> Bool {
+    public static func isAllLowercase<S: StringProtocol>(_ string: S) -> Bool {
         string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return true }
             return INCITS_4_1986.CharacterClassification.isLetter(byte)
@@ -285,7 +285,7 @@ public extension INCITS_4_1986.StringClassification {
     /// - Parameter string: The string to test
     /// - Returns: `true` if all ASCII letters are uppercase (non-letters ignored)
     @inlinable
-    static func isAllUppercase<S: StringProtocol>(_ string: S) -> Bool {
+    public static func isAllUppercase<S: StringProtocol>(_ string: S) -> Bool {
         string.allSatisfy { char in
             guard let byte = UInt8(ascii: char) else { return true }
             return INCITS_4_1986.CharacterClassification.isLetter(byte)

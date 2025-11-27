@@ -6,7 +6,7 @@
 
 import Standards
 
-public extension INCITS_4_1986 {
+extension INCITS_4_1986 {
     /// Numeric Value Parsing Operations
     ///
     /// Authoritative implementations for converting ASCII digit bytes to numeric values.
@@ -16,10 +16,10 @@ public extension INCITS_4_1986 {
     /// - Decimal digits: 0x30-0x39 ('0'-'9') → 0-9
     /// - Hex digits (uppercase): 0x41-0x46 ('A'-'F') → 10-15
     /// - Hex digits (lowercase): 0x61-0x66 ('a'-'f') → 10-15
-    enum NumericParsing {}
+    public enum NumericParsing {}
 }
 
-public extension INCITS_4_1986.NumericParsing {
+extension INCITS_4_1986.NumericParsing {
     // MARK: - Decimal Digit Parsing
 
     /// Parses an ASCII digit byte to its numeric value (0-9)
@@ -52,7 +52,7 @@ public extension INCITS_4_1986.NumericParsing {
     /// - Parameter byte: The ASCII byte to parse as a decimal digit
     /// - Returns: Numeric value 0-9 if byte is a digit, `nil` otherwise
     @inlinable
-    static func digit(_ byte: UInt8) -> UInt8? {
+    public static func digit(_ byte: UInt8) -> UInt8? {
         guard INCITS_4_1986.CharacterClassification.isDigit(byte) else { return nil }
         return byte - INCITS_4_1986.GraphicCharacters.`0`
     }
@@ -91,13 +91,13 @@ public extension INCITS_4_1986.NumericParsing {
     /// - Parameter byte: The ASCII byte to parse as a hexadecimal digit
     /// - Returns: Numeric value 0-15 if byte is a hex digit, `nil` otherwise
     @inlinable
-    static func hexDigit(_ byte: UInt8) -> UInt8? {
+    public static func hexDigit(_ byte: UInt8) -> UInt8? {
         switch byte {
-        case INCITS_4_1986.GraphicCharacters.`0` ... INCITS_4_1986.GraphicCharacters.`9`:
+        case INCITS_4_1986.GraphicCharacters.`0`...INCITS_4_1986.GraphicCharacters.`9`:
             return byte - INCITS_4_1986.GraphicCharacters.`0`
-        case INCITS_4_1986.GraphicCharacters.A ... INCITS_4_1986.GraphicCharacters.F:
+        case INCITS_4_1986.GraphicCharacters.A...INCITS_4_1986.GraphicCharacters.F:
             return byte - INCITS_4_1986.GraphicCharacters.A + 10
-        case INCITS_4_1986.GraphicCharacters.a ... INCITS_4_1986.GraphicCharacters.f:
+        case INCITS_4_1986.GraphicCharacters.a...INCITS_4_1986.GraphicCharacters.f:
             return byte - INCITS_4_1986.GraphicCharacters.a + 10
         default:
             return nil

@@ -6,7 +6,7 @@
 
 import Standards
 
-public extension INCITS_4_1986 {
+extension INCITS_4_1986 {
     /// Character Classification Operations
     ///
     /// Authoritative implementations of character class tests per INCITS 4-1986.
@@ -18,10 +18,10 @@ public extension INCITS_4_1986 {
     /// - Whitespace: 0x20, 0x09, 0x0A, 0x0D (4 total)
     /// - Digits: 0x30-0x39 ('0'-'9')
     /// - Letters: 0x41-0x5A ('A'-'Z') and 0x61-0x7A ('a'-'z')
-    enum CharacterClassification {}
+    public enum CharacterClassification {}
 }
 
-public extension INCITS_4_1986.CharacterClassification {
+extension INCITS_4_1986.CharacterClassification {
     // MARK: - Whitespace Classification
 
     /// Tests if byte is ASCII whitespace
@@ -44,7 +44,7 @@ public extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isWhitespace(0x41)    // false ('A')
     /// ```
     @_transparent
-    static func isWhitespace(_ byte: UInt8) -> Bool {
+    public static func isWhitespace(_ byte: UInt8) -> Bool {
         byte == INCITS_4_1986.SPACE.sp
             || byte == INCITS_4_1986.ControlCharacters.htab
             || byte == INCITS_4_1986.ControlCharacters.lf
@@ -73,7 +73,7 @@ public extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isControl(0x41)    // false ('A')
     /// ```
     @_transparent
-    static func isControl(_ byte: UInt8) -> Bool {
+    public static func isControl(_ byte: UInt8) -> Bool {
         byte <= INCITS_4_1986.ControlCharacters.us || byte == INCITS_4_1986.ControlCharacters.del
     }
 
@@ -98,7 +98,7 @@ public extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isVisible(0x20)    // false (SPACE)
     /// ```
     @_transparent
-    static func isVisible(_ byte: UInt8) -> Bool {
+    public static func isVisible(_ byte: UInt8) -> Bool {
         byte >= INCITS_4_1986.GraphicCharacters.exclamationPoint
             && byte <= INCITS_4_1986.GraphicCharacters.tilde
     }
@@ -122,7 +122,7 @@ public extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isPrintable(0x0A)    // false (LF)
     /// ```
     @_transparent
-    static func isPrintable(_ byte: UInt8) -> Bool {
+    public static func isPrintable(_ byte: UInt8) -> Bool {
         byte >= INCITS_4_1986.SPACE.sp && byte <= INCITS_4_1986.GraphicCharacters.tilde
     }
 
@@ -140,7 +140,7 @@ public extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isDigit(0x41)    // false ('A')
     /// ```
     @_transparent
-    static func isDigit(_ byte: UInt8) -> Bool {
+    public static func isDigit(_ byte: UInt8) -> Bool {
         byte >= INCITS_4_1986.GraphicCharacters.`0` && byte <= INCITS_4_1986.GraphicCharacters.`9`
     }
 
@@ -157,7 +157,7 @@ public extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isHexDigit(0x47)    // false ('G')
     /// ```
     @inlinable
-    static func isHexDigit(_ byte: UInt8) -> Bool {
+    public static func isHexDigit(_ byte: UInt8) -> Bool {
         isDigit(byte)
             || (byte >= INCITS_4_1986.GraphicCharacters.A && byte <= INCITS_4_1986.GraphicCharacters.F)
             || (byte >= INCITS_4_1986.GraphicCharacters.a && byte <= INCITS_4_1986.GraphicCharacters.f)
@@ -177,7 +177,7 @@ public extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isLetter(0x30)    // false ('0')
     /// ```
     @_transparent
-    static func isLetter(_ byte: UInt8) -> Bool {
+    public static func isLetter(_ byte: UInt8) -> Bool {
         (byte >= INCITS_4_1986.GraphicCharacters.A && byte <= INCITS_4_1986.GraphicCharacters.Z)
             || (byte >= INCITS_4_1986.GraphicCharacters.a && byte <= INCITS_4_1986.GraphicCharacters.z)
     }
@@ -194,7 +194,7 @@ public extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isUppercase(0x61)    // false ('a')
     /// ```
     @_transparent
-    static func isUppercase(_ byte: UInt8) -> Bool {
+    public static func isUppercase(_ byte: UInt8) -> Bool {
         byte >= INCITS_4_1986.GraphicCharacters.A && byte <= INCITS_4_1986.GraphicCharacters.Z
     }
 
@@ -210,7 +210,7 @@ public extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isLowercase(0x41)    // false ('A')
     /// ```
     @_transparent
-    static func isLowercase(_ byte: UInt8) -> Bool {
+    public static func isLowercase(_ byte: UInt8) -> Bool {
         byte >= INCITS_4_1986.GraphicCharacters.a && byte <= INCITS_4_1986.GraphicCharacters.z
     }
 
@@ -226,7 +226,7 @@ public extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isAlphanumeric(0x21)    // false ('!')
     /// ```
     @inlinable
-    static func isAlphanumeric(_ byte: UInt8) -> Bool {
+    public static func isAlphanumeric(_ byte: UInt8) -> Bool {
         isDigit(byte) || isLetter(byte)
     }
 }

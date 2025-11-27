@@ -7,7 +7,7 @@ import Standards
 
 // MARK: - [UInt8] ASCII Namespace
 
-public extension [UInt8] {
+extension [UInt8] {
     /// Access to ASCII type-level constants and methods
     ///
     /// Provides static access to ASCII byte array constants and static utility methods.
@@ -25,7 +25,7 @@ public extension [UInt8] {
     ///
     /// - ``ASCII``
     /// - ``INCITS_4_1986``
-    static var ascii: ASCII.Type {
+    public static var ascii: ASCII.Type {
         ASCII.self
     }
 
@@ -48,7 +48,7 @@ public extension [UInt8] {
     /// - ``INCITS_4_1986/ASCII``
     /// - ``INCITS_4_1986``
     @inlinable
-    var ascii: INCITS_4_1986.ASCII<Self> {
+    public var ascii: INCITS_4_1986.ASCII<Self> {
         INCITS_4_1986.ASCII(self)
     }
 
@@ -69,12 +69,12 @@ public extension [UInt8] {
     ///
     /// - ``INCITS_4_1986/ASCII``
     /// - ``INCITS_4_1986``
-    enum ASCII {}
+    public enum ASCII {}
 }
 
 // MARK: - [UInt8] Initializers
 
-public extension [UInt8] {
+extension [UInt8] {
     /// Creates ASCII byte array from a string with validation
     ///
     /// Converts a Swift `String` to an array of ASCII bytes, returning `nil` if any character
@@ -114,7 +114,7 @@ public extension [UInt8] {
     ///
     /// - ``ascii(unchecked:)``
     /// - ``String/init(ascii:)``
-    init?(ascii s: some StringProtocol) {
+    public init?(ascii s: some StringProtocol) {
         guard s.allSatisfy({ $0.isASCII }) else { return nil }
         self = Array(s.utf8)
     }
@@ -153,7 +153,7 @@ public extension [UInt8] {
     /// - ``String/LineEnding``
     /// - ``INCITS_4_1986/crlf``
     /// - ``ASCII/crlf``
-    init(ascii lineEnding: INCITS_4_1986.FormatEffectors.LineEnding) {
+    public init(ascii lineEnding: INCITS_4_1986.FormatEffectors.LineEnding) {
         switch lineEnding {
         case .lf: self = [UInt8.ascii.lf]
         case .cr: self = [UInt8.ascii.cr]
@@ -164,7 +164,7 @@ public extension [UInt8] {
 
 // MARK: - [UInt8].ASCII Static Methods
 
-public extension [UInt8].ASCII {
+extension [UInt8].ASCII {
     /// Creates ASCII byte array from a string without validation
     ///
     /// Converts a Swift `String` to an array of bytes, assuming all characters are valid ASCII
@@ -200,7 +200,7 @@ public extension [UInt8].ASCII {
     ///
     /// - ``ascii(_:)``
     /// - ``String/ascii(unchecked:)``
-    static func unchecked(_ s: some StringProtocol) -> [UInt8] {
+    public static func unchecked(_ s: some StringProtocol) -> [UInt8] {
         Array(s.utf8)
     }
 
@@ -233,7 +233,7 @@ public extension [UInt8].ASCII {
     ///
     /// - ``INCITS_4_1986/crlf``
     /// - ``ascii(lineEnding:)``
-    static var crlf: [UInt8] {
+    public static var crlf: [UInt8] {
         INCITS_4_1986.ControlCharacters.crlf
     }
 
@@ -264,7 +264,7 @@ public extension [UInt8].ASCII {
     ///
     /// - ``INCITS_4_1986/whitespaces``
     /// - ``UInt8/ASCII/isWhitespace``
-    static var whitespaces: Set<UInt8> {
+    public static var whitespaces: Set<UInt8> {
         INCITS_4_1986.whitespaces
     }
 }

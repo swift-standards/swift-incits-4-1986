@@ -19,7 +19,7 @@ struct `Graphic Characters` {
             #expect(UInt8.ascii.9 == 0x39)
         }
 
-        @Test(arguments: Array(0 ... 9))
+        @Test(arguments: Array(0...9))
         func `digit constants correct`(digit: Int) {
             let char = Character("\(digit)")
             let byte = UInt8(ascii: char)!
@@ -41,13 +41,13 @@ struct `Graphic Characters` {
             #expect(UInt8.ascii.z == 0x7A)
         }
 
-        @Test(arguments: Array(zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ", UInt8.ascii.A ... UInt8.ascii.Z)))
+        @Test(arguments: Array(zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ", UInt8.ascii.A...UInt8.ascii.Z)))
         func `uppercase letters present`(char: Character, expected: UInt8) {
             let byte = UInt8(ascii: char)!
             #expect(byte == expected, "Character '\(char)' should have value 0x\(String(expected, radix: 16))")
         }
 
-        @Test(arguments: Array(zip("abcdefghijklmnopqrstuvwxyz", UInt8.ascii.a ... UInt8.ascii.z)))
+        @Test(arguments: Array(zip("abcdefghijklmnopqrstuvwxyz", UInt8.ascii.a...UInt8.ascii.z)))
         func `lowercase letters present`(char: Character, expected: UInt8) {
             let byte = UInt8(ascii: char)!
             #expect(byte == expected, "Character '\(char)' should have value 0x\(String(expected, radix: 16))")
@@ -79,7 +79,7 @@ extension `Performance Tests` {
     struct `Graphic Characters - Performance` {
         @Test(.timed(threshold: .milliseconds(200)))
         func `graphic character access 100K times`() {
-            for _ in 0 ..< 100_000 {
+            for _ in 0..<100_000 {
                 _ = UInt8.ascii.A
                 _ = UInt8.ascii.0
                 _ = UInt8.ascii.period

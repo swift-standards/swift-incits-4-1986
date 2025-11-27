@@ -19,10 +19,10 @@ struct `INCITS_4_1986 - Constants Tests` {
 
     @Test
     func `whitespaces contains SPACE, TAB, LF, CR`() {
-        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.sp)) // SPACE
-        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.htab)) // HT
-        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.lf)) // LF
-        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.cr)) // CR
+        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.sp))  // SPACE
+        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.htab))  // HT
+        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.lf))  // LF
+        #expect(INCITS_4_1986.whitespaces.contains(UInt8.ascii.cr))  // CR
     }
 
     @Test
@@ -52,7 +52,7 @@ extension `Performance Tests` {
         @Test(.timed(threshold: .milliseconds(2000)))
         func `whitespaces set lookup 1M times`() {
             let testBytes: [UInt8] = [UInt8.ascii.sp, UInt8.ascii.A, UInt8.ascii.htab, UInt8.ascii.a]
-            for _ in 0 ..< 250_000 {
+            for _ in 0..<250_000 {
                 for byte in testBytes {
                     _ = INCITS_4_1986.whitespaces.contains(byte)
                 }
