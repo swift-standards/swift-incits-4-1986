@@ -27,7 +27,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-standards/swift-standards.git", from: "0.4.0"),
+        .package(url: "https://github.com/swift-standards/swift-standards.git", from: "0.5.0"),
     ],
     targets: [
         .target(

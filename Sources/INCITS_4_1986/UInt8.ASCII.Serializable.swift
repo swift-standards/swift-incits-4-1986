@@ -21,7 +21,7 @@
 //
 //  Conforming types must provide:
 //  1. `init(ascii:in:)` - byte-level parsing with context
-//  2. `static var serialize` - byte-level serialization function
+//  2. `static var serialize` - byte-level serialization (inherited from UInt8.Serializable)
 //
 //  For context-free types, use `Context = Void` (the default) and
 //  implement `init(ascii bytes: Bytes, in context: Void)`.
@@ -69,7 +69,7 @@ extension UInt8.ASCII {
     ///
     /// Conforming types must provide:
     /// - `init(ascii:in:)` - Parse from bytes with context
-    /// - `static var serialize` - Serialize to bytes
+    /// - `static var serialize` - Serialize to bytes (inherited from UInt8.Serializable)
     ///
     /// ## Context-Free Types (Context == Void)
     ///
@@ -150,22 +150,7 @@ extension UInt8.ASCII {
             in context: Context
         ) throws(Error) where Bytes.Element == UInt8
 
-        /// Serialize to canonical ASCII byte representation (CANONICAL SERIALIZATION)
-        ///
-        /// This is the fundamental serialization transformation.
-        /// Unlike parsing, serialization is always context-free because
-        /// the value itself contains all necessary information.
-        ///
-        /// Typically implemented as: `static let serialize = [UInt8].init`
-        ///
-        /// ## Category Theory
-        ///
-        /// Serialization transformation:
-        /// - **Domain**: Self
-        /// - **Codomain**: [UInt8]
-        ///
-        /// - Returns: A function that converts Self to [UInt8]
-        static var serialize: @Sendable (Self) -> [UInt8] { get }
+        // Note: `static var serialize` is inherited from UInt8.Serializable
     }
 }
 

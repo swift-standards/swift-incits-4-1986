@@ -347,14 +347,14 @@ private struct HTMLAnchor: UInt8.Serializable {
     let href: Token
     let text: String
 
-    func serialize<Buffer: RangeReplaceableCollection>(
-        into buffer: inout Buffer
-    ) where Buffer.Element == UInt8 {
+    static let serialize: @Sendable (Self) -> [UInt8] = { anchor in
+        var buffer: [UInt8] = []
         buffer.append(contentsOf: "<a href=\"".utf8)
-        href.serialize(into: &buffer)  // Token conforms via ASCII.Serializable
+        anchor.href.serialize(into: &buffer)  // Token conforms via ASCII.Serializable
         buffer.append(contentsOf: "\">".utf8)
-        buffer.append(contentsOf: text.utf8)
+        buffer.append(contentsOf: anchor.text.utf8)
         buffer.append(contentsOf: "</a>".utf8)
+        return buffer
     }
 }
 
@@ -561,16 +561,16 @@ struct StreamingAPIPatternTests {
             let title: Token
             let links: [HTMLAnchor]
 
-            func serialize<Buffer: RangeReplaceableCollection>(
-                into buffer: inout Buffer
-            ) where Buffer.Element == UInt8 {
+            static let serialize: @Sendable (Self) -> [UInt8] = { doc in
+                var buffer: [UInt8] = []
                 buffer.append(contentsOf: "<html><head><title>".utf8)
-                title.serialize(into: &buffer)
+                doc.title.serialize(into: &buffer)
                 buffer.append(contentsOf: "</title></head><body>".utf8)
-                for link in links {
+                for link in doc.links {
                     link.serialize(into: &buffer)
                 }
                 buffer.append(contentsOf: "</body></html>".utf8)
+                return buffer
             }
         }
 
