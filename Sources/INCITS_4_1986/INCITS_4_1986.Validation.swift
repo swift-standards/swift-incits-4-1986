@@ -32,7 +32,7 @@ extension INCITS_4_1986 {
     ///
     /// ## Performance
     ///
-    /// For contiguous byte arrays (`[UInt8]`, `ContiguousArray<UInt8>`),
+    /// For collections with contiguous storage (Array, ContiguousArray, ArraySlice, etc.),
     /// this uses SIMD-style processing (8 bytes at a time) for ~10x speedup
     /// on large inputs. Non-contiguous collections fall back to byte-by-byte.
     ///
@@ -49,16 +49,12 @@ extension INCITS_4_1986 {
     public static func isAllASCII<C: Collection>(
         _ bytes: C
     ) -> Bool where C.Element == UInt8 {
-        // Fast path for Array<UInt8>
-        if let array = bytes as? [UInt8] {
-            return array.withUnsafeBufferPointer { _isAllASCIIFast($0) }
+        // Fast path: SIMD-accelerated for any contiguous storage
+        if let result = bytes.withContiguousStorageIfAvailable({ _isAllASCIIFast($0) }) {
+            return result
         }
-        // Fast path for ContiguousArray<UInt8>
-        if let array = bytes as? ContiguousArray<UInt8> {
-            return array.withUnsafeBufferPointer { _isAllASCIIFast($0) }
-        }
-        // Generic path
-        return bytes.allSatisfy { $0 <= 0x7F }
+        // Generic path: delegate to authoritative predicate
+        return bytes.allSatisfy(\.ascii.isASCII)
     }
 
     /// SIMD-style ASCII validation for contiguous buffers
