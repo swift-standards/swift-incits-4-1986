@@ -12,8 +12,10 @@ extension INCITS_4_1986 {
     /// Authoritative implementations of byte array-level classification tests per INCITS 4-1986.
     /// All byte array predicates are defined here as the single source of truth.
     ///
-    /// These operations test properties of entire byte arrays, delegating to the byte-level
-    /// character classification operations for individual byte tests.
+    /// ## Performance
+    ///
+    /// These operations use inline loops with branchless byte-level checks for optimal performance.
+    /// For contiguous arrays, SIMD-accelerated paths are used where applicable.
     public enum ByteArrayClassification {}
 }
 
@@ -28,7 +30,12 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllWhitespace<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isWhitespace)
+        for byte in bytes {
+            // Whitespace: 0x09, 0x0A, 0x0D, 0x20
+            let isWS = byte == 0x20 || byte == 0x09 || byte == 0x0A || byte == 0x0D
+            guard isWS else { return false }
+        }
+        return true
     }
 
     /// Returns true if all bytes are ASCII digits (0-9)
@@ -38,7 +45,10 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllDigits<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isDigit)
+        for byte in bytes {
+            guard (byte &- 0x30) < 10 else { return false }
+        }
+        return true
     }
 
     /// Returns true if all bytes are ASCII letters (A-Z, a-z)
@@ -48,7 +58,11 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllLetters<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isLetter)
+        for byte in bytes {
+            let isLetter = (byte &- 0x41) < 26 || (byte &- 0x61) < 26
+            guard isLetter else { return false }
+        }
+        return true
     }
 
     /// Returns true if all bytes are ASCII alphanumeric (A-Z, a-z, 0-9)
@@ -58,7 +72,12 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllAlphanumeric<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isAlphanumeric)
+        for byte in bytes {
+            let isDigit = (byte &- 0x30) < 10
+            let isLetter = (byte &- 0x41) < 26 || (byte &- 0x61) < 26
+            guard isDigit || isLetter else { return false }
+        }
+        return true
     }
 
     /// Returns true if all bytes are ASCII control characters
@@ -68,7 +87,10 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllControl<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isControl)
+        for byte in bytes {
+            guard byte <= 0x1F || byte == 0x7F else { return false }
+        }
+        return true
     }
 
     /// Returns true if all bytes are ASCII visible characters
@@ -79,7 +101,10 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllVisible<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isVisible)
+        for byte in bytes {
+            guard byte >= 0x21 && byte <= 0x7E else { return false }
+        }
+        return true
     }
 
     /// Returns true if all bytes are ASCII printable characters
@@ -90,7 +115,10 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllPrintable<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(INCITS_4_1986.CharacterClassification.isPrintable)
+        for byte in bytes {
+            guard byte >= 0x20 && byte <= 0x7E else { return false }
+        }
+        return true
     }
 
     /// Returns true if all letter bytes are lowercase
@@ -101,10 +129,13 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for arrays with no letters.
     @inlinable
     public static func isAllLowercase<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy { byte in
-            guard INCITS_4_1986.CharacterClassification.isLetter(byte) else { return true }
-            return INCITS_4_1986.CharacterClassification.isLowercase(byte)
+        for byte in bytes {
+            // If uppercase letter (A-Z), fail
+            if (byte &- 0x41) < 26 {
+                return false
+            }
         }
+        return true
     }
 
     /// Returns true if all letter bytes are uppercase
@@ -115,20 +146,35 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for arrays with no letters.
     @inlinable
     public static func isAllUppercase<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy { byte in
-            guard INCITS_4_1986.CharacterClassification.isLetter(byte) else { return true }
-            return INCITS_4_1986.CharacterClassification.isUppercase(byte)
+        for byte in bytes {
+            // If lowercase letter (a-z), fail
+            if (byte &- 0x61) < 26 {
+                return false
+            }
         }
+        return true
     }
 
     /// Returns true if array contains any non-ASCII bytes
     ///
     /// Tests whether any byte in the array is outside the valid ASCII range (>= 0x80).
     ///
+    /// ## Performance
+    ///
+    /// For contiguous arrays, uses SIMD-accelerated checking (8 bytes at a time).
+    ///
     /// Returns `false` for empty arrays.
     @inlinable
     public static func containsNonASCII<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.contains { $0 > 0x7F }
+        // Fast path for Array<UInt8>
+        if let array = bytes as? [UInt8] {
+            return !INCITS_4_1986.isAllASCII(array)
+        }
+        // Generic path
+        for byte in bytes {
+            if byte > 0x7F { return true }
+        }
+        return false
     }
 
     /// Returns true if array contains at least one hex digit byte
@@ -138,6 +184,12 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `false` for empty arrays.
     @inlinable
     public static func containsHexDigit<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.contains(where: INCITS_4_1986.CharacterClassification.isHexDigit)
+        for byte in bytes {
+            let isDigit = (byte &- 0x30) < 10
+            let isHexUpper = (byte &- 0x41) < 6
+            let isHexLower = (byte &- 0x61) < 6
+            if isDigit || isHexUpper || isHexLower { return true }
+        }
+        return false
     }
 }

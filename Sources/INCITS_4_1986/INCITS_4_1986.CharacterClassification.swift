@@ -18,12 +18,107 @@ extension INCITS_4_1986 {
     /// - Whitespace: 0x20, 0x09, 0x0A, 0x0D (4 total)
     /// - Digits: 0x30-0x39 ('0'-'9')
     /// - Letters: 0x41-0x5A ('A'-'Z') and 0x61-0x7A ('a'-'z')
+    ///
+    /// ## Performance
+    ///
+    /// All predicates use `@_transparent` for zero-overhead inlining.
+    /// Range checks use branchless subtraction tricks for optimal codegen.
     public enum CharacterClassification {}
 }
 
-extension INCITS_4_1986.CharacterClassification {
-    // MARK: - Whitespace Classification
+// MARK: - Lookup Table
 
+extension INCITS_4_1986.CharacterClassification {
+    /// Character classification bit flags
+    @usableFromInline
+    internal static let _digit: UInt8     = 0x01
+    @usableFromInline
+    internal static let _upper: UInt8     = 0x02
+    @usableFromInline
+    internal static let _lower: UInt8     = 0x04
+    @usableFromInline
+    internal static let _hexUpper: UInt8  = 0x08
+    @usableFromInline
+    internal static let _hexLower: UInt8  = 0x10
+    @usableFromInline
+    internal static let _whitespace: UInt8 = 0x20
+    @usableFromInline
+    internal static let _control: UInt8   = 0x40
+    @usableFromInline
+    internal static let _printable: UInt8 = 0x80
+
+    /// Pre-computed 128-byte lookup table for O(1) character classification
+    ///
+    /// Each byte encodes multiple class memberships via bit flags:
+    /// - Bit 0: Digit (0-9)
+    /// - Bit 1: Uppercase letter (A-Z)
+    /// - Bit 2: Lowercase letter (a-z)
+    /// - Bit 3: Hex digit uppercase (A-F)
+    /// - Bit 4: Hex digit lowercase (a-f)
+    /// - Bit 5: Whitespace (SP, HT, LF, CR)
+    /// - Bit 6: Control character
+    /// - Bit 7: Printable (graphic + space)
+    @usableFromInline
+    internal static let _classTable: [UInt8] = {
+        var table = [UInt8](repeating: 0, count: 128)
+
+        // Control characters (0x00-0x1F)
+        for i in 0x00...0x1F {
+            table[i] = _control
+        }
+        // DEL (0x7F)
+        table[0x7F] = _control
+
+        // Whitespace (overwrites some control flags, adds whitespace)
+        table[0x09] |= _whitespace  // HT
+        table[0x0A] |= _whitespace  // LF
+        table[0x0D] |= _whitespace  // CR
+        table[0x20] = _whitespace | _printable  // SP
+
+        // Printable characters (0x21-0x7E)
+        for i in 0x21...0x7E {
+            table[i] |= _printable
+        }
+
+        // Digits (0x30-0x39)
+        for i in 0x30...0x39 {
+            table[i] |= _digit
+        }
+
+        // Uppercase letters (0x41-0x5A)
+        for i in 0x41...0x5A {
+            table[i] |= _upper
+        }
+
+        // Lowercase letters (0x61-0x7A)
+        for i in 0x61...0x7A {
+            table[i] |= _lower
+        }
+
+        // Hex digits uppercase (A-F: 0x41-0x46)
+        for i in 0x41...0x46 {
+            table[i] |= _hexUpper
+        }
+
+        // Hex digits lowercase (a-f: 0x61-0x66)
+        for i in 0x61...0x66 {
+            table[i] |= _hexLower
+        }
+
+        return table
+    }()
+
+    /// Fast lookup for ASCII bytes (< 128)
+    @_transparent
+    @usableFromInline
+    internal static func _lookup(_ byte: UInt8) -> UInt8 {
+        byte < 128 ? _classTable[Int(byte)] : 0
+    }
+}
+
+// MARK: - Whitespace Classification
+
+extension INCITS_4_1986.CharacterClassification {
     /// Tests if byte is ASCII whitespace
     ///
     /// Returns `true` for the four ASCII whitespace characters defined in INCITS 4-1986:
@@ -34,7 +129,7 @@ extension INCITS_4_1986.CharacterClassification {
     ///
     /// ## Performance
     ///
-    /// Uses four inline equality comparisons rather than a Set lookup for optimal performance.
+    /// Uses lookup table for O(1) classification.
     ///
     /// ## Usage
     ///
@@ -45,10 +140,7 @@ extension INCITS_4_1986.CharacterClassification {
     /// ```
     @_transparent
     public static func isWhitespace(_ byte: UInt8) -> Bool {
-        byte == INCITS_4_1986.SPACE.sp
-            || byte == INCITS_4_1986.ControlCharacters.htab
-            || byte == INCITS_4_1986.ControlCharacters.lf
-            || byte == INCITS_4_1986.ControlCharacters.cr
+        _lookup(byte) & _whitespace != 0
     }
 
     // MARK: - Control Character Classification
@@ -74,7 +166,7 @@ extension INCITS_4_1986.CharacterClassification {
     /// ```
     @_transparent
     public static func isControl(_ byte: UInt8) -> Bool {
-        byte <= INCITS_4_1986.ControlCharacters.us || byte == INCITS_4_1986.ControlCharacters.del
+        byte <= 0x1F || byte == 0x7F
     }
 
     // MARK: - Graphic Character Classification
@@ -99,8 +191,7 @@ extension INCITS_4_1986.CharacterClassification {
     /// ```
     @_transparent
     public static func isVisible(_ byte: UInt8) -> Bool {
-        byte >= INCITS_4_1986.GraphicCharacters.exclamationPoint
-            && byte <= INCITS_4_1986.GraphicCharacters.tilde
+        byte >= 0x21 && byte <= 0x7E
     }
 
     /// Tests if byte is ASCII printable (graphic) character
@@ -123,7 +214,7 @@ extension INCITS_4_1986.CharacterClassification {
     /// ```
     @_transparent
     public static func isPrintable(_ byte: UInt8) -> Bool {
-        byte >= INCITS_4_1986.SPACE.sp && byte <= INCITS_4_1986.GraphicCharacters.tilde
+        byte >= 0x20 && byte <= 0x7E
     }
 
     // MARK: - Digit Classification
@@ -131,6 +222,10 @@ extension INCITS_4_1986.CharacterClassification {
     /// Tests if byte is ASCII digit ('0'...'9')
     ///
     /// Returns `true` for bytes in the range 0x30-0x39.
+    ///
+    /// ## Performance
+    ///
+    /// Uses branchless subtraction: `(byte - 0x30) < 10`
     ///
     /// ## Usage
     ///
@@ -141,12 +236,16 @@ extension INCITS_4_1986.CharacterClassification {
     /// ```
     @_transparent
     public static func isDigit(_ byte: UInt8) -> Bool {
-        byte >= INCITS_4_1986.GraphicCharacters.`0` && byte <= INCITS_4_1986.GraphicCharacters.`9`
+        (byte &- 0x30) < 10
     }
 
     /// Tests if byte is ASCII hexadecimal digit ('0'...'9', 'A'...'F', 'a'...'f')
     ///
     /// Returns `true` for bytes that represent valid hexadecimal digits in either case.
+    ///
+    /// ## Performance
+    ///
+    /// Uses lookup table for single memory access.
     ///
     /// ## Usage
     ///
@@ -156,11 +255,10 @@ extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isHexDigit(0x61)    // true ('a')
     /// INCITS_4_1986.CharacterClassification.isHexDigit(0x47)    // false ('G')
     /// ```
-    @inlinable
+    @_transparent
     public static func isHexDigit(_ byte: UInt8) -> Bool {
-        isDigit(byte)
-            || (byte >= INCITS_4_1986.GraphicCharacters.A && byte <= INCITS_4_1986.GraphicCharacters.F)
-            || (byte >= INCITS_4_1986.GraphicCharacters.a && byte <= INCITS_4_1986.GraphicCharacters.f)
+        let flags = _lookup(byte)
+        return flags & (_digit | _hexUpper | _hexLower) != 0
     }
 
     // MARK: - Letter Classification
@@ -168,6 +266,10 @@ extension INCITS_4_1986.CharacterClassification {
     /// Tests if byte is ASCII letter ('A'...'Z' or 'a'...'z')
     ///
     /// Returns `true` for uppercase letters (0x41-0x5A) or lowercase letters (0x61-0x7A).
+    ///
+    /// ## Performance
+    ///
+    /// Uses OR of two branchless range checks.
     ///
     /// ## Usage
     ///
@@ -178,13 +280,16 @@ extension INCITS_4_1986.CharacterClassification {
     /// ```
     @_transparent
     public static func isLetter(_ byte: UInt8) -> Bool {
-        (byte >= INCITS_4_1986.GraphicCharacters.A && byte <= INCITS_4_1986.GraphicCharacters.Z)
-            || (byte >= INCITS_4_1986.GraphicCharacters.a && byte <= INCITS_4_1986.GraphicCharacters.z)
+        (byte &- 0x41) < 26 || (byte &- 0x61) < 26
     }
 
     /// Tests if byte is ASCII uppercase letter ('A'...'Z')
     ///
     /// Returns `true` for bytes in the range 0x41-0x5A.
+    ///
+    /// ## Performance
+    ///
+    /// Uses branchless subtraction: `(byte - 0x41) < 26`
     ///
     /// ## Usage
     ///
@@ -195,12 +300,16 @@ extension INCITS_4_1986.CharacterClassification {
     /// ```
     @_transparent
     public static func isUppercase(_ byte: UInt8) -> Bool {
-        byte >= INCITS_4_1986.GraphicCharacters.A && byte <= INCITS_4_1986.GraphicCharacters.Z
+        (byte &- 0x41) < 26
     }
 
     /// Tests if byte is ASCII lowercase letter ('a'...'z')
     ///
     /// Returns `true` for bytes in the range 0x61-0x7A.
+    ///
+    /// ## Performance
+    ///
+    /// Uses branchless subtraction: `(byte - 0x61) < 26`
     ///
     /// ## Usage
     ///
@@ -211,12 +320,16 @@ extension INCITS_4_1986.CharacterClassification {
     /// ```
     @_transparent
     public static func isLowercase(_ byte: UInt8) -> Bool {
-        byte >= INCITS_4_1986.GraphicCharacters.a && byte <= INCITS_4_1986.GraphicCharacters.z
+        (byte &- 0x61) < 26
     }
 
     /// Tests if byte is ASCII alphanumeric (digit or letter)
     ///
     /// Returns `true` if the byte is either a digit or a letter (uppercase or lowercase).
+    ///
+    /// ## Performance
+    ///
+    /// Uses lookup table for single memory access.
     ///
     /// ## Usage
     ///
@@ -225,8 +338,9 @@ extension INCITS_4_1986.CharacterClassification {
     /// INCITS_4_1986.CharacterClassification.isAlphanumeric(0x30)    // true ('0')
     /// INCITS_4_1986.CharacterClassification.isAlphanumeric(0x21)    // false ('!')
     /// ```
-    @inlinable
+    @_transparent
     public static func isAlphanumeric(_ byte: UInt8) -> Bool {
-        isDigit(byte) || isLetter(byte)
+        let flags = _lookup(byte)
+        return flags & (_digit | _upper | _lower) != 0
     }
 }

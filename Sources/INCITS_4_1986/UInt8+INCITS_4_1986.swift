@@ -261,7 +261,7 @@ extension UInt8.ASCII {
     /// ## See Also
     ///
     /// - ``INCITS_4_1986/CharacterClassification/isAlphanumeric(_:)``
-    @inlinable
+    @_transparent
     public var isAlphanumeric: Bool {
         INCITS_4_1986.CharacterClassification.isAlphanumeric(byte)
     }
@@ -271,7 +271,7 @@ extension UInt8.ASCII {
     /// ## See Also
     ///
     /// - ``INCITS_4_1986/CharacterClassification/isHexDigit(_:)``
-    @inlinable
+    @_transparent
     public var isHexDigit: Bool {
         INCITS_4_1986.CharacterClassification.isHexDigit(byte)
     }
@@ -296,12 +296,12 @@ extension UInt8.ASCII {
         INCITS_4_1986.CharacterClassification.isLowercase(byte)
     }
 
-    @inlinable
+    @_transparent
     public func lowercased() -> UInt8 {
         INCITS_4_1986.CaseConversion.convert(byte, to: .lower)
     }
 
-    @inlinable
+    @_transparent
     public func uppercased() -> UInt8 {
         INCITS_4_1986.CaseConversion.convert(byte, to: .upper)
     }

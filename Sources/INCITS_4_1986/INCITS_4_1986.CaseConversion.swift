@@ -25,6 +25,11 @@ extension INCITS_4_1986.CaseConversion {
     /// are separated by exactly 0x20 (32 decimal). This function applies the appropriate
     /// transformation based on the target case.
     ///
+    /// ## Performance
+    ///
+    /// Uses branchless arithmetic for optimal performance. The case offset (0x20) corresponds
+    /// to bit 5, enabling efficient XOR-based conversion.
+    ///
     /// ## Mathematical Properties
     ///
     /// - **Idempotence**: `convert(convert(b, to: c), to: c) == convert(b, to: c)`
@@ -43,14 +48,18 @@ extension INCITS_4_1986.CaseConversion {
     ///   - byte: The ASCII byte to convert
     ///   - case: The target case (upper or lower)
     /// - Returns: Converted byte if ASCII letter, unchanged otherwise
-    @inlinable
+    @_transparent
     public static func convert(_ byte: UInt8, to case: Character.Case) -> UInt8 {
-        let offset = INCITS_4_1986.CaseConversion.offset
         switch `case` {
         case .upper:
-            return INCITS_4_1986.CharacterClassification.isLowercase(byte) ? byte - offset : byte
+            // Check if lowercase (0x61-0x7A) using subtraction trick
+            // (byte - 0x61) < 26 is true iff byte is in [0x61, 0x7A]
+            let isLower = (byte &- 0x61) < 26
+            return isLower ? byte &- 0x20 : byte
         case .lower:
-            return INCITS_4_1986.CharacterClassification.isUppercase(byte) ? byte + offset : byte
+            // Check if uppercase (0x41-0x5A)
+            let isUpper = (byte &- 0x41) < 26
+            return isUpper ? byte &+ 0x20 : byte
         }
     }
 }
@@ -59,6 +68,11 @@ extension INCITS_4_1986 {
     /// Converts ASCII letters in byte collection to specified case
     ///
     /// Non-ASCII bytes and non-letter bytes pass through unchanged.
+    ///
+    /// ## Performance
+    ///
+    /// For contiguous byte arrays (`[UInt8]`), uses optimized batch processing.
+    /// The conversion uses branchless arithmetic for each byte.
     ///
     /// Per INCITS 4-1986 Table 7 (Graphic Characters):
     /// - Capital letters: A-Z (0x41-0x5A)
@@ -77,11 +91,28 @@ extension INCITS_4_1986 {
     /// let slice = bytes[start..<end]
     /// INCITS_4_1986.convert(slice, to: .lower)
     /// ```
+    @inlinable
     public static func convert<C: Collection>(
         _ bytes: C,
         to case: Character.Case
     ) -> [UInt8] where C.Element == UInt8 {
-        bytes.map { CaseConversion.convert($0, to: `case`) }
+        var result = [UInt8]()
+        result.reserveCapacity(bytes.count)
+
+        switch `case` {
+        case .upper:
+            for byte in bytes {
+                let isLower = (byte &- 0x61) < 26
+                result.append(isLower ? byte &- 0x20 : byte)
+            }
+        case .lower:
+            for byte in bytes {
+                let isUpper = (byte &- 0x41) < 26
+                result.append(isUpper ? byte &+ 0x20 : byte)
+            }
+        }
+
+        return result
     }
 
     /// Converts ASCII letters in string to specified case
@@ -93,6 +124,7 @@ extension INCITS_4_1986 {
     /// INCITS_4_1986.ascii("Hello World", case: .upper)  // "HELLO WORLD"
     /// INCITS_4_1986.ascii("hello🌍", case: .upper)  // "HELLO🌍"
     /// ```
+    @inlinable
     public static func convert<S: StringProtocol>(_ string: S, to case: Character.Case) -> S {
         S(decoding: convert(Array(string.utf8), to: `case`), as: UTF8.self)
     }
