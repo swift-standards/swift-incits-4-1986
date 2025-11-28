@@ -194,3 +194,29 @@ extension StringProtocol {
         self.init(decoding: CollectionOfOne(byte), as: UTF8.self)
     }
 }
+
+extension StringProtocol {
+    /// String representation of an ASCII-serializable value
+    ///
+    /// Composes through canonical byte representation for academic correctness.
+    ///
+    /// ## Category Theory
+    ///
+    /// String display composes as:
+    /// ```
+    /// Serializable → [UInt8] (ASCII) → String (UTF-8 interpretation)
+    /// ```
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let value: RFC_5322.EmailAddress = ...
+    /// let string = String(value)  // Uses this initializer
+    /// ```
+    ///
+    /// - Parameter value: Any type conforming to UInt8.ASCII.Serializable
+    @_transparent
+    public init<T: UInt8.ASCII.Serializable>(_ value: T) {
+        self = Self(decoding: value.bytes, as: UTF8.self)
+    }
+}
