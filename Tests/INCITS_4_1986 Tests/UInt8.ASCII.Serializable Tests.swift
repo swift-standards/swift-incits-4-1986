@@ -22,11 +22,14 @@ private struct Token: Sendable, Codable {
     }
 }
 
-extension Token: UInt8.ASCII.Serializable {
+extension Token {
     enum Error: Swift.Error, Sendable, Equatable {
         case empty
         case invalidCharacter(UInt8)
     }
+}
+
+extension Token: UInt8.ASCII.Serializable {
 
     // Context == Void (default), so we implement init(ascii:in:) with Void context
     init<Bytes: Collection>(ascii bytes: Bytes, in context: Void) throws(Error)
@@ -42,7 +45,9 @@ extension Token: UInt8.ASCII.Serializable {
         self.init(__unchecked: (), rawValue: String(decoding: bytes, as: UTF8.self))
     }
 
-    static let serialize: @Sendable (Self) -> [UInt8] = { Array($0.rawValue.utf8) }
+    static func serialize(ascii token: Token) -> [UInt8] {
+        Array(token.rawValue.utf8)
+    }
 }
 
 extension Token: Hashable {}
@@ -53,7 +58,7 @@ extension Token: ExpressibleByStringLiteral {}
 
 /// A message type that requires a delimiter to parse.
 /// Demonstrates context-dependent Serializable conformance.
-private struct DelimitedMessage: Sendable, Codable {
+struct DelimitedMessage: Sendable, Codable {
     let parts: [String]
     let delimiter: UInt8
 
@@ -64,6 +69,17 @@ private struct DelimitedMessage: Sendable, Codable {
 }
 
 extension DelimitedMessage: UInt8.ASCII.Serializable {
+    static func serialize(ascii message: DelimitedMessage) -> [UInt8] {
+        var result: [UInt8] = []
+        for (index, part) in message.parts.enumerated() {
+            if index > 0 {
+                result.append(message.delimiter)
+            }
+            result.append(contentsOf: part.utf8)
+        }
+        return result
+    }
+    
     /// Context required for parsing - the delimiter byte
     struct Context: Sendable {
         let delimiter: UInt8
@@ -93,17 +109,6 @@ extension DelimitedMessage: UInt8.ASCII.Serializable {
         parts.append(String(decoding: current, as: UTF8.self))
 
         self.init(__unchecked: (), parts: parts, delimiter: context.delimiter)
-    }
-
-    static let serialize: @Sendable (Self) -> [UInt8] = { message in
-        var result: [UInt8] = []
-        for (index, part) in message.parts.enumerated() {
-            if index > 0 {
-                result.append(message.delimiter)
-            }
-            result.append(contentsOf: part.utf8)
-        }
-        return result
     }
 }
 
@@ -339,7 +344,7 @@ struct CategoryTheoryTests {
     }
 }
 
-// MARK: - UInt8.Streaming Conformance Tests
+// MARK: - UInt8.Serializable Conformance Tests
 
 /// Example HTML-like element that composes with ASCII.Serializable types.
 /// Demonstrates how streaming types can embed RFC/ASCII types seamlessly.
@@ -358,23 +363,23 @@ private struct HTMLAnchor: UInt8.Serializable {
     }
 }
 
-@Suite("Serializable - UInt8.Streaming Conformance")
+@Suite("Serializable - UInt8.Serializable Conformance")
 struct StreamingConformanceTests {
 
     // MARK: - Automatic Conformance
 
-    @Test("ASCII.Serializable types automatically conform to UInt8.Streaming")
+    @Test("ASCII.Serializable types automatically conform to UInt8.Serializable")
     func automaticConformance() throws {
         let token = try Token("my-token")
 
-        // Token conforms to UInt8.Streaming via ASCII.Serializable
+        // Token conforms to UInt8.Serializable via ASCII.Serializable
         var buffer: [UInt8] = []
         token.serialize(into: &buffer)
 
         #expect(buffer == Array("my-token".utf8))
     }
 
-    @Test("Context-dependent types also conform to UInt8.Streaming")
+    @Test("Context-dependent types also conform to UInt8.Serializable")
     func contextDependentConformance() {
         let message = DelimitedMessage(
             __unchecked: (),
@@ -382,7 +387,7 @@ struct StreamingConformanceTests {
             delimiter: .ascii.comma
         )
 
-        // DelimitedMessage conforms to UInt8.Streaming via ASCII.Serializable
+        // DelimitedMessage conforms to UInt8.Serializable via ASCII.Serializable
         var buffer: [UInt8] = []
         message.serialize(into: &buffer)
 
@@ -406,7 +411,7 @@ struct StreamingConformanceTests {
     func bytesProperty() throws {
         let token = try Token("swift-token")
 
-        // Convenience property from UInt8.Streaming
+        // Convenience property from UInt8.Serializable
         let bytes = token.bytes
 
         #expect(bytes == Array("swift-token".utf8))
