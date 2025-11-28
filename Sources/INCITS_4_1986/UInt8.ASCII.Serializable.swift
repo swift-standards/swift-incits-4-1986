@@ -168,22 +168,6 @@ extension UInt8.ASCII.Serializable {
     public static var serialize: @Sendable (Self) -> [UInt8] { Self.serialize(ascii:) }
 }
 
-// String-like types → UTF-8 bytes
-extension UInt8.Serializable where Self: RawRepresentable, Self.RawValue: StringProtocol {
-    @_transparent
-    static var serialize: @Sendable (Self) -> [UInt8] {
-        { Array($0.rawValue.utf8) }
-    }
-}
-
-// Byte array types → direct passthrough
-extension UInt8.Serializable where Self: RawRepresentable, Self.RawValue == [UInt8] {
-    @_transparent
-    static var serialize: @Sendable (Self) -> [UInt8] {
-        { $0.rawValue }
-    }
-}
-
 extension UInt8.ASCII {
     public protocol RawRepresentable: UInt8.ASCII.Serializable, Swift.RawRepresentable {}
 }
