@@ -85,7 +85,7 @@ extension UInt8.ASCII.RawRepresentable where Self.RawValue == [UInt8], Context =
     @_disfavoredOverload
     @inlinable
     public var rawValue: [UInt8] {
-        self.asciiBytes
+        self.bytes
     }
 }
 

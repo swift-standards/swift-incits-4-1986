@@ -562,6 +562,7 @@ extension UInt8.ASCII {
     /// QUOTATION MARK (0x22) - "
     public static var quotationMark: UInt8 { INCITS_4_1986.GraphicCharacters.quotationMark }
     public static var dquote: UInt8 { INCITS_4_1986.GraphicCharacters.quotationMark }
+    public static var doubleQuote: UInt8 { INCITS_4_1986.GraphicCharacters.quotationMark }
 
     /// NUMBER SIGN (0x23) - #
     public static var numberSign: UInt8 { INCITS_4_1986.GraphicCharacters.numberSign }
@@ -863,9 +864,11 @@ extension UInt8.ASCII {
 extension UInt8.ASCII {
     /// LESS-THAN SIGN (0x3C) - <
     public static var lt: UInt8 { INCITS_4_1986.GraphicCharacters.lessThanSign }
+    public static var lessThan: UInt8 { INCITS_4_1986.GraphicCharacters.lessThanSign }
 
     /// GREATER-THAN SIGN (0x3E) - >
     public static var gt: UInt8 { INCITS_4_1986.GraphicCharacters.greaterThanSign }
+    public static var greaterThan: UInt8 { INCITS_4_1986.GraphicCharacters.greaterThanSign }
 
     /// COMMERCIAL AT (0x40) - @
     public static var at: UInt8 { INCITS_4_1986.GraphicCharacters.commercialAt }

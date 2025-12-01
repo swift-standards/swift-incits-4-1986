@@ -181,36 +181,36 @@ extension UInt8.ASCII.Serializable {
     }
 }
 
-// MARK: - Convenience Extensions
-
-extension UInt8.ASCII.Serializable {
-    /// Serialize to a new ASCII byte array
-    ///
-    /// Convenience property that creates a new buffer and serializes into it.
-    ///
-    /// ## Performance Note
-    ///
-    /// Each call allocates a new array. For repeated serialization,
-    /// prefer `serialize(ascii:into:)` with a reusable buffer.
-    @inlinable
-    public var asciiBytes: [UInt8] {
-        var buffer: [UInt8] = []
-        Self.serialize(ascii: self, into: &buffer)
-        return buffer
-    }
-
-    /// Serialize this value into an ASCII byte buffer (instance method)
-    ///
-    /// Convenience method that delegates to the static `serialize(ascii:into:)`.
-    ///
-    /// - Parameter buffer: The buffer to append bytes to
-    @inlinable
-    public func serialize<Buffer: RangeReplaceableCollection>(
-        ascii buffer: inout Buffer
-    ) where Buffer.Element == UInt8 {
-        Self.serialize(ascii: self, into: &buffer)
-    }
-}
+//// MARK: - Convenience Extensions
+//
+//extension UInt8.ASCII.Serializable {
+//    /// Serialize to a new ASCII byte array
+//    ///
+//    /// Convenience property that creates a new buffer and serializes into it.
+//    ///
+//    /// ## Performance Note
+//    ///
+//    /// Each call allocates a new array. For repeated serialization,
+//    /// prefer `serialize(ascii:into:)` with a reusable buffer.
+//    @inlinable
+//    public var asciiBytes: [UInt8] {
+//        var buffer: [UInt8] = []
+//        Self.serialize(ascii: self, into: &buffer)
+//        return buffer
+//    }
+//
+//    /// Serialize this value into an ASCII byte buffer (instance method)
+//    ///
+//    /// Convenience method that delegates to the static `serialize(ascii:into:)`.
+//    ///
+//    /// - Parameter buffer: The buffer to append bytes to
+//    @inlinable
+//    public func serialize<Buffer: RangeReplaceableCollection>(
+//        ascii buffer: inout Buffer
+//    ) where Buffer.Element == UInt8 {
+//        Self.serialize(ascii: self, into: &buffer)
+//    }
+//}
 
 // MARK: - Static Returning Convenience
 
@@ -244,21 +244,23 @@ extension Array where Element == UInt8 {
     }
 }
 
-// MARK: - RawRepresentable Default Implementations
 
-extension UInt8.ASCII.Serializable where Self: Swift.RawRepresentable, Self.RawValue == String {
-    /// Default implementation for string-backed types (enums, etc.)
-    ///
-    /// Uses the native `rawValue` property to serialize.
-    /// This avoids infinite recursion with synthesized `rawValue` implementations.
-    @inlinable
-    public static func serialize<Buffer: RangeReplaceableCollection>(
-        ascii serializable: Self,
-        into buffer: inout Buffer
-    ) where Buffer.Element == UInt8 {
-        buffer.append(contentsOf: serializable.rawValue.utf8)
-    }
-}
+//extension UInt8.ASCII.Serializable where Self: Swift.RawRepresentable, Self.RawValue == String {
+//    /// Default implementation for string-backed types (enums, etc.)
+//    ///
+//    /// Uses the native `rawValue` property to serialize.
+//    ///
+//    /// - Important: Types conforming to `UInt8.ASCII.RawRepresentable` MUST provide
+//    ///   their own `serialize` implementation to avoid infinite recursion, since their
+//    ///   `rawValue` is synthesized from serialization.
+//    @inlinable
+//    public static func serialize<Buffer: RangeReplaceableCollection>(
+//        ascii serializable: Self,
+//        into buffer: inout Buffer
+//    ) where Buffer.Element == UInt8 {
+//        buffer.append(contentsOf: serializable.rawValue.utf8)
+//    }
+//}
 
 extension UInt8.ASCII.Serializable where Self: Swift.RawRepresentable, Self.RawValue == [UInt8] {
     /// Default implementation for byte-array-backed types
@@ -305,7 +307,7 @@ extension UInt8.ASCII.Serializable where Context == Void {
 
 // MARK: - String Conversion
 
-extension String {
+extension StringProtocol {
     /// Create a string from an ASCII serializable value
     ///
     /// Serializes the value and interprets the bytes as UTF-8.
@@ -313,7 +315,8 @@ extension String {
     /// - Parameter value: The ASCII serializable value to convert
     @inlinable
     public init<T: UInt8.ASCII.Serializable>(ascii value: T) {
-        self = String(decoding: value.asciiBytes, as: UTF8.self)
+        let bytes: [UInt8] = T.serialize(ascii: value)
+        self = .init(decoding: bytes, as: UTF8.self)
     }
 }
 
@@ -380,5 +383,114 @@ extension UInt8.ASCII.Serializable where Self: ExpressibleByFloatLiteral, Contex
     public init(floatLiteral value: Double) {
         // swiftlint:disable:next force_try
         try! self.init(String(value))
+    }
+}
+
+extension RangeReplaceableCollection where Element == UInt8 {
+    @inlinable
+    public mutating func append<Serializable: UInt8.ASCII.Serializable>(
+        ascii serializable: Serializable
+    ) {
+        Serializable.serialize(ascii: serializable, into: &self)
+    }
+}
+
+// MARK: - ASCII Serialization Wrapper
+
+extension UInt8.ASCII {
+    /// Wrapper for ASCII serializable types
+    ///
+    /// Provides instance-level access to ASCII serialization methods.
+    /// This wrapper enables the syntax `value.ascii.serialize(into:)` for types
+    /// that have both binary and ASCII serializations.
+    ///
+    /// ## Usage
+    ///
+    /// ```swift
+    /// // For types with both binary and ASCII serialization:
+    /// let address = try RFC_791.IPv4.Address("192.168.1.1")
+    ///
+    /// var binaryBuffer: [UInt8] = []
+    /// address.serialize(into: &binaryBuffer)  // Binary: [192, 168, 1, 1]
+    ///
+    /// var asciiBuffer: [UInt8] = []
+    /// address.ascii.serialize(into: &asciiBuffer)  // ASCII: "192.168.1.1"
+    /// ```
+    ///
+    /// ## Category Theory
+    ///
+    /// This wrapper enables explicit selection of the ASCII serialization functor
+    /// when multiple serialization morphisms are available:
+    /// - `serialize(into:)` → binary bytes (for types with binary representation)
+    /// - `ascii.serialize(into:)` → ASCII text representation
+    public struct Wrapper<Wrapped: UInt8.ASCII.Serializable>: Sendable where Wrapped: Sendable {
+        /// The wrapped value
+        public let wrapped: Wrapped
+
+        /// Creates a wrapper around the given value
+        @inlinable
+        init(_ wrapped: Wrapped) {
+            self.wrapped = wrapped
+        }
+    }
+}
+
+// MARK: - Wrapper Serialization Methods
+
+extension UInt8.ASCII.Wrapper {
+    /// Serialize the wrapped value into an ASCII byte buffer
+    ///
+    /// - Parameter buffer: The buffer to append ASCII bytes to
+    @inlinable
+    public func serialize<Buffer: RangeReplaceableCollection>(
+        into buffer: inout Buffer
+    ) where Buffer.Element == UInt8 {
+        Wrapped.serialize(ascii: wrapped, into: &buffer)
+    }
+
+    /// Serialize to a new ASCII byte array
+    ///
+    /// - Returns: A new `[UInt8]` containing the ASCII representation
+    @inlinable
+    public var bytes: [UInt8] {
+        var buffer: [UInt8] = []
+        serialize(into: &buffer)
+        return buffer
+    }
+}
+
+extension UInt8.ASCII.Wrapper: CustomStringConvertible {
+    /// The ASCII string representation
+    @inlinable
+    public var description: String {
+        String(decoding: bytes, as: UTF8.self)
+    }
+}
+
+// MARK: - Serializable Extension
+
+extension UInt8.ASCII.Serializable where Self: Sendable {
+    /// Access ASCII serialization wrapper
+    ///
+    /// Returns a wrapper that provides instance-level access to ASCII serialization.
+    /// Use this when the type has both binary and ASCII serializations, and you need
+    /// to explicitly select ASCII serialization.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let address = try RFC_791.IPv4.Address("192.168.1.1")
+    ///
+    /// // Binary serialization (4 bytes)
+    /// var binary: [UInt8] = []
+    /// address.serialize(into: &binary)
+    ///
+    /// // ASCII serialization (dotted-decimal string)
+    /// var ascii: [UInt8] = []
+    /// address.ascii.serialize(into: &ascii)
+    /// ```
+    @inlinable
+    public var ascii: UInt8.ASCII.Wrapper<Self> {
+        UInt8.ASCII.Wrapper(self)
     }
 }

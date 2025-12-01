@@ -8,7 +8,7 @@
 
 import Testing
 
-@testable import INCITS_4_1986
+import INCITS_4_1986
 
 // MARK: - Context-Free Type Example
 
@@ -17,8 +17,29 @@ import Testing
 private struct Token: Sendable, Codable {
     let rawValue: String
 
-    init(__unchecked: Void, rawValue: String) {
+    internal init(
+        __unchecked: Void,
+        rawValue: String
+    ) {
         self.rawValue = rawValue
+    }
+    
+    public init(
+        _ value: String
+    ) throws(Error) {
+        let bytes: [UInt8] = Array(value.utf8)
+        guard !bytes.isEmpty else { throw .empty }
+
+        for byte in bytes {
+            guard byte.ascii.isAlphanumeric || byte == .ascii.hyphen else {
+                throw .invalidCharacter(byte)
+            }
+        }
+        
+        self.init(
+            __unchecked: (),
+            rawValue: value
+        )
     }
 }
 
@@ -34,15 +55,7 @@ extension Token: UInt8.ASCII.Serializable {
     // Context == Void (default), so we implement init(ascii:in:) with Void context
     init<Bytes: Collection>(ascii bytes: Bytes, in context: Void) throws(Error)
     where Bytes.Element == UInt8 {
-        guard !bytes.isEmpty else { throw .empty }
-
-        for byte in bytes {
-            guard byte.ascii.isAlphanumeric || byte == .ascii.hyphen else {
-                throw .invalidCharacter(byte)
-            }
-        }
-
-        self.init(__unchecked: (), rawValue: String(decoding: bytes, as: UTF8.self))
+        try self.init(String(decoding: bytes, as: UTF8.self))
     }
 
     static func serialize<Buffer>(ascii token: Self, into buffer: inout Buffer) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
@@ -131,7 +144,7 @@ struct ContextFreeSerializableTests {
     @Test("Parse from bytes using init(ascii:)")
     func parseFromBytes() throws {
         let bytes: [UInt8] = Array("hello-world".utf8)
-        let token = try Token(ascii: bytes)
+        let token: Token = try .init(ascii: bytes)
 
         #expect(token.rawValue == "hello-world")
     }
@@ -139,14 +152,14 @@ struct ContextFreeSerializableTests {
     @Test("Parse from bytes using init(ascii:in:) with Void")
     func parseFromBytesWithVoidContext() throws {
         let bytes: [UInt8] = Array("test123".utf8)
-        let token = try Token(ascii: bytes, in: ())
+        let token: Token = try .init(ascii: bytes, in: ())
 
         #expect(token.rawValue == "test123")
     }
 
     @Test("Parse from string using init(_:)")
     func parseFromString() throws {
-        let token = try Token("my-token")
+        let token: Token = try .init("my-token")
 
         #expect(token.rawValue == "my-token")
     }
@@ -160,14 +173,14 @@ struct ContextFreeSerializableTests {
 
     @Test("Serialize to bytes")
     func serializeToBytes() throws {
-        let token = try Token("hello")
+        let token: Token = try .init("hello")
 
         #expect(Token.serialize(token) == Array("hello".utf8))
     }
 
     @Test("Convert to String")
     func convertToString() throws {
-        let token = try Token("world")
+        let token: Token = try .init("world")
 
         #expect(String(token) == "world")
     }
@@ -175,7 +188,7 @@ struct ContextFreeSerializableTests {
     @Test("Round-trip: bytes → Token → bytes")
     func roundTripBytes() throws {
         let original: [UInt8] = Array("round-trip".utf8)
-        let token = try Token(ascii: original)
+        let token: Token = try .init(ascii: original)
 
         #expect(Token.serialize(token) == original)
     }
@@ -183,7 +196,7 @@ struct ContextFreeSerializableTests {
     @Test("Round-trip: string → Token → string")
     func roundTripString() throws {
         let original = "test-value"
-        let token = try Token(original)
+        let token: Token = try .init(original)
         let result = String(token)
 
         #expect(result == original)
@@ -338,7 +351,7 @@ struct CategoryTheoryTests {
         // For well-formed input, parse ∘ serialize = id
         let original: [UInt8] = Array("valid-token".utf8)
 
-        let token = try Token(ascii: original)
+        let token: Token = try .init(ascii: original)
         #expect(Token.serialize(token) == original)
     }
 }
@@ -353,7 +366,7 @@ private struct HTMLAnchor: UInt8.Serializable {
 
     static func serialize<Buffer>(_ anchor: Self, into buffer: inout Buffer) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
         buffer.append(contentsOf: "<a href=\"".utf8)
-        anchor.href.serialize(into: &buffer)  // Token conforms via ASCII.Serializable
+        anchor.href.ascii.serialize(into: &buffer)  // Token conforms via ASCII.Serializable
         buffer.append(contentsOf: "\">".utf8)
         buffer.append(contentsOf: anchor.text.utf8)
         buffer.append(contentsOf: "</a>".utf8)
@@ -367,11 +380,11 @@ struct StreamingConformanceTests {
 
     @Test("ASCII.Serializable types automatically conform to UInt8.Serializable")
     func automaticConformance() throws {
-        let token = try Token("my-token")
+        let token: Token = try .init("my-token")
 
         // Token conforms to UInt8.Serializable via ASCII.Serializable
         var buffer: [UInt8] = []
-        token.serialize(into: &buffer)
+        token.ascii.serialize(into: &buffer)
 
         #expect(buffer == Array("my-token".utf8))
     }
@@ -386,7 +399,7 @@ struct StreamingConformanceTests {
 
         // DelimitedMessage conforms to UInt8.Serializable via ASCII.Serializable
         var buffer: [UInt8] = []
-        message.serialize(into: &buffer)
+        message.ascii.serialize(into: &buffer)
 
         #expect(buffer == Array("a,b,c".utf8))
     }
@@ -395,18 +408,18 @@ struct StreamingConformanceTests {
 
     @Test("Serialize into buffer using serialize(into:)")
     func serializeIntoBuffer() throws {
-        let token = try Token("hello-world")
+        let token: Token = try .init("hello-world")
 
         // Ideal streaming usage pattern
         var buffer: [UInt8] = []
-        token.serialize(into: &buffer)
+        token.ascii.serialize(into: &buffer)
 
         #expect(buffer == Array("hello-world".utf8))
     }
 
     @Test("Get bytes using .bytes property")
     func bytesProperty() throws {
-        let token = try Token("swift-token")
+        let token: Token = try .init("swift-token")
 
         // Convenience property from UInt8.Serializable
         let bytes = token.bytes
@@ -416,10 +429,10 @@ struct StreamingConformanceTests {
 
     @Test("Append to existing buffer content")
     func appendToExistingBuffer() throws {
-        let token = try Token("suffix")
+        let token: Token = try .init("suffix")
 
         var buffer: [UInt8] = Array("prefix-".utf8)
-        token.serialize(into: &buffer)
+        token.ascii.serialize(into: &buffer)
 
         #expect(buffer == Array("prefix-suffix".utf8))
     }
@@ -428,8 +441,8 @@ struct StreamingConformanceTests {
 
     @Test("ASCII types compose with pure streaming types")
     func composeWithStreaming() throws {
-        let anchor = HTMLAnchor(
-            href: try Token("example-link"),
+        let anchor = try HTMLAnchor(
+            href: .init("example-link"),
             text: "Click here"
         )
 
@@ -440,8 +453,8 @@ struct StreamingConformanceTests {
 
     @Test("Multiple ASCII types serialize into shared buffer")
     func multipleTypesIntoBuffer() throws {
-        let token1 = try Token("first")
-        let token2 = try Token("second")
+        let token1: Token = try .init("first")
+        let token2: Token = try .init("second")
         let message = DelimitedMessage(
             __unchecked: (),
             parts: ["a", "b"],
@@ -450,11 +463,11 @@ struct StreamingConformanceTests {
 
         // Accumulate all into one buffer
         var buffer: [UInt8] = []
-        token1.serialize(into: &buffer)
+        token1.ascii.serialize(into: &buffer)
         buffer.append(UInt8(ascii: "-"))
-        token2.serialize(into: &buffer)
+        token2.ascii.serialize(into: &buffer)
         buffer.append(UInt8(ascii: "|"))
-        message.serialize(into: &buffer)
+        message.ascii.serialize(into: &buffer)
 
         #expect(buffer == Array("first-second|a:b".utf8))
     }
@@ -470,7 +483,7 @@ struct StreamingConformanceTests {
             if index > 0 {
                 buffer.append(UInt8(ascii: ","))
             }
-            token.serialize(into: &buffer)
+            token.ascii.serialize(into: &buffer)
         }
 
         let result = String(decoding: buffer, as: UTF8.self)
@@ -482,14 +495,14 @@ struct StreamingConformanceTests {
 
     @Test("Round-trip through buffer produces same result as static serialize")
     func roundTripEquivalence() throws {
-        let token = try Token("roundtrip-test")
+        let token: Token = try .init("roundtrip-test")
 
         // Via static serialize
         let staticBytes: [UInt8] = Token.serialize(token)
 
         // Via streaming serialize(into:)
         var streamingBuffer: [UInt8] = []
-        token.serialize(into: &streamingBuffer)
+        token.ascii.serialize(into: &streamingBuffer)
 
         // Via .bytes property
         let propertyBytes = token.bytes
@@ -511,8 +524,8 @@ struct StreamingAPIPatternTests {
 
         // Add header
         response.append(contentsOf: "X-Token: ".utf8)
-        let token = try Token("auth-token-123")
-        token.serialize(into: &response)
+        let token: Token = try .init("auth-token-123")
+        token.ascii.serialize(into: &response)
         response.append(contentsOf: "\r\n".utf8)
 
         let result = String(decoding: response, as: UTF8.self)
@@ -521,8 +534,8 @@ struct StreamingAPIPatternTests {
 
     @Test("Pattern: Building HTML with embedded RFC types")
     func htmlWithRFCTypes() throws {
-        let anchor = HTMLAnchor(
-            href: try Token("https-link"),
+        let anchor = try HTMLAnchor(
+            href: .init("https-link"),
             text: "Visit site"
         )
 
@@ -545,8 +558,8 @@ struct StreamingAPIPatternTests {
 
         for input in inputs {
             buffer.removeAll(keepingCapacity: true)
-            let token = try Token(input)
-            token.serialize(into: &buffer)
+            let token: Token = try .init(input)
+            token.ascii.serialize(into: &buffer)
             results.append(buffer)
         }
 
@@ -565,7 +578,7 @@ struct StreamingAPIPatternTests {
 
             static func serialize<Buffer>(_ doc: Self, into buffer: inout Buffer) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
                 buffer.append(contentsOf: "<html><head><title>".utf8)
-                doc.title.serialize(into: &buffer)
+                doc.title.ascii.serialize(into: &buffer)
                 buffer.append(contentsOf: "</title></head><body>".utf8)
                 for link in doc.links {
                     link.serialize(into: &buffer)
@@ -574,11 +587,11 @@ struct StreamingAPIPatternTests {
             }
         }
 
-        let doc = Document(
-            title: try Token("My-Page"),
+        let doc = try Document(
+            title: .init("My-Page"),
             links: [
-                HTMLAnchor(href: try Token("link1"), text: "First"),
-                HTMLAnchor(href: try Token("link2"), text: "Second"),
+                HTMLAnchor(href: .init("link1"), text: "First"),
+                HTMLAnchor(href: .init("link2"), text: "Second"),
             ]
         )
 
@@ -587,5 +600,177 @@ struct StreamingAPIPatternTests {
         #expect(html.contains("<title>My-Page</title>"))
         #expect(html.contains("<a href=\"link1\">First</a>"))
         #expect(html.contains("<a href=\"link2\">Second</a>"))
+    }
+}
+
+// MARK: - Infinite Recursion Prevention Tests
+
+/// Example type demonstrating the CORRECT pattern for UInt8.ASCII.RawRepresentable
+///
+/// Types conforming to both `UInt8.ASCII.Serializable` and `UInt8.ASCII.RawRepresentable`
+/// MUST implement `serialize(ascii:into:)` explicitly to avoid infinite recursion.
+private struct CorrectEmailAddress: Sendable, Codable, Hashable {
+    let localPart: String
+    let domain: String
+
+    init(__unchecked: Void, localPart: String, domain: String) {
+        self.localPart = localPart
+        self.domain = domain
+    }
+}
+
+extension CorrectEmailAddress: UInt8.ASCII.Serializable {
+    enum Error: Swift.Error, Sendable, Equatable {
+        case empty
+        case missingAtSign
+    }
+
+    init<Bytes: Collection>(ascii bytes: Bytes, in context: Void) throws(Error)
+    where Bytes.Element == UInt8 {
+        guard !bytes.isEmpty else { throw .empty }
+
+        let byteArray = Array(bytes)
+        guard let atIndex = byteArray.firstIndex(of: .ascii.commercialAt) else {
+            throw .missingAtSign
+        }
+
+        self.init(
+            __unchecked: (),
+            localPart: String(decoding: byteArray[..<atIndex], as: UTF8.self),
+            domain: String(decoding: byteArray[byteArray.index(after: atIndex)...], as: UTF8.self)
+        )
+    }
+
+    /// CORRECT: Explicit serialize implementation that does NOT use rawValue
+    ///
+    /// This is REQUIRED when conforming to UInt8.ASCII.RawRepresentable.
+    /// Using rawValue here would cause infinite recursion because:
+    ///   rawValue → String(ascii: self) → serialize(ascii:into:) → rawValue → ...
+    static func serialize<Buffer: RangeReplaceableCollection>(
+        ascii email: Self,
+        into buffer: inout Buffer
+    ) where Buffer.Element == UInt8 {
+        buffer.append(contentsOf: email.localPart.utf8)
+        buffer.append(.ascii.commercialAt)
+        buffer.append(contentsOf: email.domain.utf8)
+    }
+}
+
+extension CorrectEmailAddress: UInt8.ASCII.RawRepresentable {
+    typealias RawValue = String
+}
+
+extension CorrectEmailAddress: CustomStringConvertible {}
+
+@Suite("Serializable - Infinite Recursion Prevention")
+struct InfiniteRecursionPreventionTests {
+
+    // MARK: - Documentation of the Problem
+
+    /// This test documents the infinite recursion problem that occurs when
+    /// a type conforms to both UInt8.ASCII.Serializable and UInt8.ASCII.RawRepresentable
+    /// WITHOUT providing an explicit serialize(ascii:into:) implementation.
+    ///
+    /// ## The Problem Pattern (DO NOT USE)
+    ///
+    /// ```swift
+    /// // WRONG: This causes infinite recursion!
+    /// extension MyType: UInt8.ASCII.Serializable {
+    ///     // Relying on default implementation from RawRepresentable
+    /// }
+    ///
+    /// extension MyType: UInt8.ASCII.RawRepresentable {
+    ///     typealias RawValue = String
+    /// }
+    /// ```
+    ///
+    /// ## Why It Crashes
+    ///
+    /// 1. `rawValue` getter (from UInt8.ASCII.RawRepresentable) calls `String(ascii: self)`
+    /// 2. `String(ascii:)` calls `T.serialize(ascii:into:)` to get bytes
+    /// 3. Default `serialize(ascii:into:)` for RawRepresentable uses `rawValue.utf8`
+    /// 4. This accesses `rawValue` again → INFINITE RECURSION → Stack overflow
+    ///
+    /// ## The Solution
+    ///
+    /// Always provide an explicit `serialize(ascii:into:)` that does NOT use `rawValue`:
+    ///
+    /// ```swift
+    /// extension MyType: UInt8.ASCII.Serializable {
+    ///     static func serialize<Buffer: RangeReplaceableCollection>(
+    ///         ascii value: Self,
+    ///         into buffer: inout Buffer
+    ///     ) where Buffer.Element == UInt8 {
+    ///         // Serialize directly from stored properties, NOT from rawValue
+    ///         buffer.append(contentsOf: value.someProperty.utf8)
+    ///     }
+    /// }
+    /// ```
+    @Test("Correct pattern avoids infinite recursion")
+    func correctPatternWorks() throws {
+        let email = try CorrectEmailAddress("user@example.com")
+
+        // These should all work without infinite recursion:
+        let rawValue = email.rawValue
+        let description = email.description
+        let bytes = email.bytes
+
+        #expect(rawValue == "user@example.com")
+        #expect(description == "user@example.com")
+        #expect(bytes == Array("user@example.com".utf8))
+    }
+
+    @Test("RawValue is synthesized from serialization")
+    func rawValueFromSerialization() throws {
+        let email = try CorrectEmailAddress("test@domain.org")
+
+        // rawValue should be derived from serialize(ascii:into:)
+        #expect(email.rawValue == "test@domain.org")
+    }
+
+    @Test("Round-trip through rawValue")
+    func roundTripThroughRawValue() throws {
+        let original = try CorrectEmailAddress("hello@world.net")
+
+        // rawValue → String → bytes → parse → compare
+        let rawValue = original.rawValue
+        let restored = try CorrectEmailAddress(rawValue)
+
+        #expect(original == restored)
+    }
+
+    @Test("Serialization does not access rawValue")
+    func serializationIndependentOfRawValue() throws {
+        let email = try CorrectEmailAddress("direct@serialize.test")
+
+        // serialize(ascii:into:) should work without ever touching rawValue
+        var buffer: [UInt8] = []
+        CorrectEmailAddress.serialize(ascii: email, into: &buffer)
+
+        #expect(buffer == Array("direct@serialize.test".utf8))
+    }
+
+    // MARK: - API Design Guidance
+
+    @Test("Checklist for UInt8.ASCII.RawRepresentable conformance")
+    func conformanceChecklist() throws {
+        // This test serves as documentation for the required pattern:
+        //
+        // ✅ 1. Implement serialize(ascii:into:) explicitly
+        // ✅ 2. Do NOT use rawValue in serialize implementation
+        // ✅ 3. Add `typealias RawValue = String` to RawRepresentable conformance
+        // ✅ 4. Test that rawValue, description, and bytes all work
+
+        let email = try CorrectEmailAddress("checklist@test.com")
+
+        // All of these should work without recursion:
+        #expect(email.rawValue == "checklist@test.com")
+        #expect(email.description == "checklist@test.com")
+        #expect(String(ascii: email) == "checklist@test.com")
+        #expect(email.bytes == Array("checklist@test.com".utf8))
+
+        var buffer: [UInt8] = []
+        email.ascii.serialize(into: &buffer)
+        #expect(buffer == Array("checklist@test.com".utf8))
     }
 }
