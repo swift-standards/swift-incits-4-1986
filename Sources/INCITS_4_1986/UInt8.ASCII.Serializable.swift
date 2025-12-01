@@ -181,37 +181,6 @@ extension UInt8.ASCII.Serializable {
     }
 }
 
-//// MARK: - Convenience Extensions
-//
-//extension UInt8.ASCII.Serializable {
-//    /// Serialize to a new ASCII byte array
-//    ///
-//    /// Convenience property that creates a new buffer and serializes into it.
-//    ///
-//    /// ## Performance Note
-//    ///
-//    /// Each call allocates a new array. For repeated serialization,
-//    /// prefer `serialize(ascii:into:)` with a reusable buffer.
-//    @inlinable
-//    public var asciiBytes: [UInt8] {
-//        var buffer: [UInt8] = []
-//        Self.serialize(ascii: self, into: &buffer)
-//        return buffer
-//    }
-//
-//    /// Serialize this value into an ASCII byte buffer (instance method)
-//    ///
-//    /// Convenience method that delegates to the static `serialize(ascii:into:)`.
-//    ///
-//    /// - Parameter buffer: The buffer to append bytes to
-//    @inlinable
-//    public func serialize<Buffer: RangeReplaceableCollection>(
-//        ascii buffer: inout Buffer
-//    ) where Buffer.Element == UInt8 {
-//        Self.serialize(ascii: self, into: &buffer)
-//    }
-//}
-
 // MARK: - Static Returning Convenience
 
 extension UInt8.ASCII.Serializable {
@@ -243,24 +212,6 @@ extension Array where Element == UInt8 {
         S.serialize(ascii: serializable, into: &self)
     }
 }
-
-
-//extension UInt8.ASCII.Serializable where Self: Swift.RawRepresentable, Self.RawValue == String {
-//    /// Default implementation for string-backed types (enums, etc.)
-//    ///
-//    /// Uses the native `rawValue` property to serialize.
-//    ///
-//    /// - Important: Types conforming to `UInt8.ASCII.RawRepresentable` MUST provide
-//    ///   their own `serialize` implementation to avoid infinite recursion, since their
-//    ///   `rawValue` is synthesized from serialization.
-//    @inlinable
-//    public static func serialize<Buffer: RangeReplaceableCollection>(
-//        ascii serializable: Self,
-//        into buffer: inout Buffer
-//    ) where Buffer.Element == UInt8 {
-//        buffer.append(contentsOf: serializable.rawValue.utf8)
-//    }
-//}
 
 extension UInt8.ASCII.Serializable where Self: Swift.RawRepresentable, Self.RawValue == [UInt8] {
     /// Default implementation for byte-array-backed types

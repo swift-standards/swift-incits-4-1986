@@ -31,19 +31,19 @@ extension INCITS_4_1986 {
 extension INCITS_4_1986.CharacterClassification {
     /// Character classification bit flags
     @usableFromInline
-    internal static let _digit: UInt8     = 0x01
+    internal static let _digit: UInt8 = 0x01
     @usableFromInline
-    internal static let _upper: UInt8     = 0x02
+    internal static let _upper: UInt8 = 0x02
     @usableFromInline
-    internal static let _lower: UInt8     = 0x04
+    internal static let _lower: UInt8 = 0x04
     @usableFromInline
-    internal static let _hexUpper: UInt8  = 0x08
+    internal static let _hexUpper: UInt8 = 0x08
     @usableFromInline
-    internal static let _hexLower: UInt8  = 0x10
+    internal static let _hexLower: UInt8 = 0x10
     @usableFromInline
     internal static let _whitespace: UInt8 = 0x20
     @usableFromInline
-    internal static let _control: UInt8   = 0x40
+    internal static let _control: UInt8 = 0x40
     @usableFromInline
     internal static let _printable: UInt8 = 0x80
 

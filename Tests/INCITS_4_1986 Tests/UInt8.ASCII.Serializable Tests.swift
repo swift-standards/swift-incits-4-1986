@@ -6,9 +6,8 @@
 //  with both context-free and context-dependent parsing.
 //
 
-import Testing
-
 import INCITS_4_1986
+import Testing
 
 // MARK: - Context-Free Type Example
 
@@ -23,7 +22,7 @@ private struct Token: Sendable, Codable {
     ) {
         self.rawValue = rawValue
     }
-    
+
     public init(
         _ value: String
     ) throws(Error) {
@@ -35,7 +34,7 @@ private struct Token: Sendable, Codable {
                 throw .invalidCharacter(byte)
             }
         }
-        
+
         self.init(
             __unchecked: (),
             rawValue: value
@@ -58,7 +57,8 @@ extension Token: UInt8.ASCII.Serializable {
         try self.init(String(decoding: bytes, as: UTF8.self))
     }
 
-    static func serialize<Buffer>(ascii token: Self, into buffer: inout Buffer) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
+    static func serialize<Buffer>(ascii token: Self, into buffer: inout Buffer)
+    where Buffer: RangeReplaceableCollection, Buffer.Element == UInt8 {
         buffer.append(contentsOf: token.rawValue.utf8)
     }
 }
@@ -82,18 +82,19 @@ struct DelimitedMessage: Sendable, Codable {
 }
 
 extension DelimitedMessage: UInt8.ASCII.Serializable {
-//    static func serialize(ascii message: DelimitedMessage) -> [UInt8] {
-//        var result: [UInt8] = []
-//        for (index, part) in message.parts.enumerated() {
-//            if index > 0 {
-//                result.append(message.delimiter)
-//            }
-//            result.append(contentsOf: part.utf8)
-//        }
-//        return result
-//    }
-    
-    internal static func serialize<Buffer>(ascii message: Self, into buffer: inout Buffer) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
+    //    static func serialize(ascii message: DelimitedMessage) -> [UInt8] {
+    //        var result: [UInt8] = []
+    //        for (index, part) in message.parts.enumerated() {
+    //            if index > 0 {
+    //                result.append(message.delimiter)
+    //            }
+    //            result.append(contentsOf: part.utf8)
+    //        }
+    //        return result
+    //    }
+
+    internal static func serialize<Buffer>(ascii message: Self, into buffer: inout Buffer)
+    where Buffer: RangeReplaceableCollection, Buffer.Element == UInt8 {
         for (index, part) in message.parts.enumerated() {
             if index > 0 {
                 buffer.append(message.delimiter)
@@ -101,7 +102,7 @@ extension DelimitedMessage: UInt8.ASCII.Serializable {
             buffer.append(contentsOf: part.utf8)
         }
     }
-    
+
     /// Context required for parsing - the delimiter byte
     struct Context: Sendable {
         let delimiter: UInt8
@@ -258,7 +259,7 @@ struct ContextDependentSerializableTests {
             parts: ["hello", "world"],
             delimiter: .ascii.hyphen
         )
-        
+
         #expect(DelimitedMessage.serialize(message) == Array("hello-world".utf8))
     }
 
@@ -364,7 +365,8 @@ private struct HTMLAnchor: UInt8.Serializable {
     let href: Token
     let text: String
 
-    static func serialize<Buffer>(_ anchor: Self, into buffer: inout Buffer) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
+    static func serialize<Buffer>(_ anchor: Self, into buffer: inout Buffer)
+    where Buffer: RangeReplaceableCollection, Buffer.Element == UInt8 {
         buffer.append(contentsOf: "<a href=\"".utf8)
         anchor.href.ascii.serialize(into: &buffer)  // Token conforms via ASCII.Serializable
         buffer.append(contentsOf: "\">".utf8)
@@ -576,7 +578,8 @@ struct StreamingAPIPatternTests {
             let title: Token
             let links: [HTMLAnchor]
 
-            static func serialize<Buffer>(_ doc: Self, into buffer: inout Buffer) where Buffer : RangeReplaceableCollection, Buffer.Element == UInt8 {
+            static func serialize<Buffer>(_ doc: Self, into buffer: inout Buffer)
+            where Buffer: RangeReplaceableCollection, Buffer.Element == UInt8 {
                 buffer.append(contentsOf: "<html><head><title>".utf8)
                 doc.title.ascii.serialize(into: &buffer)
                 buffer.append(contentsOf: "</title></head><body>".utf8)
