@@ -7,6 +7,7 @@
 // For ASCII constants, use UInt8.ascii namespace (see UInt8+ASCII.swift)
 
 import Standards
+public import Binary
 
 // MARK: - Character to Byte Conversion
 
@@ -58,7 +59,7 @@ extension UInt8 {
     }
 }
 
-extension UInt8.ASCII {
+extension Binary.ASCII {
     // MARK: - ASCII Validation
 
     /// Tests if this byte is valid ASCII (0x00-0x7F)
@@ -307,7 +308,7 @@ extension UInt8.ASCII {
     }
 }
 
-extension UInt8.ASCII {
+extension Binary.ASCII {
     // MARK: - Numeric Value Parsing (Static Transformations)
 
     /// Parses an ASCII digit byte to its numeric value (0-9)
@@ -334,7 +335,7 @@ extension UInt8.ASCII {
     }
 }
 
-extension UInt8.ASCII {
+extension Binary.ASCII {
     /// Parses an ASCII hex digit byte to its numeric value (0-15)
     ///
     /// Pure function transformation from ASCII hex digit to numeric value.
@@ -367,7 +368,7 @@ extension UInt8.ASCII {
     }
 }
 
-extension UInt8.ASCII {
+extension Binary.ASCII {
     /// Parses an ASCII digit byte via call syntax
     ///
     /// Enables the convenient syntax: `UInt8(ascii: digit: byte)`
@@ -446,7 +447,7 @@ extension UInt8.ASCII {
     }
 }
 
-extension UInt8.ASCII {
+extension Binary.ASCII {
     // MARK: - Control Characters (direct access)
 
     /// NULL character (0x00)
@@ -605,6 +606,7 @@ extension UInt8.ASCII {
     public static var slant: UInt8 { INCITS_4_1986.GraphicCharacters.slant }
     public static var solidus: UInt8 { INCITS_4_1986.GraphicCharacters.solidus }
     public static var slash: UInt8 { INCITS_4_1986.GraphicCharacters.slant }
+    public static var forwardSlash: UInt8 { INCITS_4_1986.GraphicCharacters.slant }
 
     // MARK: - Graphic Characters - Digits (direct access)
 
@@ -861,7 +863,7 @@ extension UInt8.ASCII {
 }
 
 // Conveniences for common shorthands
-extension UInt8.ASCII {
+extension Binary.ASCII {
     /// LESS-THAN SIGN (0x3C) - <
     public static var lt: UInt8 { INCITS_4_1986.GraphicCharacters.lessThanSign }
     public static var lessThan: UInt8 { INCITS_4_1986.GraphicCharacters.lessThanSign }

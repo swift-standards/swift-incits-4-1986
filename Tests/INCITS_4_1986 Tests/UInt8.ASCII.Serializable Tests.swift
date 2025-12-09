@@ -1,8 +1,8 @@
 //
-//  UInt8.ASCII.Serializable Tests.swift
+//  Binary.ASCII.Serializable Tests.swift
 //  swift-incits-4-1986
 //
-//  Tests demonstrating the UInt8.ASCII.Serializable protocol
+//  Tests demonstrating the Binary.ASCII.Serializable protocol
 //  with both context-free and context-dependent parsing.
 //
 
@@ -49,7 +49,7 @@ extension Token {
     }
 }
 
-extension Token: UInt8.ASCII.Serializable {
+extension Token: Binary.ASCII.Serializable {
 
     // Context == Void (default), so we implement init(ascii:in:) with Void context
     init<Bytes: Collection>(ascii bytes: Bytes, in context: Void) throws(Error)
@@ -81,7 +81,7 @@ struct DelimitedMessage: Sendable, Codable {
     }
 }
 
-extension DelimitedMessage: UInt8.ASCII.Serializable {
+extension DelimitedMessage: Binary.ASCII.Serializable {
     //    static func serialize(ascii message: DelimitedMessage) -> [UInt8] {
     //        var result: [UInt8] = []
     //        for (index, part) in message.parts.enumerated() {
@@ -357,11 +357,11 @@ struct CategoryTheoryTests {
     }
 }
 
-// MARK: - UInt8.Serializable Conformance Tests
+// MARK: - Binary.Serializable Conformance Tests
 
 /// Example HTML-like element that composes with ASCII.Serializable types.
 /// Demonstrates how streaming types can embed RFC/ASCII types seamlessly.
-private struct HTMLAnchor: UInt8.Serializable {
+private struct HTMLAnchor: Binary.Serializable {
     let href: Token
     let text: String
 
@@ -375,23 +375,23 @@ private struct HTMLAnchor: UInt8.Serializable {
     }
 }
 
-@Suite("Serializable - UInt8.Serializable Conformance")
+@Suite("Serializable - Binary.Serializable Conformance")
 struct StreamingConformanceTests {
 
     // MARK: - Automatic Conformance
 
-    @Test("ASCII.Serializable types automatically conform to UInt8.Serializable")
+    @Test("ASCII.Serializable types automatically conform to Binary.Serializable")
     func automaticConformance() throws {
         let token: Token = try .init("my-token")
 
-        // Token conforms to UInt8.Serializable via ASCII.Serializable
+        // Token conforms to Binary.Serializable via ASCII.Serializable
         var buffer: [UInt8] = []
         token.ascii.serialize(into: &buffer)
 
         #expect(buffer == Array("my-token".utf8))
     }
 
-    @Test("Context-dependent types also conform to UInt8.Serializable")
+    @Test("Context-dependent types also conform to Binary.Serializable")
     func contextDependentConformance() {
         let message = DelimitedMessage(
             __unchecked: (),
@@ -399,7 +399,7 @@ struct StreamingConformanceTests {
             delimiter: .ascii.comma
         )
 
-        // DelimitedMessage conforms to UInt8.Serializable via ASCII.Serializable
+        // DelimitedMessage conforms to Binary.Serializable via ASCII.Serializable
         var buffer: [UInt8] = []
         message.ascii.serialize(into: &buffer)
 
@@ -423,7 +423,7 @@ struct StreamingConformanceTests {
     func bytesProperty() throws {
         let token: Token = try .init("swift-token")
 
-        // Convenience property from UInt8.Serializable
+        // Convenience property from Binary.Serializable
         let bytes = token.bytes
 
         #expect(bytes == Array("swift-token".utf8))
@@ -574,7 +574,7 @@ struct StreamingAPIPatternTests {
     @Test("Pattern: Streaming type wrapping ASCII type")
     func streamingWrapper() throws {
         // HTMLAnchor is a streaming type that wraps Token (ASCII type)
-        struct Document: UInt8.Serializable {
+        struct Document: Binary.Serializable {
             let title: Token
             let links: [HTMLAnchor]
 
@@ -608,9 +608,9 @@ struct StreamingAPIPatternTests {
 
 // MARK: - Infinite Recursion Prevention Tests
 
-/// Example type demonstrating the CORRECT pattern for UInt8.ASCII.RawRepresentable
+/// Example type demonstrating the CORRECT pattern for Binary.ASCII.RawRepresentable
 ///
-/// Types conforming to both `UInt8.ASCII.Serializable` and `UInt8.ASCII.RawRepresentable`
+/// Types conforming to both `Binary.ASCII.Serializable` and `Binary.ASCII.RawRepresentable`
 /// MUST implement `serialize(ascii:into:)` explicitly to avoid infinite recursion.
 private struct CorrectEmailAddress: Sendable, Codable, Hashable {
     let localPart: String
@@ -622,7 +622,7 @@ private struct CorrectEmailAddress: Sendable, Codable, Hashable {
     }
 }
 
-extension CorrectEmailAddress: UInt8.ASCII.Serializable {
+extension CorrectEmailAddress: Binary.ASCII.Serializable {
     enum Error: Swift.Error, Sendable, Equatable {
         case empty
         case missingAtSign
@@ -646,7 +646,7 @@ extension CorrectEmailAddress: UInt8.ASCII.Serializable {
 
     /// CORRECT: Explicit serialize implementation that does NOT use rawValue
     ///
-    /// This is REQUIRED when conforming to UInt8.ASCII.RawRepresentable.
+    /// This is REQUIRED when conforming to Binary.ASCII.RawRepresentable.
     /// Using rawValue here would cause infinite recursion because:
     ///   rawValue → String(ascii: self) → serialize(ascii:into:) → rawValue → ...
     static func serialize<Buffer: RangeReplaceableCollection>(
@@ -659,7 +659,7 @@ extension CorrectEmailAddress: UInt8.ASCII.Serializable {
     }
 }
 
-extension CorrectEmailAddress: UInt8.ASCII.RawRepresentable {
+extension CorrectEmailAddress: Binary.ASCII.RawRepresentable {
     typealias RawValue = String
 }
 
@@ -671,25 +671,25 @@ struct InfiniteRecursionPreventionTests {
     // MARK: - Documentation of the Problem
 
     /// This test documents the infinite recursion problem that occurs when
-    /// a type conforms to both UInt8.ASCII.Serializable and UInt8.ASCII.RawRepresentable
+    /// a type conforms to both Binary.ASCII.Serializable and Binary.ASCII.RawRepresentable
     /// WITHOUT providing an explicit serialize(ascii:into:) implementation.
     ///
     /// ## The Problem Pattern (DO NOT USE)
     ///
     /// ```swift
     /// // WRONG: This causes infinite recursion!
-    /// extension MyType: UInt8.ASCII.Serializable {
+    /// extension MyType: Binary.ASCII.Serializable {
     ///     // Relying on default implementation from RawRepresentable
     /// }
     ///
-    /// extension MyType: UInt8.ASCII.RawRepresentable {
+    /// extension MyType: Binary.ASCII.RawRepresentable {
     ///     typealias RawValue = String
     /// }
     /// ```
     ///
     /// ## Why It Crashes
     ///
-    /// 1. `rawValue` getter (from UInt8.ASCII.RawRepresentable) calls `String(ascii: self)`
+    /// 1. `rawValue` getter (from Binary.ASCII.RawRepresentable) calls `String(ascii: self)`
     /// 2. `String(ascii:)` calls `T.serialize(ascii:into:)` to get bytes
     /// 3. Default `serialize(ascii:into:)` for RawRepresentable uses `rawValue.utf8`
     /// 4. This accesses `rawValue` again → INFINITE RECURSION → Stack overflow
@@ -699,7 +699,7 @@ struct InfiniteRecursionPreventionTests {
     /// Always provide an explicit `serialize(ascii:into:)` that does NOT use `rawValue`:
     ///
     /// ```swift
-    /// extension MyType: UInt8.ASCII.Serializable {
+    /// extension MyType: Binary.ASCII.Serializable {
     ///     static func serialize<Buffer: RangeReplaceableCollection>(
     ///         ascii value: Self,
     ///         into buffer: inout Buffer
@@ -755,7 +755,7 @@ struct InfiniteRecursionPreventionTests {
 
     // MARK: - API Design Guidance
 
-    @Test("Checklist for UInt8.ASCII.RawRepresentable conformance")
+    @Test("Checklist for Binary.ASCII.RawRepresentable conformance")
     func conformanceChecklist() throws {
         // This test serves as documentation for the required pattern:
         //

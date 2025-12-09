@@ -5,6 +5,8 @@
 //  Created by Coen ten Thije Boonkkamp on 22/11/2025.
 //
 
+public import Binary
+
 extension StringProtocol {
     public typealias ASCII = INCITS_4_1986.ASCII<Self>
 
@@ -214,9 +216,9 @@ extension StringProtocol {
     /// let string = String(value)  // Uses this initializer
     /// ```
     ///
-    /// - Parameter value: Any type conforming to UInt8.ASCII.Serializable
+    /// - Parameter value: Any type conforming to Binary.ASCII.Serializable
     @_transparent
-    public init<T: UInt8.ASCII.Serializable>(_ value: T) {
+    public init<T: Binary.ASCII.Serializable>(_ value: T) {
         self = Self(decoding: value.bytes, as: UTF8.self)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  UInt8.ASCII.Serializable.swift
+//  Binary.ASCII.Serializable.swift
 //  swift-incits-4-1986
 //
 //  ASCII Serialization Protocol
@@ -34,7 +34,7 @@
 //  ## Example
 //
 //  ```swift
-//  struct EmailAddress: UInt8.ASCII.Serializable {
+//  struct EmailAddress: Binary.ASCII.Serializable {
 //      init<Bytes: Collection>(ascii bytes: Bytes, in context: Void) throws(Error) {
 //          // Parse bytes...
 //      }
@@ -57,7 +57,9 @@
 //  Created by Coen ten Thije Boonkkamp on 24/11/2025.
 //
 
-extension UInt8.ASCII {
+public import Binary
+
+extension Binary.ASCII {
     /// Protocol for types with canonical ASCII byte-level transformations
     ///
     /// Types conforming to this protocol work at the byte level as the primitive form,
@@ -83,7 +85,7 @@ extension UInt8.ASCII {
     /// Most types are context-free and use `Context = Void` (the default):
     ///
     /// ```swift
-    /// struct Token: UInt8.ASCII.Serializable {
+    /// struct Token: Binary.ASCII.Serializable {
     ///     init<Bytes>(ascii bytes: Bytes, in context: Void) throws(Error) { ... }
     ///     static func serialize<Buffer>(ascii token: Self, into buffer: inout Buffer) { ... }
     /// }
@@ -97,7 +99,7 @@ extension UInt8.ASCII {
     /// Types that require external information to parse define a custom `Context`:
     ///
     /// ```swift
-    /// struct Multipart: UInt8.ASCII.Serializable {
+    /// struct Multipart: Binary.ASCII.Serializable {
     ///     struct Context: Sendable {
     ///         let boundary: Boundary
     ///     }
@@ -115,8 +117,8 @@ extension UInt8.ASCII {
     /// - String parsing via `init(_: some StringProtocol)` when `Context == Void`
     /// - String conversion via `String.init(_:)`
     /// - CustomStringConvertible (if type conforms)
-    /// - `UInt8.Serializable` conformance (buffer-based serialization)
-    public protocol Serializable: UInt8.Serializable {
+    /// - `Binary.Serializable` conformance (buffer-based serialization)
+    public protocol Serializable: Binary.Serializable {
         /// Serialize this value into an ASCII byte buffer
         ///
         /// Writes the ASCII byte representation of this value into the buffer.
@@ -165,13 +167,13 @@ extension UInt8.ASCII {
     }
 }
 
-// MARK: - UInt8.Serializable Conformance
+// MARK: - Binary.Serializable Conformance
 
-extension UInt8.ASCII.Serializable {
-    /// Default `UInt8.Serializable` implementation via ASCII serialization
+extension Binary.ASCII.Serializable {
+    /// Default `Binary.Serializable` implementation via ASCII serialization
     ///
-    /// Bridges ASCII serialization to the base `UInt8.Serializable` protocol.
-    /// This enables ASCII types to be used anywhere `UInt8.Serializable` is expected.
+    /// Bridges ASCII serialization to the base `Binary.Serializable` protocol.
+    /// This enables ASCII types to be used anywhere `Binary.Serializable` is expected.
     @inlinable
     public static func serialize<Buffer: RangeReplaceableCollection>(
         _ serializable: Self,
@@ -183,7 +185,7 @@ extension UInt8.ASCII.Serializable {
 
 // MARK: - Static Returning Convenience
 
-extension UInt8.ASCII.Serializable {
+extension Binary.ASCII.Serializable {
     /// Serialize to a new collection (static method)
     ///
     /// Creates a new buffer of the inferred type and serializes into it.
@@ -207,13 +209,13 @@ extension Array where Element == UInt8 {
     ///
     /// - Parameter serializable: The ASCII serializable value
     @inlinable
-    public init<S: UInt8.ASCII.Serializable>(ascii serializable: S) {
+    public init<S: Binary.ASCII.Serializable>(ascii serializable: S) {
         self = []
         S.serialize(ascii: serializable, into: &self)
     }
 }
 
-extension UInt8.ASCII.Serializable where Self: Swift.RawRepresentable, Self.RawValue == [UInt8] {
+extension Binary.ASCII.Serializable where Self: Swift.RawRepresentable, Self.RawValue == [UInt8] {
     /// Default implementation for byte-array-backed types
     ///
     /// Appends the raw value directly (identity transformation).
@@ -228,7 +230,7 @@ extension UInt8.ASCII.Serializable where Self: Swift.RawRepresentable, Self.RawV
 
 // MARK: - Context-Free Convenience
 
-extension UInt8.ASCII.Serializable where Context == Void {
+extension Binary.ASCII.Serializable where Context == Void {
     /// Parse from canonical ASCII byte representation (context-free convenience)
     ///
     /// This convenience initializer is available for context-free types
@@ -242,7 +244,7 @@ extension UInt8.ASCII.Serializable where Context == Void {
     }
 }
 
-extension UInt8.ASCII.Serializable where Context == Void {
+extension Binary.ASCII.Serializable where Context == Void {
     /// Parse from string representation
     ///
     /// Automatically provided for context-free types (`Context == Void`).
@@ -265,7 +267,7 @@ extension StringProtocol {
     ///
     /// - Parameter value: The ASCII serializable value to convert
     @inlinable
-    public init<T: UInt8.ASCII.Serializable>(ascii value: T) {
+    public init<T: Binary.ASCII.Serializable>(ascii value: T) {
         let bytes: [UInt8] = T.serialize(ascii: value)
         self = .init(decoding: bytes, as: UTF8.self)
     }
@@ -273,15 +275,19 @@ extension StringProtocol {
 
 // MARK: - CustomStringConvertible
 
-extension UInt8.ASCII.Serializable where Self: CustomStringConvertible {
+extension Binary.ASCII.Serializable where Self: CustomStringConvertible {
     /// Default CustomStringConvertible implementation via byte serialization
+    ///
+    /// Marked as disfavored to avoid ambiguity with types that already have
+    /// CustomStringConvertible conformance from the standard library (e.g., Int, Double).
+    @_disfavoredOverload
     @inlinable
     public var description: String {
         String(ascii: self)
     }
 }
 
-extension UInt8.ASCII.Serializable
+extension Binary.ASCII.Serializable
 where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue: CustomStringConvertible {
     /// Optimized description for RawRepresentable types with CustomStringConvertible raw values
     @inlinable
@@ -290,7 +296,7 @@ where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue: Cust
     }
 }
 
-extension UInt8.ASCII.Serializable
+extension Binary.ASCII.Serializable
 where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue == [UInt8] {
     /// UTF-8 decoded description for byte-array backed types
     @inlinable
@@ -301,7 +307,7 @@ where Self: RawRepresentable, Self: CustomStringConvertible, Self.RawValue == [U
 
 // MARK: - ExpressibleBy*Literal Support
 
-extension UInt8.ASCII.Serializable
+extension Binary.ASCII.Serializable
 where Self: ExpressibleByStringLiteral, Context == Void {
     /// Default ExpressibleByStringLiteral implementation
     ///
@@ -313,7 +319,7 @@ where Self: ExpressibleByStringLiteral, Context == Void {
     }
 }
 
-extension UInt8.ASCII.Serializable where Self: ExpressibleByIntegerLiteral, Context == Void {
+extension Binary.ASCII.Serializable where Self: ExpressibleByIntegerLiteral, Context == Void {
     /// Default ExpressibleByIntegerLiteral implementation
     ///
     /// **Warning**: Uses force-try. Will crash at runtime if the integer
@@ -325,7 +331,7 @@ extension UInt8.ASCII.Serializable where Self: ExpressibleByIntegerLiteral, Cont
     }
 }
 
-extension UInt8.ASCII.Serializable where Self: ExpressibleByFloatLiteral, Context == Void {
+extension Binary.ASCII.Serializable where Self: ExpressibleByFloatLiteral, Context == Void {
     /// Default ExpressibleByFloatLiteral implementation
     ///
     /// **Warning**: Uses force-try. Will crash at runtime if the float
@@ -339,7 +345,7 @@ extension UInt8.ASCII.Serializable where Self: ExpressibleByFloatLiteral, Contex
 
 extension RangeReplaceableCollection where Element == UInt8 {
     @inlinable
-    public mutating func append<Serializable: UInt8.ASCII.Serializable>(
+    public mutating func append<Serializable: Binary.ASCII.Serializable>(
         ascii serializable: Serializable
     ) {
         Serializable.serialize(ascii: serializable, into: &self)
@@ -348,7 +354,7 @@ extension RangeReplaceableCollection where Element == UInt8 {
 
 // MARK: - ASCII Serialization Wrapper
 
-extension UInt8.ASCII {
+extension Binary.ASCII {
     /// Wrapper for ASCII serializable types
     ///
     /// Provides instance-level access to ASCII serialization methods.
@@ -374,7 +380,7 @@ extension UInt8.ASCII {
     /// when multiple serialization morphisms are available:
     /// - `serialize(into:)` → binary bytes (for types with binary representation)
     /// - `ascii.serialize(into:)` → ASCII text representation
-    public struct Wrapper<Wrapped: UInt8.ASCII.Serializable>: Sendable where Wrapped: Sendable {
+    public struct Wrapper<Wrapped: Binary.ASCII.Serializable>: Sendable where Wrapped: Sendable {
         /// The wrapped value
         public let wrapped: Wrapped
 
@@ -388,7 +394,7 @@ extension UInt8.ASCII {
 
 // MARK: - Wrapper Serialization Methods
 
-extension UInt8.ASCII.Wrapper {
+extension Binary.ASCII.Wrapper {
     /// Serialize the wrapped value into an ASCII byte buffer
     ///
     /// - Parameter buffer: The buffer to append ASCII bytes to
@@ -410,7 +416,7 @@ extension UInt8.ASCII.Wrapper {
     }
 }
 
-extension UInt8.ASCII.Wrapper: CustomStringConvertible {
+extension Binary.ASCII.Wrapper: CustomStringConvertible {
     /// The ASCII string representation
     @inlinable
     public var description: String {
@@ -420,7 +426,7 @@ extension UInt8.ASCII.Wrapper: CustomStringConvertible {
 
 // MARK: - Serializable Extension
 
-extension UInt8.ASCII.Serializable where Self: Sendable {
+extension Binary.ASCII.Serializable where Self: Sendable {
     /// Access ASCII serialization wrapper
     ///
     /// Returns a wrapper that provides instance-level access to ASCII serialization.
@@ -441,7 +447,7 @@ extension UInt8.ASCII.Serializable where Self: Sendable {
     /// address.ascii.serialize(into: &ascii)
     /// ```
     @inlinable
-    public var ascii: UInt8.ASCII.Wrapper<Self> {
-        UInt8.ASCII.Wrapper(self)
+    public var ascii: Binary.ASCII.Wrapper<Self> {
+        Binary.ASCII.Wrapper(self)
     }
 }

@@ -3,6 +3,7 @@
 //
 // Generic ASCII operations wrapper for bytes and strings
 
+public import Binary
 import Standards
 
 extension INCITS_4_1986 {

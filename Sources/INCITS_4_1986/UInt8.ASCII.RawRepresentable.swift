@@ -1,5 +1,5 @@
 //
-//  UInt8.ASCII.RawRepresentable.swift
+//  Binary.ASCII.RawRepresentable.swift
 //  swift-incits-4-1986
 //
 //  Protocol for ASCII serializable types that synthesize RawRepresentable
@@ -7,23 +7,25 @@
 //  Created by Coen ten Thije Boonkkamp on 28/11/2025.
 //
 
-extension UInt8.ASCII {
+public import Binary
+
+extension Binary.ASCII {
     /// Protocol for ASCII types that need synthesized RawRepresentable conformance
     ///
     /// Use this protocol for struct types that need `rawValue` synthesized from
     /// their ASCII serialization. Enums with native `rawValue` should NOT use this -
-    /// they should conform directly to `UInt8.ASCII.Serializable` which will use
+    /// they should conform directly to `Binary.ASCII.Serializable` which will use
     /// their native `rawValue`.
     ///
     /// ## When to Use
     ///
-    /// - **Structs**: Use `UInt8.ASCII.RawRepresentable` to get synthesized `rawValue`
-    /// - **Enums**: Use `UInt8.ASCII.Serializable` directly (uses native `rawValue`)
+    /// - **Structs**: Use `Binary.ASCII.RawRepresentable` to get synthesized `rawValue`
+    /// - **Enums**: Use `Binary.ASCII.Serializable` directly (uses native `rawValue`)
     ///
     /// ## Example
     ///
     /// ```swift
-    /// struct Token: UInt8.ASCII.RawRepresentable {
+    /// struct Token: Binary.ASCII.RawRepresentable {
     ///     let value: String
     ///
     ///     init<Bytes: Collection>(ascii bytes: Bytes, in context: Void) throws(Error) {
@@ -42,12 +44,12 @@ extension UInt8.ASCII {
     /// let token = Token(rawValue: "abc")  // Synthesized
     /// token.rawValue                       // "abc" (synthesized)
     /// ```
-    public protocol RawRepresentable: UInt8.ASCII.Serializable, Swift.RawRepresentable {}
+    public protocol RawRepresentable: Binary.ASCII.Serializable, Swift.RawRepresentable {}
 }
 
 // MARK: - String RawValue
 
-extension UInt8.ASCII.RawRepresentable where Self.RawValue == String, Context == Void {
+extension Binary.ASCII.RawRepresentable where Self.RawValue == String, Context == Void {
     /// Synthesized init(rawValue:) for String-based raw values
     ///
     /// Parses the raw string value through the canonical byte transformation.
@@ -69,7 +71,7 @@ extension UInt8.ASCII.RawRepresentable where Self.RawValue == String, Context ==
 
 // MARK: - [UInt8] RawValue
 
-extension UInt8.ASCII.RawRepresentable where Self.RawValue == [UInt8], Context == Void {
+extension Binary.ASCII.RawRepresentable where Self.RawValue == [UInt8], Context == Void {
     /// Synthesized init(rawValue:) for byte array raw values
     ///
     /// Parses the raw bytes directly through `init(ascii:)`.
@@ -91,7 +93,7 @@ extension UInt8.ASCII.RawRepresentable where Self.RawValue == [UInt8], Context =
 
 // MARK: - LosslessStringConvertible RawValue
 
-extension UInt8.ASCII.RawRepresentable where Self.RawValue: LosslessStringConvertible, Context == Void {
+extension Binary.ASCII.RawRepresentable where Self.RawValue: LosslessStringConvertible, Context == Void {
     /// Synthesized init(rawValue:) for LosslessStringConvertible raw values
     ///
     /// Converts the raw value to string, then parses through bytes.
