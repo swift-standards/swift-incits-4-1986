@@ -6,8 +6,8 @@
 // Character classification and manipulation methods for UInt8.
 // For ASCII constants, use UInt8.ascii namespace (see UInt8+ASCII.swift)
 
-import Standards
 public import Binary
+import Standards
 
 // MARK: - Character to Byte Conversion
 
@@ -479,9 +479,11 @@ extension Binary.ASCII {
 
     /// HORIZONTAL TAB (0x09)
     public static var htab: UInt8 { INCITS_4_1986.ControlCharacters.htab }
+    public static var tab: UInt8 { INCITS_4_1986.ControlCharacters.htab }
 
     /// LINE FEED (0x0A)
     public static var lf: UInt8 { INCITS_4_1986.ControlCharacters.lf }
+    public static var newline: UInt8 { INCITS_4_1986.ControlCharacters.lf }
 
     /// VERTICAL TAB (0x0B)
     public static var vtab: UInt8 { INCITS_4_1986.ControlCharacters.vtab }

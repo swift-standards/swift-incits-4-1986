@@ -5,14 +5,14 @@
 //  Created by Coen ten Thije Boonkkamp on 28/11/2025.
 //
 
-import Standards
 public import Binary
+import Standards
 
 // MARK: - ASCII Namespace Access
 
 extension UInt8 {
     // MARK: - Namespace Access
-    
+
     /// Access to ASCII type-level constants and methods
     ///
     /// Provides static access to all ASCII character constants and static utility methods.
@@ -33,7 +33,7 @@ extension UInt8 {
     public static var ascii: Binary.ASCII.Type {
         Binary.ASCII.self
     }
-    
+
     /// Access to ASCII instance methods for this byte
     ///
     /// Provides instance-level access to ASCII character classification and manipulation methods.
