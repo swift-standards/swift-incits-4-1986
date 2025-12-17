@@ -111,15 +111,21 @@ extension INCITS_4_1986.NumericSerialization {
             return
         }
 
-        // Build digits in reverse, then append in correct order
+        // Build digits in reverse using InlineArray (stack storage, no heap allocation)
+        // Max 20 digits for UInt64.max (18,446,744,073,709,551,615)
         var n = value
-        var digits: [UInt8] = []
+        var digits = InlineArray<20, UInt8>(repeating: 0)
+        var count = 0
         while n > 0 {
-            let digit = UInt8(n % 10)
-            digits.append(INCITS_4_1986.GraphicCharacters.`0` + digit)
+            digits[count] = INCITS_4_1986.GraphicCharacters.`0` + UInt8(n % 10)
             n /= 10
+            count += 1
         }
-        buffer.append(contentsOf: digits.reversed())
+
+        // Append in correct order (reverse of how we built them)
+        for i in stride(from: count - 1, through: 0, by: -1) {
+            buffer.append(digits[i])
+        }
     }
 
     /// Serialize a signed integer to ASCII decimal bytes
@@ -154,14 +160,20 @@ extension INCITS_4_1986.NumericSerialization {
             n = -n
         }
 
-        // Build digits in reverse, then append in correct order
-        var digits: [UInt8] = []
+        // Build digits in reverse using InlineArray (stack storage, no heap allocation)
+        // Max 19 digits for Int64.max (9,223,372,036,854,775,807)
+        var digits = InlineArray<20, UInt8>(repeating: 0)
+        var count = 0
         while n > 0 {
-            let digit = UInt8(n % 10)
-            digits.append(INCITS_4_1986.GraphicCharacters.`0` + digit)
+            digits[count] = INCITS_4_1986.GraphicCharacters.`0` + UInt8(n % 10)
             n /= 10
+            count += 1
         }
-        buffer.append(contentsOf: digits.reversed())
+
+        // Append in correct order (reverse of how we built them)
+        for i in stride(from: count - 1, through: 0, by: -1) {
+            buffer.append(digits[i])
+        }
     }
 }
 
