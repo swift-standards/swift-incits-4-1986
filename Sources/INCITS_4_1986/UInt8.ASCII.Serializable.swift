@@ -414,6 +414,27 @@ extension Binary.ASCII.Wrapper {
         serialize(into: &buffer)
         return buffer
     }
+
+    /// Provides zero-copy access to ASCII-serialized bytes via a Span.
+    ///
+    /// Enables `.ascii.withSerializedBytes { ... }` syntax.
+    @inlinable
+    public func withSerializedBytes<R, E: Error>(
+        _ body: (borrowing Span<UInt8>) throws(E) -> R
+    ) throws(E) -> R {
+        var buffer: ContiguousArray<UInt8> = []
+        Wrapped.serialize(ascii: wrapped, into: &buffer)
+        var result: Result<R, E>!
+        buffer.withUnsafeBufferPointer { bufferPointer in
+            let span = Span(_unsafeElements: bufferPointer)
+            do throws(E) {
+                result = .success(try body(span))
+            } catch {
+                result = .failure(error)
+            }
+        }
+        return try result.get()
+    }
 }
 
 extension Binary.ASCII.Wrapper: CustomStringConvertible {
