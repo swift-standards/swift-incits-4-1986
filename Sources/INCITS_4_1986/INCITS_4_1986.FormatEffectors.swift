@@ -4,7 +4,7 @@
 // INCITS 4-1986 Section 4.1.2: Format Effectors
 // Format effectors control the layout and positioning of information
 
-import Standards
+import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
     /// Case Conversion Operations

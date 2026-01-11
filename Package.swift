@@ -28,20 +28,23 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-standards/swift-standards", from: "0.10.0"),
+        .package(path: "../../swift-primitives/swift-standard-library-extensions"),
+        .package(path: "../../swift-primitives/swift-binary-primitives"),
+        .package(path: "../../swift-primitives/swift-test-primitives"),
     ],
     targets: [
         .target(
             name: "INCITS 4 1986",
             dependencies: [
-                .product(name: "Standards", package: "swift-standards"),
+                .product(name: "Standard Library Extensions", package: "swift-standard-library-extensions"),
+                .product(name: "Binary Primitives", package: "swift-binary-primitives"),
             ]
         ),
         .testTarget(
             name: "INCITS 4 1986".tests,
             dependencies: [
                 "INCITS 4 1986",
-                .product(name: "StandardsTestSupport", package: "swift-standards"),
+                .product(name: "Test Primitives", package: "swift-test-primitives"),
             ]
         ),
     ],

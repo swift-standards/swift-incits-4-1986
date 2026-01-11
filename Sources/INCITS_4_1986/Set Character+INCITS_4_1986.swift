@@ -3,7 +3,8 @@
 //
 // INCITS 4-1986: US-ASCII character sets
 
-import Standards
+import Standard_Library_Extensions
+import Binary_Primitives
 
 extension Set {
     /// Convenient access to INCITS 4-1986 (US-ASCII) character constants

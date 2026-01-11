@@ -3,7 +3,7 @@
 //
 // INCITS 4-1986: US-ASCII character classification
 
-import Standards
+import Standard_Library_Extensions
 
 extension Character {
     /// Character case style for ASCII case conversion

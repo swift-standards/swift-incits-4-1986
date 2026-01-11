@@ -5,7 +5,7 @@
 //  Created by Coen ten Thije Boonkkamp on 22/11/2025.
 //
 
-public import Binary
+public import Binary_Primitives
 
 extension StringProtocol {
     public typealias ASCII = INCITS_4_1986.ASCII<Self>

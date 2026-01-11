@@ -3,7 +3,7 @@
 //
 // Convenient namespaced access to INCITS 4-1986 (US-ASCII) constants
 
-import Standards
+import Standard_Library_Extensions
 
 // MARK: - [UInt8] ASCII Namespace
 

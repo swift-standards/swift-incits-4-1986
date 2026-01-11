@@ -4,7 +4,7 @@
 // INCITS 4-1986: ASCII Validation
 // Validates that bytes conform to the 7-bit ASCII range (0x00-0x7F)
 
-import Standards
+import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
     /// Returns true if the byte is valid ASCII (0x00-0x7F)

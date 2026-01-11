@@ -4,7 +4,7 @@
 // INCITS 4-1986 Section 4.3: Graphic Characters - Numeric Value Parsing
 // Authoritative transformations from ASCII digit bytes to numeric values
 
-import Standards
+import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
     /// Numeric Value Parsing Operations

@@ -57,7 +57,7 @@
 //  Created by Coen ten Thije Boonkkamp on 24/11/2025.
 //
 
-public import Binary
+public import Binary_Primitives
 
 extension Binary.ASCII {
     /// Protocol for types with canonical ASCII byte-level transformations

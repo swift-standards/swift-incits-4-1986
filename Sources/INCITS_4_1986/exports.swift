@@ -13,4 +13,4 @@
 //
 // IANA charset name: US-ASCII
 
-@_exported import Standards
+@_exported import Standard_Library_Extensions

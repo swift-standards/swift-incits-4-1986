@@ -5,8 +5,8 @@
 //  Created by Coen ten Thije Boonkkamp on 28/11/2025.
 //
 
-public import Binary
-import Standards
+public import Binary_Primitives
+import Standard_Library_Extensions
 
 // MARK: - ASCII Namespace Access
 

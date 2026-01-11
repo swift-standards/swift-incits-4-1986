@@ -4,7 +4,7 @@
 // INCITS 4-1986: Byte Array Classification Operations
 // Authoritative predicates for testing properties of byte arrays
 
-import Standards
+import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
     /// Byte Array Classification Operations

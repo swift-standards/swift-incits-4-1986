@@ -4,7 +4,7 @@
 // INCITS 4-1986 Section 4.3: Graphic Characters - Case Conversion
 // Transforms ASCII letters between uppercase and lowercase
 
-import Standards
+import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
     /// Case Conversion Operations

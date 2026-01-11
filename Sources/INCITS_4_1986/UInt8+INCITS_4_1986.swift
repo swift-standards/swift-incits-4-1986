@@ -6,8 +6,8 @@
 // Character classification and manipulation methods for UInt8.
 // For ASCII constants, use UInt8.ascii namespace (see UInt8+ASCII.swift)
 
-public import Binary
-import Standards
+public import Binary_Primitives
+import Standard_Library_Extensions
 
 // MARK: - Character to Byte Conversion
 

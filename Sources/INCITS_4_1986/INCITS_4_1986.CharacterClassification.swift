@@ -4,7 +4,7 @@
 // INCITS 4-1986 Section 4: Character Classification
 // Authoritative predicates for testing ASCII byte properties
 
-import Standards
+import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
     /// Character Classification Operations

@@ -4,7 +4,7 @@
 // INCITS 4-1986: String Classification Operations
 // Authoritative predicates for testing properties of strings
 
-import Standards
+import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
     /// String Classification Operations

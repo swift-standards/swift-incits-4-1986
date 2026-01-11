@@ -7,7 +7,7 @@
 //  Created by Coen ten Thije Boonkkamp on 28/11/2025.
 //
 
-public import Binary
+public import Binary_Primitives
 
 extension Binary.ASCII {
     /// Protocol for ASCII types that need synthesized RawRepresentable conformance

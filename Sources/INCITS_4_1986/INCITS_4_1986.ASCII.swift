@@ -3,8 +3,8 @@
 //
 // Generic ASCII operations wrapper for bytes and strings
 
-public import Binary
-import Standards
+public import Binary_Primitives
+import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
     /// Generic ASCII operations wrapper

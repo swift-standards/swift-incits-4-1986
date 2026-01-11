@@ -4,7 +4,7 @@
 // INCITS 4-1986 Section 4.3: Graphic Characters - Numeric Value Serialization
 // Authoritative transformations from numeric values to ASCII digit bytes
 
-public import Binary
+public import Binary_Primitives
 
 extension INCITS_4_1986 {
     /// Numeric Value Serialization Operations

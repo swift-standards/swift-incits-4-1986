@@ -4,7 +4,7 @@
 // INCITS 4-1986 Section 4.1.2: Format Effectors - Line Ending Detection
 // Authoritative operations for detecting line ending styles in strings
 
-import Standards
+import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
     /// Line Ending Detection Operations
