@@ -49,7 +49,7 @@ extension INCITS_4_1986.CaseConversion {
     ///   - case: The target case (upper or lower)
     /// - Returns: Converted byte if ASCII letter, unchanged otherwise
     @_transparent
-    public static func convert(_ byte: UInt8, to case: Character.Case) -> UInt8 {
+    public static func convert(_ byte: UInt8, to case: INCITS_4_1986.Case) -> UInt8 {
         switch `case` {
         case .upper:
             // Check if lowercase (0x61-0x7A) using subtraction trick
@@ -94,7 +94,7 @@ extension INCITS_4_1986 {
     @inlinable
     public static func convert<C: Collection>(
         _ bytes: C,
-        to case: Character.Case
+        to case: INCITS_4_1986.Case
     ) -> [UInt8] where C.Element == UInt8 {
         var result = [UInt8]()
         result.reserveCapacity(bytes.count)
@@ -125,7 +125,7 @@ extension INCITS_4_1986 {
     /// INCITS_4_1986.ascii("hello🌍", case: .upper)  // "HELLO🌍"
     /// ```
     @inlinable
-    public static func convert<S: StringProtocol>(_ string: S, to case: Character.Case) -> S {
+    public static func convert<S: StringProtocol>(_ string: S, to case: INCITS_4_1986.Case) -> S {
         S(decoding: convert(Array(string.utf8), to: `case`), as: UTF8.self)
     }
 }

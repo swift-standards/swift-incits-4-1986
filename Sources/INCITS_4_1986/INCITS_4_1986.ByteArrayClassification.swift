@@ -15,9 +15,9 @@ extension INCITS_4_1986 {
     /// ## Architecture
     ///
     /// These operations delegate to the authoritative single-byte predicates in
-    /// ``CharacterClassification`` via the `UInt8.ascii` accessor. This ensures
-    /// consistency and maintainability while achieving identical performance
-    /// (the compiler optimizes `allSatisfy` to match inline loops).
+    /// ``CharacterClassification``. This ensures consistency and maintainability
+    /// while achieving identical performance (the compiler optimizes `allSatisfy`
+    /// to match inline loops).
     ///
     /// ## Performance
     ///
@@ -37,7 +37,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllWhitespace<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(\.ascii.isWhitespace)
+        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isWhitespace($0) }
     }
 
     /// Returns true if all bytes are ASCII digits (0-9)
@@ -47,7 +47,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllDigits<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(\.ascii.isDigit)
+        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isDigit($0) }
     }
 
     /// Returns true if all bytes are ASCII letters (A-Z, a-z)
@@ -57,7 +57,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllLetters<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(\.ascii.isLetter)
+        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isLetter($0) }
     }
 
     /// Returns true if all bytes are ASCII alphanumeric (A-Z, a-z, 0-9)
@@ -67,7 +67,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllAlphanumeric<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(\.ascii.isAlphanumeric)
+        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isAlphanumeric($0) }
     }
 
     /// Returns true if all bytes are ASCII control characters
@@ -77,7 +77,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllControl<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(\.ascii.isControl)
+        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isControl($0) }
     }
 
     /// Returns true if all bytes are ASCII visible characters
@@ -88,7 +88,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllVisible<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(\.ascii.isVisible)
+        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isVisible($0) }
     }
 
     /// Returns true if all bytes are ASCII printable characters
@@ -99,7 +99,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllPrintable<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy(\.ascii.isPrintable)
+        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isPrintable($0) }
     }
 
     /// Returns true if all letter bytes are lowercase
@@ -110,7 +110,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for arrays with no letters.
     @inlinable
     public static func isAllLowercase<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        !bytes.contains(where: \.ascii.isUppercase)
+        !bytes.contains { INCITS_4_1986.CharacterClassification.isUppercase($0) }
     }
 
     /// Returns true if all letter bytes are uppercase
@@ -121,7 +121,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for arrays with no letters.
     @inlinable
     public static func isAllUppercase<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        !bytes.contains(where: \.ascii.isLowercase)
+        !bytes.contains { INCITS_4_1986.CharacterClassification.isLowercase($0) }
     }
 
     /// Returns true if array contains any non-ASCII bytes
@@ -141,7 +141,7 @@ extension INCITS_4_1986.ByteArrayClassification {
             return result
         }
         // Generic path: delegate to authoritative predicate
-        return bytes.contains { !$0.ascii.isASCII }
+        return bytes.contains { !INCITS_4_1986.isASCII($0) }
     }
 
     /// Returns true if array contains at least one hex digit byte
@@ -151,6 +151,6 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `false` for empty arrays.
     @inlinable
     public static func containsHexDigit<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.contains(where: \.ascii.isHexDigit)
+        bytes.contains { INCITS_4_1986.CharacterClassification.isHexDigit($0) }
     }
 }

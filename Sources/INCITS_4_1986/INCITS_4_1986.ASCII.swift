@@ -3,7 +3,6 @@
 //
 // Generic ASCII operations wrapper for bytes and strings
 
-public import Binary_Primitives
 import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
@@ -96,7 +95,7 @@ extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 
     /// - Parameter case: Target case (`.upper` or `.lower`)
     /// - Returns: New byte array with ASCII letters converted
     @inlinable
-    public func callAsFunction(case: Character.Case) -> [UInt8] {
+    public func callAsFunction(case: INCITS_4_1986.Case) -> [UInt8] {
         INCITS_4_1986.convert(source, to: `case`)
     }
 
@@ -142,7 +141,9 @@ extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 
     public func lowercased() -> [UInt8] {
         INCITS_4_1986.convert(source, to: .lower)
     }
+}
 
+extension INCITS_4_1986.ASCII where Source: BidirectionalCollection, Source.Element == UInt8 {
     /// Trims ASCII bytes from both ends of the collection
     ///
     /// Removes leading and trailing bytes that match the given character set.
@@ -152,10 +153,11 @@ extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 
     ///
     /// ```swift
     /// let bytes: [UInt8] = [0x20, 0x48, 0x69, 0x20]  // " Hi "
-    /// let trimmed = bytes.ascii.trimming([.ascii.space])  // [0x48, 0x69] ("Hi")
+    /// let trimmed = bytes.ascii.trimming([0x20])  // [0x48, 0x69] ("Hi")
     ///
     /// // Trim LWSP (linear whitespace per RFC 822)
-    /// let header = headerBytes.ascii.trimming([.ascii.space, .ascii.htab])
+    /// let whitespace: Set<UInt8> = [0x20, 0x09]  // SPACE, HTAB
+    /// let header = headerBytes.ascii.trimming(whitespace)
     /// ```
     ///
     /// - Parameter characterSet: The set of ASCII byte values to trim
@@ -204,7 +206,7 @@ extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 
 
         while let s = sourceIterator.next(), let o = otherIterator.next() {
             // Use single-byte lowercased() - no allocation
-            guard s.ascii.lowercased() == o.ascii.lowercased() else {
+            guard INCITS_4_1986.CaseConversion.convert(s, to: .lower) == INCITS_4_1986.CaseConversion.convert(o, to: .lower) else {
                 return false
             }
         }
@@ -231,7 +233,7 @@ extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 
 
         var sourceIndex = source.startIndex
         for prefixByte in prefix {
-            guard source[sourceIndex].ascii.lowercased() == prefixByte.ascii.lowercased() else {
+            guard INCITS_4_1986.CaseConversion.convert(source[sourceIndex], to: .lower) == INCITS_4_1986.CaseConversion.convert(prefixByte, to: .lower) else {
                 return false
             }
             sourceIndex = source.index(after: sourceIndex)
@@ -296,13 +298,13 @@ extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 
         while index < source.endIndex {
             let byte = source[index]
 
-            if byte == UInt8.ascii.cr {
+            if byte == INCITS_4_1986.ControlCharacters.cr {
                 // End current line (excluding CR)
                 ranges.append(lineStart..<index)
 
                 // Check for CRLF
                 let next = source.index(after: index)
-                if next < source.endIndex && source[next] == UInt8.ascii.lf {
+                if next < source.endIndex && source[next] == INCITS_4_1986.ControlCharacters.lf {
                     // CRLF - skip both
                     index = source.index(after: next)
                 } else {
@@ -310,7 +312,7 @@ extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 
                     index = next
                 }
                 lineStart = index
-            } else if byte == UInt8.ascii.lf {
+            } else if byte == INCITS_4_1986.ControlCharacters.lf {
                 // End current line (excluding LF)
                 ranges.append(lineStart..<index)
                 index = source.index(after: index)
@@ -470,7 +472,7 @@ extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// - Parameter case: The target case (`.upper` or `.lower`)
     /// - Returns: New string with ASCII letters converted to the specified case
     @inlinable
-    public func callAsFunction(case: Character.Case) -> Source {
+    public func callAsFunction(case: INCITS_4_1986.Case) -> Source {
         INCITS_4_1986.convert(source, to: `case`)
     }
 
@@ -599,12 +601,12 @@ extension INCITS_4_1986.ASCII where Source: StringProtocol {
 extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// Line Feed character as a string
     public static var lf: Source {
-        Source(decoding: [UInt8.ascii.lf], as: UTF8.self)
+        Source(decoding: [INCITS_4_1986.ControlCharacters.lf], as: UTF8.self)
     }
 
     /// Carriage Return character as a string
     public static var cr: Source {
-        Source(decoding: [UInt8.ascii.cr], as: UTF8.self)
+        Source(decoding: [INCITS_4_1986.ControlCharacters.cr], as: UTF8.self)
     }
 
     /// CRLF sequence as a string

@@ -33,6 +33,7 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-parsing-primitives"),
         .package(path: "../../swift-primitives/swift-serialization-primitives"),
         .package(path: "../../swift-primitives/swift-test-primitives"),
+        .package(path: "../../swift-foundations/swift-testing-extras"),
     ],
     targets: [
         .target(
@@ -49,6 +50,7 @@ let package = Package(
             dependencies: [
                 "INCITS 4 1986",
                 .product(name: "Test Primitives", package: "swift-test-primitives"),
+                .product(name: "Testing Extras", package: "swift-testing-extras"),
             ]
         ),
     ],

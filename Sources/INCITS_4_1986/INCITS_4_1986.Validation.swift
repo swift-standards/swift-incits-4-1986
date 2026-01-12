@@ -54,7 +54,7 @@ extension INCITS_4_1986 {
             return result
         }
         // Generic path: delegate to authoritative predicate
-        return bytes.allSatisfy(\.ascii.isASCII)
+        return bytes.allSatisfy { INCITS_4_1986.isASCII($0) }
     }
 
     /// SIMD-style ASCII validation for contiguous buffers

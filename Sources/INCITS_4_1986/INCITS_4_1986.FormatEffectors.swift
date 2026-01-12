@@ -47,14 +47,18 @@ extension INCITS_4_1986 {
     ) -> [UInt8] where C.Element == UInt8 {
         // Fast path: if no line ending characters exist, return as-is
         // Single pass check is faster than two separate contains() calls
-        if !bytes.contains(where: { $0 == .ascii.cr || $0 == .ascii.lf }) {
+        let cr = INCITS_4_1986.ControlCharacters.cr
+        let lf = INCITS_4_1986.ControlCharacters.lf
+        if !bytes.contains(where: { $0 == cr || $0 == lf }) {
             return Array(bytes)
         }
 
         // Determine target line ending sequence inline
-        let cr = UInt8.ascii.cr
-        let lf = UInt8.ascii.lf
-        let target = [UInt8](ascii: lineEnding)
+        let target: [UInt8] = switch lineEnding {
+        case .lf: [lf]
+        case .cr: [cr]
+        case .crlf: [cr, lf]
+        }
 
         var result = [UInt8]()
         result.reserveCapacity(bytes.count + (lineEnding == .crlf ? bytes.count / 10 : 0))

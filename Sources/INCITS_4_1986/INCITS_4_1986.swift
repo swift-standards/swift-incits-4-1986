@@ -69,6 +69,20 @@
 public enum INCITS_4_1986 {}
 
 extension INCITS_4_1986 {
+    /// ASCII Letter Case
+    ///
+    /// Per INCITS 4-1986 Table 7, ASCII letters exist in two cases:
+    /// - Capital letters: A-Z (0x41-0x5A)
+    /// - Small letters: a-z (0x61-0x7A)
+    public enum Case: Sendable {
+        /// Uppercase (capital letters A-Z)
+        case upper
+        /// Lowercase (small letters a-z)
+        case lower
+    }
+}
+
+extension INCITS_4_1986 {
     /// Canonical definition of ASCII whitespace bytes
     ///
     /// Single source of truth for ASCII whitespace per INCITS 4-1986.
