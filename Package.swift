@@ -30,6 +30,8 @@ let package = Package(
     dependencies: [
         .package(path: "../../swift-primitives/swift-standard-library-extensions"),
         .package(path: "../../swift-primitives/swift-binary-primitives"),
+        .package(path: "../../swift-primitives/swift-parsing-primitives"),
+        .package(path: "../../swift-primitives/swift-serialization-primitives"),
         .package(path: "../../swift-primitives/swift-test-primitives"),
     ],
     targets: [
@@ -38,6 +40,8 @@ let package = Package(
             dependencies: [
                 .product(name: "Standard Library Extensions", package: "swift-standard-library-extensions"),
                 .product(name: "Binary Primitives", package: "swift-binary-primitives"),
+                .product(name: "Parsing Primitives", package: "swift-parsing-primitives"),
+                .product(name: "Serialization Primitives", package: "swift-serialization-primitives"),
             ]
         ),
         .testTarget(

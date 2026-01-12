@@ -118,6 +118,7 @@ extension Binary.ASCII {
     /// - String conversion via `String.init(_:)`
     /// - CustomStringConvertible (if type conforms)
     /// - `Binary.Serializable` conformance (buffer-based serialization)
+    @available(*, deprecated, message: "Use static witness properties instead: static var ascii: Serialization.Serializing.Buffer and parser.ascii.whole/prefix accessors")
     public protocol Serializable: Binary.Serializable {
         /// Serialize this value into an ASCII byte buffer
         ///
