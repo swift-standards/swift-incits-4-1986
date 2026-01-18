@@ -28,12 +28,12 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-primitives/swift-standard-library-extensions.git", from: "0.0.1"),
-        .package(url: "https://github.com/swift-primitives/swift-binary-primitives.git", from: "0.0.1"),
-        .package(url: "https://github.com/swift-primitives/swift-parsing-primitives.git", from: "0.0.1"),
-        .package(url: "https://github.com/swift-primitives/swift-serialization-primitives.git", from: "0.0.1"),
-        .package(url: "https://github.com/swift-primitives/swift-test-primitives.git", from: "0.0.1"),
-        .package(url: "https://github.com/swift-foundations/swift-testing-extras.git", from: "0.0.1"),
+        .package(path: "../../swift-primitives/swift-standard-library-extensions"),
+        .package(path: "../../swift-primitives/swift-binary-primitives"),
+        .package(path: "../../swift-primitives/swift-parsing-primitives"),
+        .package(path: "../../swift-primitives/swift-serialization-primitives"),
+        .package(path: "../../swift-primitives/swift-test-primitives"),
+        .package(path: "../../swift-foundations/swift-testing-extras"),
     ],
     targets: [
         .target(

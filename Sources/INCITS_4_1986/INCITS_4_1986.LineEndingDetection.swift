@@ -47,19 +47,28 @@ extension INCITS_4_1986.LineEndingDetection {
     /// - Returns: The detected line ending type, or `nil` if none found
     @inlinable
     public static func detect<S: StringProtocol>(_ string: S) -> INCITS_4_1986.FormatEffectors.LineEnding? {
-        // Check CRLF first (two-byte sequence takes precedence)
-        // We need to check for the CRLF sequence as a substring
-        let crlf = S(decoding: INCITS_4_1986.ControlCharacters.crlf, as: UTF8.self)
-        let cr = S(decoding: [INCITS_4_1986.ControlCharacters.cr], as: UTF8.self)
-        let lf = S(decoding: [INCITS_4_1986.ControlCharacters.lf], as: UTF8.self)
+        // Byte-based detection for embedded Swift compatibility
+        let bytes = Array(string.utf8)
+        var hasCR = false
+        var hasLF = false
 
-        if string.contains(crlf) {
-            return .crlf
-        } else if string.contains(cr) {
-            return .cr
-        } else if string.contains(lf) {
-            return .lf
+        var i = 0
+        while i < bytes.count {
+            let byte = bytes[i]
+            if byte == INCITS_4_1986.ControlCharacters.cr {
+                // Check if this CR is part of CRLF
+                if i + 1 < bytes.count && bytes[i + 1] == INCITS_4_1986.ControlCharacters.lf {
+                    return .crlf  // CRLF takes precedence
+                }
+                hasCR = true
+            } else if byte == INCITS_4_1986.ControlCharacters.lf {
+                hasLF = true
+            }
+            i += 1
         }
+
+        if hasCR { return .cr }
+        if hasLF { return .lf }
         return nil
     }
 
