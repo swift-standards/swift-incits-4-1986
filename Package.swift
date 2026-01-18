@@ -32,8 +32,6 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-binary-primitives"),
         .package(path: "../../swift-primitives/swift-parsing-primitives"),
         .package(path: "../../swift-primitives/swift-serialization-primitives"),
-        .package(path: "../../swift-primitives/swift-test-primitives"),
-        .package(path: "../../swift-foundations/swift-testing-extras"),
     ],
     targets: [
         .target(
@@ -43,14 +41,6 @@ let package = Package(
                 .product(name: "Binary Primitives", package: "swift-binary-primitives"),
                 .product(name: "Parsing Primitives", package: "swift-parsing-primitives"),
                 .product(name: "Serialization Primitives", package: "swift-serialization-primitives"),
-            ]
-        ),
-        .testTarget(
-            name: "INCITS 4 1986".tests,
-            dependencies: [
-                "INCITS 4 1986",
-                .product(name: "Test Primitives", package: "swift-test-primitives"),
-                .product(name: "Testing Extras", package: "swift-testing-extras"),
             ]
         ),
     ],
