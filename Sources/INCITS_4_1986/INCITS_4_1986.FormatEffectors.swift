@@ -4,17 +4,11 @@
 // INCITS 4-1986 Section 4.1.2: Format Effectors
 // Format effectors control the layout and positioning of information
 
-import Standard_Library_Extensions
-
 extension INCITS_4_1986 {
-    /// Case Conversion Operations
+    /// Format Effector Operations
     ///
-    /// Authoritative implementations for converting ASCII letters between uppercase and lowercase.
-    ///
-    /// Per INCITS 4-1986 Table 7 (Graphic Characters):
-    /// - Capital letters: A-Z (0x41-0x5A)
-    /// - Small letters: a-z (0x61-0x7A)
-    /// - Difference between cases: 32 (0x20)
+    /// Operations for controlling the layout and positioning of text.
+    /// Per INCITS 4-1986 Section 4.1.2, format effectors control physical positioning.
     public enum FormatEffectors {}
 }
 
@@ -47,8 +41,8 @@ extension INCITS_4_1986 {
     ) -> [UInt8] where C.Element == UInt8 {
         // Fast path: if no line ending characters exist, return as-is
         // Single pass check is faster than two separate contains() calls
-        let cr = INCITS_4_1986.ControlCharacters.cr
-        let lf = INCITS_4_1986.ControlCharacters.lf
+        let cr = ASCII_Primitives.ASCII.ControlCharacters.cr
+        let lf = ASCII_Primitives.ASCII.ControlCharacters.lf
         if !bytes.contains(where: { $0 == cr || $0 == lf }) {
             return Array(bytes)
         }

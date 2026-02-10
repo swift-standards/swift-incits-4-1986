@@ -136,12 +136,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `false` for empty arrays.
     @inlinable
     public static func containsNonASCII<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        // Fast path: SIMD-accelerated for any contiguous storage
-        if let result = bytes.withContiguousStorageIfAvailable({ !INCITS_4_1986._isAllASCIIFast($0) }) {
-            return result
-        }
-        // Generic path: delegate to authoritative predicate
-        return bytes.contains { !INCITS_4_1986.isASCII($0) }
+        !INCITS_4_1986.isAllASCII(bytes)
     }
 
     /// Returns true if array contains at least one hex digit byte

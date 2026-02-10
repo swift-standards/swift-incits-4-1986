@@ -28,18 +28,20 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(path: "../../swift-primitives/swift-ascii-primitives"),
         .package(path: "../../swift-primitives/swift-standard-library-extensions"),
         .package(path: "../../swift-primitives/swift-binary-primitives"),
-        .package(path: "../../swift-primitives/swift-parsing-primitives"),
+        .package(path: "../../swift-primitives/swift-parser-primitives"),
         .package(path: "../../swift-primitives/swift-serialization-primitives"),
     ],
     targets: [
         .target(
             name: "INCITS 4 1986",
             dependencies: [
+                .product(name: "ASCII Primitives", package: "swift-ascii-primitives"),
                 .product(name: "Standard Library Extensions", package: "swift-standard-library-extensions"),
                 .product(name: "Binary Primitives", package: "swift-binary-primitives"),
-                .product(name: "Parsing Primitives", package: "swift-parsing-primitives"),
+                .product(name: "Parser Primitives", package: "swift-parser-primitives"),
                 .product(name: "Serialization Primitives", package: "swift-serialization-primitives"),
             ]
         ),
