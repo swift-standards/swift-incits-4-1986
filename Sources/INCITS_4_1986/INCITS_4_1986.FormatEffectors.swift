@@ -35,7 +35,7 @@ extension INCITS_4_1986 {
     /// let slice = bytes[start..<end]
     /// INCITS_4_1986.normalized(slice, to: .lf)
     /// ```
-    public static func normalized<C: Collection>(
+    public static func normalized<C: Swift.Collection>(
         _ bytes: C,
         to lineEnding: INCITS_4_1986.FormatEffectors.LineEnding
     ) -> [UInt8] where C.Element == UInt8 {

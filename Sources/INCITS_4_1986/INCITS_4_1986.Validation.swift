@@ -17,7 +17,7 @@ extension INCITS_4_1986 {
     ///
     /// Delegates to ``ASCII/isAllASCII(_:)``.
     @inlinable
-    public static func isAllASCII<C: Collection>(
+    public static func isAllASCII<C: Swift.Collection>(
         _ bytes: C
     ) -> Bool where C.Element == UInt8 {
         ASCII_Primitives.ASCII.isAllASCII(bytes)

@@ -16,7 +16,7 @@ extension INCITS_4_1986 {
     ///
     /// Delegates to ``ASCII/convert(_:to:)-5f76s``.
     @inlinable
-    public static func convert<C: Collection>(
+    public static func convert<C: Swift.Collection>(
         _ bytes: C,
         to case: INCITS_4_1986.Case
     ) -> [UInt8] where C.Element == UInt8 {
