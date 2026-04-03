@@ -1,4 +1,4 @@
-// INCITS_4_1986.ByteArrayClassification.swift
+// INCITS_4_1986.ByteArray.Classification.swift
 // swift-incits-4-1986
 //
 // INCITS 4-1986: Byte Array Classification Operations
@@ -6,7 +6,7 @@
 
 import Standard_Library_Extensions
 
-extension INCITS_4_1986 {
+extension INCITS_4_1986.ByteArray {
     /// Byte Array Classification Operations
     ///
     /// Authoritative implementations of byte array-level classification tests per INCITS 4-1986.
@@ -15,7 +15,7 @@ extension INCITS_4_1986 {
     /// ## Architecture
     ///
     /// These operations delegate to the authoritative single-byte predicates in
-    /// ``CharacterClassification``. This ensures consistency and maintainability
+    /// ``Classification``. This ensures consistency and maintainability
     /// while achieving identical performance (the compiler optimizes `allSatisfy`
     /// to match inline loops).
     ///
@@ -23,10 +23,10 @@ extension INCITS_4_1986 {
     ///
     /// For contiguous arrays, SIMD-accelerated paths are used where applicable
     /// (e.g., `containsNonASCII` processes 8 bytes at a time).
-    public enum ByteArrayClassification {}
+    public enum Classification {}
 }
 
-extension INCITS_4_1986.ByteArrayClassification {
+extension INCITS_4_1986.ByteArray.Classification {
     // MARK: - Collection Predicates
 
     /// Returns true if all bytes are ASCII whitespace characters
@@ -37,7 +37,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllWhitespace<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isWhitespace($0) }
+        bytes.allSatisfy { INCITS_4_1986.Classification.isWhitespace($0) }
     }
 
     /// Returns true if all bytes are ASCII digits (0-9)
@@ -47,7 +47,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllDigits<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isDigit($0) }
+        bytes.allSatisfy { INCITS_4_1986.Classification.isDigit($0) }
     }
 
     /// Returns true if all bytes are ASCII letters (A-Z, a-z)
@@ -57,7 +57,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllLetters<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isLetter($0) }
+        bytes.allSatisfy { INCITS_4_1986.Classification.isLetter($0) }
     }
 
     /// Returns true if all bytes are ASCII alphanumeric (A-Z, a-z, 0-9)
@@ -67,7 +67,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllAlphanumeric<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isAlphanumeric($0) }
+        bytes.allSatisfy { INCITS_4_1986.Classification.isAlphanumeric($0) }
     }
 
     /// Returns true if all bytes are ASCII control characters
@@ -77,7 +77,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllControl<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isControl($0) }
+        bytes.allSatisfy { INCITS_4_1986.Classification.isControl($0) }
     }
 
     /// Returns true if all bytes are ASCII visible characters
@@ -88,7 +88,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllVisible<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isVisible($0) }
+        bytes.allSatisfy { INCITS_4_1986.Classification.isVisible($0) }
     }
 
     /// Returns true if all bytes are ASCII printable characters
@@ -99,7 +99,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for empty arrays (vacuous truth).
     @inlinable
     public static func isAllPrintable<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.allSatisfy { INCITS_4_1986.CharacterClassification.isPrintable($0) }
+        bytes.allSatisfy { INCITS_4_1986.Classification.isPrintable($0) }
     }
 
     /// Returns true if all letter bytes are lowercase
@@ -110,7 +110,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for arrays with no letters.
     @inlinable
     public static func isAllLowercase<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        !bytes.contains { INCITS_4_1986.CharacterClassification.isUppercase($0) }
+        !bytes.contains { INCITS_4_1986.Classification.isUppercase($0) }
     }
 
     /// Returns true if all letter bytes are uppercase
@@ -121,7 +121,7 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `true` for arrays with no letters.
     @inlinable
     public static func isAllUppercase<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        !bytes.contains { INCITS_4_1986.CharacterClassification.isLowercase($0) }
+        !bytes.contains { INCITS_4_1986.Classification.isLowercase($0) }
     }
 
     /// Returns true if array contains any non-ASCII bytes
@@ -146,6 +146,6 @@ extension INCITS_4_1986.ByteArrayClassification {
     /// Returns `false` for empty arrays.
     @inlinable
     public static func containsHexDigit<Bytes: Collection>(_ bytes: Bytes) -> Bool where Bytes.Element == UInt8 {
-        bytes.contains { INCITS_4_1986.CharacterClassification.isHexDigit($0) }
+        bytes.contains { INCITS_4_1986.Classification.isHexDigit($0) }
     }
 }

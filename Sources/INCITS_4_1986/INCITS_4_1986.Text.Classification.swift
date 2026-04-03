@@ -1,23 +1,23 @@
-// INCITS_4_1986.StringClassification.swift
+// INCITS_4_1986.Text.Classification.swift
 // swift-incits-4-1986
 //
-// INCITS 4-1986: String Classification Operations
+// INCITS 4-1986: Text Classification Operations
 // Authoritative predicates for testing properties of strings
 
 import Standard_Library_Extensions
 
-extension INCITS_4_1986 {
-    /// String Classification Operations
+extension INCITS_4_1986.Text {
+    /// Text Classification Operations
     ///
     /// Authoritative implementations of string-level classification tests per INCITS 4-1986.
     /// All string predicates are defined here as the single source of truth.
     ///
     /// These operations test properties of entire strings, delegating to the byte-level
-    /// character classification operations for individual character tests.
-    public enum StringClassification {}
+    /// classification operations for individual character tests.
+    public enum Classification {}
 }
 
-extension INCITS_4_1986.StringClassification {
+extension INCITS_4_1986.Text.Classification {
     // MARK: - ASCII Validation
 
     /// Tests if all bytes in the UTF-8 representation are valid ASCII (0x00-0x7F)
@@ -28,9 +28,9 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.isAllASCII("Hello")     // true
-    /// INCITS_4_1986.StringClassification.isAllASCII("café")      // false (é is U+00E9)
-    /// INCITS_4_1986.StringClassification.isAllASCII("Hello🌍")   // false (emoji)
+    /// INCITS_4_1986.Text.Classification.isAllASCII("Hello")     // true
+    /// INCITS_4_1986.Text.Classification.isAllASCII("café")      // false (é is U+00E9)
+    /// INCITS_4_1986.Text.Classification.isAllASCII("Hello🌍")   // false (emoji)
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -48,9 +48,9 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.containsNonASCII("Hello")     // false
-    /// INCITS_4_1986.StringClassification.containsNonASCII("café")      // true
-    /// INCITS_4_1986.StringClassification.containsNonASCII("Hello🌍")   // true
+    /// INCITS_4_1986.Text.Classification.containsNonASCII("Hello")     // false
+    /// INCITS_4_1986.Text.Classification.containsNonASCII("café")      // true
+    /// INCITS_4_1986.Text.Classification.containsNonASCII("Hello🌍")   // true
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -70,10 +70,10 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.isAllWhitespace("   ")      // true
-    /// INCITS_4_1986.StringClassification.isAllWhitespace("\t\n")     // true
-    /// INCITS_4_1986.StringClassification.isAllWhitespace("")         // true (vacuous truth)
-    /// INCITS_4_1986.StringClassification.isAllWhitespace(" a ")      // false
+    /// INCITS_4_1986.Text.Classification.isAllWhitespace("   ")      // true
+    /// INCITS_4_1986.Text.Classification.isAllWhitespace("\t\n")     // true
+    /// INCITS_4_1986.Text.Classification.isAllWhitespace("")         // true (vacuous truth)
+    /// INCITS_4_1986.Text.Classification.isAllWhitespace(" a ")      // false
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -81,7 +81,7 @@ extension INCITS_4_1986.StringClassification {
     @inlinable
     public static func isAllWhitespace<S: StringProtocol>(_ string: S) -> Bool {
         string.utf8.allSatisfy { byte in
-            INCITS_4_1986.CharacterClassification.isWhitespace(byte)
+            INCITS_4_1986.Classification.isWhitespace(byte)
         }
     }
 
@@ -92,9 +92,9 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.isAllDigits("12345")    // true
-    /// INCITS_4_1986.StringClassification.isAllDigits("123a45")   // false
-    /// INCITS_4_1986.StringClassification.isAllDigits("")         // true (vacuous truth)
+    /// INCITS_4_1986.Text.Classification.isAllDigits("12345")    // true
+    /// INCITS_4_1986.Text.Classification.isAllDigits("123a45")   // false
+    /// INCITS_4_1986.Text.Classification.isAllDigits("")         // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -102,7 +102,7 @@ extension INCITS_4_1986.StringClassification {
     @inlinable
     public static func isAllDigits<S: StringProtocol>(_ string: S) -> Bool {
         string.utf8.allSatisfy { byte in
-            INCITS_4_1986.CharacterClassification.isDigit(byte)
+            INCITS_4_1986.Classification.isDigit(byte)
         }
     }
 
@@ -113,9 +113,9 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.isAllLetters("Hello")    // true
-    /// INCITS_4_1986.StringClassification.isAllLetters("Hello123") // false
-    /// INCITS_4_1986.StringClassification.isAllLetters("")         // true (vacuous truth)
+    /// INCITS_4_1986.Text.Classification.isAllLetters("Hello")    // true
+    /// INCITS_4_1986.Text.Classification.isAllLetters("Hello123") // false
+    /// INCITS_4_1986.Text.Classification.isAllLetters("")         // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -123,7 +123,7 @@ extension INCITS_4_1986.StringClassification {
     @inlinable
     public static func isAllLetters<S: StringProtocol>(_ string: S) -> Bool {
         string.utf8.allSatisfy { byte in
-            INCITS_4_1986.CharacterClassification.isLetter(byte)
+            INCITS_4_1986.Classification.isLetter(byte)
         }
     }
 
@@ -134,9 +134,9 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.isAllAlphanumeric("Hello123")  // true
-    /// INCITS_4_1986.StringClassification.isAllAlphanumeric("Hello-123") // false
-    /// INCITS_4_1986.StringClassification.isAllAlphanumeric("")          // true (vacuous truth)
+    /// INCITS_4_1986.Text.Classification.isAllAlphanumeric("Hello123")  // true
+    /// INCITS_4_1986.Text.Classification.isAllAlphanumeric("Hello-123") // false
+    /// INCITS_4_1986.Text.Classification.isAllAlphanumeric("")          // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -144,7 +144,7 @@ extension INCITS_4_1986.StringClassification {
     @inlinable
     public static func isAllAlphanumeric<S: StringProtocol>(_ string: S) -> Bool {
         string.utf8.allSatisfy { byte in
-            INCITS_4_1986.CharacterClassification.isAlphanumeric(byte)
+            INCITS_4_1986.Classification.isAlphanumeric(byte)
         }
     }
 
@@ -155,9 +155,9 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.isAllControl("\t\n")    // true
-    /// INCITS_4_1986.StringClassification.isAllControl("\tA")     // false
-    /// INCITS_4_1986.StringClassification.isAllControl("")        // true (vacuous truth)
+    /// INCITS_4_1986.Text.Classification.isAllControl("\t\n")    // true
+    /// INCITS_4_1986.Text.Classification.isAllControl("\tA")     // false
+    /// INCITS_4_1986.Text.Classification.isAllControl("")        // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -165,7 +165,7 @@ extension INCITS_4_1986.StringClassification {
     @inlinable
     public static func isAllControl<S: StringProtocol>(_ string: S) -> Bool {
         string.utf8.allSatisfy { byte in
-            INCITS_4_1986.CharacterClassification.isControl(byte)
+            INCITS_4_1986.Classification.isControl(byte)
         }
     }
 
@@ -176,9 +176,9 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.isAllVisible("Hello!")   // true
-    /// INCITS_4_1986.StringClassification.isAllVisible("Hello ")   // false (contains SPACE)
-    /// INCITS_4_1986.StringClassification.isAllVisible("")         // true (vacuous truth)
+    /// INCITS_4_1986.Text.Classification.isAllVisible("Hello!")   // true
+    /// INCITS_4_1986.Text.Classification.isAllVisible("Hello ")   // false (contains SPACE)
+    /// INCITS_4_1986.Text.Classification.isAllVisible("")         // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -186,7 +186,7 @@ extension INCITS_4_1986.StringClassification {
     @inlinable
     public static func isAllVisible<S: StringProtocol>(_ string: S) -> Bool {
         string.utf8.allSatisfy { byte in
-            INCITS_4_1986.CharacterClassification.isVisible(byte)
+            INCITS_4_1986.Classification.isVisible(byte)
         }
     }
 
@@ -197,9 +197,9 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.isAllPrintable("Hello World")  // true
-    /// INCITS_4_1986.StringClassification.isAllPrintable("Hello\n")      // false (contains LF)
-    /// INCITS_4_1986.StringClassification.isAllPrintable("")             // true (vacuous truth)
+    /// INCITS_4_1986.Text.Classification.isAllPrintable("Hello World")  // true
+    /// INCITS_4_1986.Text.Classification.isAllPrintable("Hello\n")      // false (contains LF)
+    /// INCITS_4_1986.Text.Classification.isAllPrintable("")             // true (vacuous truth)
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -207,7 +207,7 @@ extension INCITS_4_1986.StringClassification {
     @inlinable
     public static func isAllPrintable<S: StringProtocol>(_ string: S) -> Bool {
         string.utf8.allSatisfy { byte in
-            INCITS_4_1986.CharacterClassification.isPrintable(byte)
+            INCITS_4_1986.Classification.isPrintable(byte)
         }
     }
 
@@ -218,9 +218,9 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.containsHexDigit("0x1A")     // true
-    /// INCITS_4_1986.StringClassification.containsHexDigit("Hello")    // false
-    /// INCITS_4_1986.StringClassification.containsHexDigit("")         // false
+    /// INCITS_4_1986.Text.Classification.containsHexDigit("0x1A")     // true
+    /// INCITS_4_1986.Text.Classification.containsHexDigit("Hello")    // false
+    /// INCITS_4_1986.Text.Classification.containsHexDigit("")         // false
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -228,7 +228,7 @@ extension INCITS_4_1986.StringClassification {
     @inlinable
     public static func containsHexDigit<S: StringProtocol>(_ string: S) -> Bool {
         string.utf8.contains { byte in
-            INCITS_4_1986.CharacterClassification.isHexDigit(byte)
+            INCITS_4_1986.Classification.isHexDigit(byte)
         }
     }
 
@@ -242,10 +242,10 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.isAllLowercase("hello")      // true
-    /// INCITS_4_1986.StringClassification.isAllLowercase("hello123")   // true (digits ignored)
-    /// INCITS_4_1986.StringClassification.isAllLowercase("Hello")      // false
-    /// INCITS_4_1986.StringClassification.isAllLowercase("123")        // true (no letters)
+    /// INCITS_4_1986.Text.Classification.isAllLowercase("hello")      // true
+    /// INCITS_4_1986.Text.Classification.isAllLowercase("hello123")   // true (digits ignored)
+    /// INCITS_4_1986.Text.Classification.isAllLowercase("Hello")      // false
+    /// INCITS_4_1986.Text.Classification.isAllLowercase("123")        // true (no letters)
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -255,8 +255,8 @@ extension INCITS_4_1986.StringClassification {
         string.utf8.allSatisfy { byte in
             // Non-ASCII bytes (>= 0x80) are ignored (return true)
             guard byte < 0x80 else { return true }
-            return INCITS_4_1986.CharacterClassification.isLetter(byte)
-                ? INCITS_4_1986.CharacterClassification.isLowercase(byte)
+            return INCITS_4_1986.Classification.isLetter(byte)
+                ? INCITS_4_1986.Classification.isLowercase(byte)
                 : true
         }
     }
@@ -269,10 +269,10 @@ extension INCITS_4_1986.StringClassification {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.StringClassification.isAllUppercase("HELLO")      // true
-    /// INCITS_4_1986.StringClassification.isAllUppercase("HELLO123")   // true (digits ignored)
-    /// INCITS_4_1986.StringClassification.isAllUppercase("Hello")      // false
-    /// INCITS_4_1986.StringClassification.isAllUppercase("123")        // true (no letters)
+    /// INCITS_4_1986.Text.Classification.isAllUppercase("HELLO")      // true
+    /// INCITS_4_1986.Text.Classification.isAllUppercase("HELLO123")   // true (digits ignored)
+    /// INCITS_4_1986.Text.Classification.isAllUppercase("Hello")      // false
+    /// INCITS_4_1986.Text.Classification.isAllUppercase("123")        // true (no letters)
     /// ```
     ///
     /// - Parameter string: The string to test
@@ -282,8 +282,8 @@ extension INCITS_4_1986.StringClassification {
         string.utf8.allSatisfy { byte in
             // Non-ASCII bytes (>= 0x80) are ignored (return true)
             guard byte < 0x80 else { return true }
-            return INCITS_4_1986.CharacterClassification.isLetter(byte)
-                ? INCITS_4_1986.CharacterClassification.isUppercase(byte)
+            return INCITS_4_1986.Classification.isLetter(byte)
+                ? INCITS_4_1986.Classification.isUppercase(byte)
                 : true
         }
     }

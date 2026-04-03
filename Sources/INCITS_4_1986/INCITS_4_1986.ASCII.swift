@@ -357,67 +357,67 @@ extension INCITS_4_1986.ASCII where Source: Collection, Source.Element == UInt8 
     /// Tests whether every byte is one of: SPACE (0x20), TAB (0x09), LF (0x0A), CR (0x0D).
     @inlinable
     public var isAllWhitespace: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllWhitespace(source)
+        INCITS_4_1986.ByteArray.Classification.isAllWhitespace(source)
     }
 
     /// Returns true if all bytes are ASCII digits (0-9)
     @inlinable
     public var isAllDigits: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllDigits(source)
+        INCITS_4_1986.ByteArray.Classification.isAllDigits(source)
     }
 
     /// Returns true if all bytes are ASCII letters (A-Z, a-z)
     @inlinable
     public var isAllLetters: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllLetters(source)
+        INCITS_4_1986.ByteArray.Classification.isAllLetters(source)
     }
 
     /// Returns true if all bytes are ASCII alphanumeric (A-Z, a-z, 0-9)
     @inlinable
     public var isAllAlphanumeric: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllAlphanumeric(source)
+        INCITS_4_1986.ByteArray.Classification.isAllAlphanumeric(source)
     }
 
     /// Returns true if all bytes are ASCII control characters (0x00-0x1F or 0x7F)
     @inlinable
     public var isAllControl: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllControl(source)
+        INCITS_4_1986.ByteArray.Classification.isAllControl(source)
     }
 
     /// Returns true if all bytes are ASCII visible characters (0x21-0x7E)
     @inlinable
     public var isAllVisible: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllVisible(source)
+        INCITS_4_1986.ByteArray.Classification.isAllVisible(source)
     }
 
     /// Returns true if all bytes are ASCII printable characters (0x20-0x7E)
     @inlinable
     public var isAllPrintable: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllPrintable(source)
+        INCITS_4_1986.ByteArray.Classification.isAllPrintable(source)
     }
 
     /// Returns true if all ASCII letters are lowercase (non-letters ignored)
     @inlinable
     public var isAllLowercase: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllLowercase(source)
+        INCITS_4_1986.ByteArray.Classification.isAllLowercase(source)
     }
 
     /// Returns true if all ASCII letters are uppercase (non-letters ignored)
     @inlinable
     public var isAllUppercase: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllUppercase(source)
+        INCITS_4_1986.ByteArray.Classification.isAllUppercase(source)
     }
 
     /// Returns true if collection contains any non-ASCII bytes (>= 0x80)
     @inlinable
     public var containsNonASCII: Bool {
-        INCITS_4_1986.ByteArrayClassification.containsNonASCII(source)
+        INCITS_4_1986.ByteArray.Classification.containsNonASCII(source)
     }
 
     /// Returns true if collection contains at least one hex digit (0-9, A-F, a-f)
     @inlinable
     public var containsHexDigit: Bool {
-        INCITS_4_1986.ByteArrayClassification.containsHexDigit(source)
+        INCITS_4_1986.ByteArray.Classification.containsHexDigit(source)
     }
 }
 
@@ -438,7 +438,7 @@ extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// ```
     @inlinable
     public var isAllASCII: Bool {
-        INCITS_4_1986.StringClassification.isAllASCII(source)
+        INCITS_4_1986.Text.Classification.isAllASCII(source)
     }
 
     /// Returns the string if all characters are ASCII, nil otherwise
@@ -513,10 +513,10 @@ extension INCITS_4_1986.ASCII where Source: StringProtocol {
     ///
     /// ## See Also
     ///
-    /// - ``INCITS_4_1986/LineEndingDetection/detect(_:)``
+    /// - ``INCITS_4_1986/LineEnding/Detection/detect(_:)``
     @inlinable
     public func detectedLineEnding() -> INCITS_4_1986.FormatEffectors.Line.Ending? {
-        INCITS_4_1986.LineEndingDetection.detect(source)
+        INCITS_4_1986.LineEnding.Detection.detect(source)
     }
 }
 
@@ -526,73 +526,73 @@ extension INCITS_4_1986.ASCII where Source: StringProtocol {
     /// Returns true if all characters are ASCII whitespace
     @inlinable
     public var isAllWhitespace: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllWhitespace(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.isAllWhitespace(source.utf8)
     }
 
     /// Returns true if all characters are ASCII digits (0-9)
     @inlinable
     public var isAllDigits: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllDigits(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.isAllDigits(source.utf8)
     }
 
     /// Returns true if all characters are ASCII letters (A-Z, a-z)
     @inlinable
     public var isAllLetters: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllLetters(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.isAllLetters(source.utf8)
     }
 
     /// Returns true if all characters are ASCII alphanumeric (A-Z, a-z, 0-9)
     @inlinable
     public var isAllAlphanumeric: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllAlphanumeric(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.isAllAlphanumeric(source.utf8)
     }
 
     /// Returns true if all characters are ASCII control characters (0x00-0x1F or 0x7F)
     @inlinable
     public var isAllControl: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllControl(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.isAllControl(source.utf8)
     }
 
     /// Returns true if all characters are ASCII visible characters (0x21-0x7E)
     @inlinable
     public var isAllVisible: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllVisible(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.isAllVisible(source.utf8)
     }
 
     /// Returns true if all characters are ASCII printable characters (0x20-0x7E)
     @inlinable
     public var isAllPrintable: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllPrintable(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.isAllPrintable(source.utf8)
     }
 
     /// Returns true if all ASCII letters are lowercase (non-letters ignored)
     @inlinable
     public var isAllLowercase: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllLowercase(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.isAllLowercase(source.utf8)
     }
 
     /// Returns true if all ASCII letters are uppercase (non-letters ignored)
     @inlinable
     public var isAllUppercase: Bool {
-        INCITS_4_1986.ByteArrayClassification.isAllUppercase(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.isAllUppercase(source.utf8)
     }
 
     /// Returns true if string contains any non-ASCII characters (>= 0x80)
     @inlinable
     public var containsNonASCII: Bool {
-        INCITS_4_1986.ByteArrayClassification.containsNonASCII(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.containsNonASCII(source.utf8)
     }
 
     /// Returns true if string contains at least one hex digit (0-9, A-F, a-f)
     @inlinable
     public var containsHexDigit: Bool {
-        INCITS_4_1986.ByteArrayClassification.containsHexDigit(source.utf8)
+        INCITS_4_1986.ByteArray.Classification.containsHexDigit(source.utf8)
     }
 
     /// Returns true if string contains mixed line ending styles
     @inlinable
     public var containsMixedLineEndings: Bool {
-        INCITS_4_1986.LineEndingDetection.hasMixedLineEndings(source)
+        INCITS_4_1986.LineEnding.Detection.hasMixedLineEndings(source)
     }
 }
 

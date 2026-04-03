@@ -1,4 +1,4 @@
-// INCITS_4_1986.LineEndingDetection.swift
+// INCITS_4_1986.LineEnding.Detection.swift
 // swift-incits-4-1986
 //
 // INCITS 4-1986 Section 4.1.2: Format Effectors - Line Ending Detection
@@ -6,7 +6,7 @@
 
 import Standard_Library_Extensions
 
-extension INCITS_4_1986 {
+extension INCITS_4_1986.LineEnding {
     /// Line Ending Detection Operations
     ///
     /// Authoritative implementations for detecting and analyzing line ending styles
@@ -16,10 +16,10 @@ extension INCITS_4_1986 {
     /// - CR (0x0D): CARRIAGE RETURN - moves to first character position
     /// - LF (0x0A): LINE FEED - advances to next line
     /// - CRLF: Combination used by Internet protocols (RFC 9112, RFC 5322)
-    public enum LineEndingDetection {}
+    public enum Detection {}
 }
 
-extension INCITS_4_1986.LineEndingDetection {
+extension INCITS_4_1986.LineEnding.Detection {
     /// Detects the line ending style used in the string
     ///
     /// Returns the first line ending type found, or `nil` if no line endings are present.
@@ -37,10 +37,10 @@ extension INCITS_4_1986.LineEndingDetection {
     /// ## Usage
     ///
     /// ```swift
-    /// INCITS_4_1986.LineEndingDetection.detect("line1\nline2")       // .lf
-    /// INCITS_4_1986.LineEndingDetection.detect("line1\rline2")       // .cr
-    /// INCITS_4_1986.LineEndingDetection.detect("line1\r\nline2")     // .crlf
-    /// INCITS_4_1986.LineEndingDetection.detect("no line endings")    // nil
+    /// INCITS_4_1986.LineEnding.Detection.detect("line1\nline2")       // .lf
+    /// INCITS_4_1986.LineEnding.Detection.detect("line1\rline2")       // .cr
+    /// INCITS_4_1986.LineEnding.Detection.detect("line1\r\nline2")     // .crlf
+    /// INCITS_4_1986.LineEnding.Detection.detect("no line endings")    // nil
     /// ```
     ///
     /// - Parameter string: The string to analyze
@@ -90,12 +90,12 @@ extension INCITS_4_1986.LineEndingDetection {
     ///
     /// ```swift
     /// // Consistent line endings
-    /// INCITS_4_1986.LineEndingDetection.hasMixedLineEndings("line1\nline2\nline3")      // false
-    /// INCITS_4_1986.LineEndingDetection.hasMixedLineEndings("line1\r\nline2\r\nline3")  // false
+    /// INCITS_4_1986.LineEnding.Detection.hasMixedLineEndings("line1\nline2\nline3")      // false
+    /// INCITS_4_1986.LineEnding.Detection.hasMixedLineEndings("line1\r\nline2\r\nline3")  // false
     ///
     /// // Mixed line endings
-    /// INCITS_4_1986.LineEndingDetection.hasMixedLineEndings("line1\nline2\r\nline3")    // true
-    /// INCITS_4_1986.LineEndingDetection.hasMixedLineEndings("line1\rline2\nline3")      // true
+    /// INCITS_4_1986.LineEnding.Detection.hasMixedLineEndings("line1\nline2\r\nline3")    // true
+    /// INCITS_4_1986.LineEnding.Detection.hasMixedLineEndings("line1\rline2\nline3")      // true
     /// ```
     ///
     /// - Parameter string: The string to analyze
