@@ -1,4 +1,4 @@
-public import ASCII_Primitives_Standard_Library_Integration
+public import ASCII_Standard_Library_Integration
 import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
@@ -15,7 +15,7 @@ extension INCITS_4_1986 {
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
 
     @inlinable
     public var bytes: Source { source }
@@ -26,46 +26,46 @@ where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
     }
 
     @inlinable
-    public func callAsFunction() -> [ASCII_Primitives.ASCII.Code]? {
+    public func callAsFunction() -> [ASCII.ASCII.Code]? {
         Array(source)
     }
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
 
     @inlinable
-    public func callAsFunction(case: INCITS_4_1986.Case) -> [ASCII_Primitives.ASCII.Code] {
+    public func callAsFunction(case: INCITS_4_1986.Case) -> [ASCII.ASCII.Code] {
         INCITS_4_1986.convert(source, to: `case`)
     }
 
     @inlinable
-    public func uppercased() -> [ASCII_Primitives.ASCII.Code] {
+    public func uppercased() -> [ASCII.ASCII.Code] {
         INCITS_4_1986.convert(source, to: .upper)
     }
 
     @inlinable
-    public func lowercased() -> [ASCII_Primitives.ASCII.Code] {
+    public func lowercased() -> [ASCII.ASCII.Code] {
         INCITS_4_1986.convert(source, to: .lower)
     }
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
 
     @inlinable
-    public func trimming(_ characterSet: Set<ASCII_Primitives.ASCII.Code>) -> Source.SubSequence {
+    public func trimming(_ characterSet: Set<ASCII.ASCII.Code>) -> Source.SubSequence {
         source.trimming(characterSet)
     }
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
 
     @inlinable
     public func elementsEqualCaseInsensitive<Other: Swift.Collection>(
         _ other: Other
-    ) -> Bool where Other.Element == ASCII_Primitives.ASCII.Code {
+    ) -> Bool where Other.Element == ASCII.ASCII.Code {
         guard source.count == other.count else { return false }
 
         var sourceIterator = source.makeIterator()
@@ -87,7 +87,7 @@ where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
     @inlinable
     public func hasPrefix<Prefix: Swift.Collection>(
         caseInsensitive prefix: Prefix
-    ) -> Bool where Prefix.Element == ASCII_Primitives.ASCII.Code {
+    ) -> Bool where Prefix.Element == ASCII.ASCII.Code {
         guard source.count >= prefix.count else { return false }
 
         var sourceIndex = source.startIndex
@@ -106,7 +106,7 @@ where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
 
     public typealias LineRange = Range<Source.Index>
 
@@ -123,12 +123,12 @@ where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
         while index < source.endIndex {
             let code = source[index]
 
-            if code == ASCII_Primitives.ASCII.Code.cr {
+            if code == ASCII.ASCII.Code.cr {
 
                 ranges.append(lineStart..<index)
 
                 let next = source.index(after: index)
-                if next < source.endIndex && source[next] == ASCII_Primitives.ASCII.Code.lf {
+                if next < source.endIndex && source[next] == ASCII.ASCII.Code.lf {
 
                     index = source.index(after: next)
                 } else {
@@ -136,7 +136,7 @@ where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
                     index = next
                 }
                 lineStart = index
-            } else if code == ASCII_Primitives.ASCII.Code.lf {
+            } else if code == ASCII.ASCII.Code.lf {
 
                 ranges.append(lineStart..<index)
                 index = source.index(after: index)
@@ -154,13 +154,13 @@ where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
     }
 
     @inlinable
-    public func lines() -> [[ASCII_Primitives.ASCII.Code]] {
+    public func lines() -> [[ASCII.ASCII.Code]] {
         lineRanges().map { Array(source[$0]) }
     }
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII_Primitives.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
 
     @inlinable
     public var isAllWhitespace: Bool {

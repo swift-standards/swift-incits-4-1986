@@ -5,79 +5,79 @@ import Testing
 @Suite struct `ASCII Wrapper Tests` {
     @Suite struct Unit {
         @Test func `code collection isAllASCII is trivially true`() {
-            let codes = [ASCII_Primitives.ASCII.Code](ascii: "hello")!
+            let codes = [ASCII.ASCII.Code](ascii: "hello")!
             #expect(codes.ascii.isAllASCII)
         }
 
         @Test func `code collection uppercased converts letters only`() {
-            let codes = [ASCII_Primitives.ASCII.Code](ascii: "hello 123!")!
-            let expected = [ASCII_Primitives.ASCII.Code](ascii: "HELLO 123!")!
+            let codes = [ASCII.ASCII.Code](ascii: "hello 123!")!
+            let expected = [ASCII.ASCII.Code](ascii: "HELLO 123!")!
             #expect(codes.ascii.uppercased() == expected)
         }
 
         @Test func `code collection lowercased converts letters only`() {
-            let codes = [ASCII_Primitives.ASCII.Code](ascii: "HELLO 123!")!
-            let expected = [ASCII_Primitives.ASCII.Code](ascii: "hello 123!")!
+            let codes = [ASCII.ASCII.Code](ascii: "HELLO 123!")!
+            let expected = [ASCII.ASCII.Code](ascii: "hello 123!")!
             #expect(codes.ascii.lowercased() == expected)
         }
 
         @Test func `trimming removes matching codes from both ends`() {
-            let codes = [ASCII_Primitives.ASCII.Code](ascii: "  Hi  ")!
+            let codes = [ASCII.ASCII.Code](ascii: "  Hi  ")!
             let trimmed = codes.ascii.trimming([.sp])
-            #expect(Array(trimmed) == [ASCII_Primitives.ASCII.Code](ascii: "Hi")!)
+            #expect(Array(trimmed) == [ASCII.ASCII.Code](ascii: "Hi")!)
         }
 
         @Test func `elementsEqualCaseInsensitive matches differing case`() {
-            let header = [ASCII_Primitives.ASCII.Code](ascii: "Content-Type")!
-            let lower = [ASCII_Primitives.ASCII.Code](ascii: "content-type")!
+            let header = [ASCII.ASCII.Code](ascii: "Content-Type")!
+            let lower = [ASCII.ASCII.Code](ascii: "content-type")!
             #expect(header.ascii.elementsEqualCaseInsensitive(lower))
         }
 
         @Test func `elementsEqualCaseInsensitive rejects differing length`() {
-            let header = [ASCII_Primitives.ASCII.Code](ascii: "Content-Type")!
-            let other = [ASCII_Primitives.ASCII.Code](ascii: "Content")!
+            let header = [ASCII.ASCII.Code](ascii: "Content-Type")!
+            let other = [ASCII.ASCII.Code](ascii: "Content")!
             #expect(!header.ascii.elementsEqualCaseInsensitive(other))
         }
 
         @Test func `elementsEqualCaseInsensitive rejects differing content`() {
-            let header = [ASCII_Primitives.ASCII.Code](ascii: "Content-Type")!
-            let other = [ASCII_Primitives.ASCII.Code](ascii: "content-length")!
+            let header = [ASCII.ASCII.Code](ascii: "Content-Type")!
+            let other = [ASCII.ASCII.Code](ascii: "content-length")!
             #expect(!header.ascii.elementsEqualCaseInsensitive(other))
         }
 
         @Test func `hasPrefix caseInsensitive matches differing case prefix`() {
-            let header = [ASCII_Primitives.ASCII.Code](ascii: "Content-Type: text/plain")!
-            let prefix = [ASCII_Primitives.ASCII.Code](ascii: "content-type")!
+            let header = [ASCII.ASCII.Code](ascii: "Content-Type: text/plain")!
+            let prefix = [ASCII.ASCII.Code](ascii: "content-type")!
             #expect(header.ascii.hasPrefix(caseInsensitive: prefix))
         }
 
         @Test func `hasPrefix caseInsensitive rejects a prefix longer than the source`() {
-            let header = [ASCII_Primitives.ASCII.Code](ascii: "Content")!
-            let prefix = [ASCII_Primitives.ASCII.Code](ascii: "Content-Type")!
+            let header = [ASCII.ASCII.Code](ascii: "Content")!
+            let prefix = [ASCII.ASCII.Code](ascii: "Content-Type")!
             #expect(!header.ascii.hasPrefix(caseInsensitive: prefix))
         }
 
         @Test func `lineRanges splits on LF CR and CRLF`() {
-            let codes = [ASCII_Primitives.ASCII.Code](ascii: "a\r\nb\nc\rd")!
+            let codes = [ASCII.ASCII.Code](ascii: "a\r\nb\nc\rd")!
             let ranges = codes.ascii.lineRanges()
             let lines = ranges.map { String(decoding: codes[$0].map(\.underlying), as: UTF8.self) }
             #expect(lines == ["a", "b", "c", "d"])
         }
 
         @Test func `lines returns copied code arrays per line`() {
-            let codes = [ASCII_Primitives.ASCII.Code](ascii: "Hello\r\nWorld")!
+            let codes = [ASCII.ASCII.Code](ascii: "Hello\r\nWorld")!
             let lines = codes.ascii.lines()
             #expect(lines.count == 2)
-            #expect(lines[0] == [ASCII_Primitives.ASCII.Code](ascii: "Hello")!)
-            #expect(lines[1] == [ASCII_Primitives.ASCII.Code](ascii: "World")!)
+            #expect(lines[0] == [ASCII.ASCII.Code](ascii: "Hello")!)
+            #expect(lines[1] == [ASCII.ASCII.Code](ascii: "World")!)
         }
 
         @Test func `predicate accessors classify a homogeneous code collection`() {
-            let digits = [ASCII_Primitives.ASCII.Code](ascii: "12345")!
+            let digits = [ASCII.ASCII.Code](ascii: "12345")!
             #expect(digits.ascii.isAllDigits)
             #expect(!digits.ascii.isAllLetters)
 
-            let letters = [ASCII_Primitives.ASCII.Code](ascii: "hello")!
+            let letters = [ASCII.ASCII.Code](ascii: "hello")!
             #expect(letters.ascii.isAllLetters)
             #expect(letters.ascii.isAllLowercase)
             #expect(!letters.ascii.isAllUppercase)
@@ -124,36 +124,36 @@ import Testing
 
     @Suite struct `Edge Case` {
         @Test func `code collection containsNonASCII is always false`() {
-            let codes = [ASCII_Primitives.ASCII.Code](ascii: "hello")!
+            let codes = [ASCII.ASCII.Code](ascii: "hello")!
             #expect(!codes.ascii.containsNonASCII)
         }
 
         @Test func `trimming an all-matching collection returns an empty subsequence`() {
-            let codes = [ASCII_Primitives.ASCII.Code](ascii: "   ")!
+            let codes = [ASCII.ASCII.Code](ascii: "   ")!
             let trimmed = codes.ascii.trimming([.sp])
             #expect(trimmed.isEmpty)
         }
 
         @Test func `lineRanges on an empty collection returns no ranges`() {
-            let codes = [ASCII_Primitives.ASCII.Code]()
+            let codes = [ASCII.ASCII.Code]()
             #expect(codes.ascii.lineRanges().isEmpty)
         }
 
         @Test func `lineRanges on text without a trailing line ending includes the final line`() {
-            let codes = [ASCII_Primitives.ASCII.Code](ascii: "onlyline")!
+            let codes = [ASCII.ASCII.Code](ascii: "onlyline")!
             let ranges = codes.ascii.lineRanges()
             #expect(ranges.count == 1)
             #expect(Array(codes[ranges[0]]) == codes)
         }
 
         @Test func `lineRanges on a trailing line ending does not emit an empty final line`() {
-            let codes = [ASCII_Primitives.ASCII.Code](ascii: "a\n")!
+            let codes = [ASCII.ASCII.Code](ascii: "a\n")!
             let ranges = codes.ascii.lineRanges()
             #expect(ranges.count == 1)
         }
 
         @Test func `elementsEqualCaseInsensitive on empty collections is true`() {
-            let empty = [ASCII_Primitives.ASCII.Code]()
+            let empty = [ASCII.ASCII.Code]()
             #expect(empty.ascii.elementsEqualCaseInsensitive(empty))
         }
 

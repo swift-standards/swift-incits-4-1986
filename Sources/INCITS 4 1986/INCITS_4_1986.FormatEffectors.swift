@@ -10,8 +10,8 @@ extension INCITS_4_1986 {
         to lineEnding: INCITS_4_1986.FormatEffectors.Line.Ending
     ) -> [UInt8] where C.Element == UInt8 {
 
-        let cr = ASCII_Primitives.ASCII.Character.Control.cr
-        let lf = ASCII_Primitives.ASCII.Character.Control.lf
+        let cr = ASCII.ASCII.Character.Control.cr
+        let lf = ASCII.ASCII.Character.Control.lf
         if !bytes.contains(where: { $0 == cr || $0 == lf }) {
             return Array(bytes)
         }

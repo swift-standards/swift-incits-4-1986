@@ -1,4 +1,4 @@
-import Binary_Primitives
+import Binary
 import Standard_Library_Extensions
 
 extension Set {
@@ -26,13 +26,13 @@ extension Set<Character>.ASCII {
         char.unicodeScalars.allSatisfy { scalar in
             scalar.value < 128
                 && INCITS_4_1986.whitespaces.contains(
-                    ASCII_Primitives.ASCII.Code(UInt8(scalar.value))
+                    ASCII.ASCII.Code(UInt8(scalar.value))
                 )
         }
     }
 }
 
-extension Set where Element == ASCII_Primitives.ASCII.Code {
+extension Set where Element == ASCII.ASCII.Code {
 
-    public static var whitespaces: Set<ASCII_Primitives.ASCII.Code> { INCITS_4_1986.whitespaces }
+    public static var whitespaces: Set<ASCII.ASCII.Code> { INCITS_4_1986.whitespaces }
 }
