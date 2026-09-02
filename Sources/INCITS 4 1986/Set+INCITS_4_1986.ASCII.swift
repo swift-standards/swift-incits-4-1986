@@ -26,13 +26,13 @@ extension Set<Character>.ASCII {
         char.unicodeScalars.allSatisfy { scalar in
             scalar.value < 128
                 && INCITS_4_1986.whitespaces.contains(
-                    ASCII.ASCII.Code(UInt8(scalar.value))
+                    .init(UInt8(scalar.value))
                 )
         }
     }
 }
 
-extension Set where Element == ASCII.ASCII.Code {
+extension Set where Element == ASCII::ASCII.Code {
 
-    public static var whitespaces: Set<ASCII.ASCII.Code> { INCITS_4_1986.whitespaces }
+    public static var whitespaces: Set<ASCII::ASCII.Code> { INCITS_4_1986.whitespaces }
 }

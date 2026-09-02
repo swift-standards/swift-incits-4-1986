@@ -5,35 +5,35 @@ import Testing
 @Suite struct `ASCII Code Array Tests` {
     @Suite struct Unit {
         @Test func `init ascii string succeeds for all-ASCII input`() {
-            let codes = [ASCII.ASCII.Code](ascii: "Hi!")
+            let codes = [ASCII::ASCII.Code](ascii: "Hi!")
             #expect(codes != nil)
             #expect(codes?.count == 3)
         }
 
         @Test func `init ascii string fails for non-ASCII input`() {
-            #expect([ASCII.ASCII.Code](ascii: "café") == nil)
+            #expect([ASCII::ASCII.Code](ascii: "café") == nil)
         }
 
         @Test func `init ascii lineEnding produces the matching code sequence`() {
-            #expect([ASCII.ASCII.Code](ascii: .lf) == [.lf])
-            #expect([ASCII.ASCII.Code](ascii: .cr) == [.cr])
-            #expect([ASCII.ASCII.Code](ascii: .crlf) == [.cr, .lf])
+            #expect([ASCII::ASCII.Code](ascii: .lf) == [.lf])
+            #expect([ASCII::ASCII.Code](ascii: .cr) == [.cr])
+            #expect([ASCII::ASCII.Code](ascii: .crlf) == [.cr, .lf])
         }
 
         @Test func `static ascii unchecked decodes without validation`() {
             #expect(
-                [ASCII.ASCII.Code].ascii.unchecked("Hi") == [
-                    ASCII.ASCII.Code
+                [ASCII::ASCII.Code].ascii.unchecked("Hi") == [
+                    ASCII::ASCII.Code
                 ](ascii: "Hi")!
             )
         }
 
         @Test func `static ascii crlf is CR followed by LF`() {
-            #expect([ASCII.ASCII.Code].ascii.crlf == [.cr, .lf])
+            #expect([ASCII::ASCII.Code].ascii.crlf == [.cr, .lf])
         }
 
         @Test func `static ascii whitespaces contains the four INCITS 4-1986 whitespace codes`() {
-            let whitespaces = [ASCII.ASCII.Code].ascii.whitespaces
+            let whitespaces = [ASCII::ASCII.Code].ascii.whitespaces
             #expect(whitespaces.contains(.sp))
             #expect(whitespaces.contains(.htab))
             #expect(whitespaces.contains(.lf))
@@ -44,15 +44,15 @@ import Testing
 
     @Suite struct `Edge Case` {
         @Test func `init ascii string succeeds for an empty string`() {
-            #expect([ASCII.ASCII.Code](ascii: "") == [])
+            #expect([ASCII::ASCII.Code](ascii: "") == [])
         }
 
         @Test func `static ascii unchecked on an empty string is empty`() {
-            #expect([ASCII.ASCII.Code].ascii.unchecked("").isEmpty)
+            #expect([ASCII::ASCII.Code].ascii.unchecked("").isEmpty)
         }
 
         @Test func `static ascii whitespaces does not contain a non-whitespace code`() {
-            #expect(![ASCII.ASCII.Code].ascii.whitespaces.contains(.A))
+            #expect(![ASCII::ASCII.Code].ascii.whitespaces.contains(.A))
         }
     }
 

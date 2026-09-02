@@ -1,4 +1,4 @@
-public import ASCII_Standard_Library_Integration
+public import ASCII
 import Standard_Library_Extensions
 
 extension INCITS_4_1986 {
@@ -15,7 +15,7 @@ extension INCITS_4_1986 {
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII::ASCII.Code {
 
     @inlinable
     public var bytes: Source { source }
@@ -26,46 +26,46 @@ where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
     }
 
     @inlinable
-    public func callAsFunction() -> [ASCII.ASCII.Code]? {
+    public func callAsFunction() -> [ASCII::ASCII.Code]? {
         Array(source)
     }
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII::ASCII.Code {
 
     @inlinable
-    public func callAsFunction(case: INCITS_4_1986.Case) -> [ASCII.ASCII.Code] {
+    public func callAsFunction(case: INCITS_4_1986.Case) -> [ASCII::ASCII.Code] {
         INCITS_4_1986.convert(source, to: `case`)
     }
 
     @inlinable
-    public func uppercased() -> [ASCII.ASCII.Code] {
+    public func uppercased() -> [ASCII::ASCII.Code] {
         INCITS_4_1986.convert(source, to: .upper)
     }
 
     @inlinable
-    public func lowercased() -> [ASCII.ASCII.Code] {
+    public func lowercased() -> [ASCII::ASCII.Code] {
         INCITS_4_1986.convert(source, to: .lower)
     }
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII::ASCII.Code {
 
     @inlinable
-    public func trimming(_ characterSet: Set<ASCII.ASCII.Code>) -> Source.SubSequence {
+    public func trimming(_ characterSet: Set<ASCII::ASCII.Code>) -> Source.SubSequence {
         source.trimming(characterSet)
     }
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII::ASCII.Code {
 
     @inlinable
     public func elementsEqualCaseInsensitive<Other: Swift.Collection>(
         _ other: Other
-    ) -> Bool where Other.Element == ASCII.ASCII.Code {
+    ) -> Bool where Other.Element == ASCII::ASCII.Code {
         guard source.count == other.count else { return false }
 
         var sourceIterator = source.makeIterator()
@@ -87,7 +87,7 @@ where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
     @inlinable
     public func hasPrefix<Prefix: Swift.Collection>(
         caseInsensitive prefix: Prefix
-    ) -> Bool where Prefix.Element == ASCII.ASCII.Code {
+    ) -> Bool where Prefix.Element == ASCII::ASCII.Code {
         guard source.count >= prefix.count else { return false }
 
         var sourceIndex = source.startIndex
@@ -106,7 +106,7 @@ where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII::ASCII.Code {
 
     public typealias LineRange = Range<Source.Index>
 
@@ -123,12 +123,12 @@ where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
         while index < source.endIndex {
             let code = source[index]
 
-            if code == ASCII.ASCII.Code.cr {
+            if code == .cr {
 
                 ranges.append(lineStart..<index)
 
                 let next = source.index(after: index)
-                if next < source.endIndex && source[next] == ASCII.ASCII.Code.lf {
+                if next < source.endIndex && source[next] == .lf {
 
                     index = source.index(after: next)
                 } else {
@@ -136,7 +136,7 @@ where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
                     index = next
                 }
                 lineStart = index
-            } else if code == ASCII.ASCII.Code.lf {
+            } else if code == .lf {
 
                 ranges.append(lineStart..<index)
                 index = source.index(after: index)
@@ -154,57 +154,57 @@ where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
     }
 
     @inlinable
-    public func lines() -> [[ASCII.ASCII.Code]] {
+    public func lines() -> [[ASCII::ASCII.Code]] {
         lineRanges().map { Array(source[$0]) }
     }
 }
 
 extension INCITS_4_1986.ASCII
-where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
+where Source: Swift.Collection, Source.Element == ASCII::ASCII.Code {
 
     @inlinable
     public var isAllWhitespace: Bool {
-        ASCII.Classification.isAllWhitespace(source)
+        ASCII::ASCII.Classification.isAllWhitespace(source)
     }
 
     @inlinable
     public var isAllDigits: Bool {
-        ASCII.Classification.isAllDigits(source)
+        ASCII::ASCII.Classification.isAllDigits(source)
     }
 
     @inlinable
     public var isAllLetters: Bool {
-        ASCII.Classification.isAllLetters(source)
+        ASCII::ASCII.Classification.isAllLetters(source)
     }
 
     @inlinable
     public var isAllAlphanumeric: Bool {
-        ASCII.Classification.isAllAlphanumeric(source)
+        ASCII::ASCII.Classification.isAllAlphanumeric(source)
     }
 
     @inlinable
     public var isAllControl: Bool {
-        ASCII.Classification.isAllControl(source)
+        ASCII::ASCII.Classification.isAllControl(source)
     }
 
     @inlinable
     public var isAllVisible: Bool {
-        ASCII.Classification.isAllVisible(source)
+        ASCII::ASCII.Classification.isAllVisible(source)
     }
 
     @inlinable
     public var isAllPrintable: Bool {
-        ASCII.Classification.isAllPrintable(source)
+        ASCII::ASCII.Classification.isAllPrintable(source)
     }
 
     @inlinable
     public var isAllLowercase: Bool {
-        ASCII.Classification.isAllLowercase(source)
+        ASCII::ASCII.Classification.isAllLowercase(source)
     }
 
     @inlinable
     public var isAllUppercase: Bool {
-        ASCII.Classification.isAllUppercase(source)
+        ASCII::ASCII.Classification.isAllUppercase(source)
     }
 
     @inlinable
@@ -214,7 +214,7 @@ where Source: Swift.Collection, Source.Element == ASCII.ASCII.Code {
 
     @inlinable
     public var containsHexDigit: Bool {
-        ASCII.Classification.containsHexDigit(source)
+        ASCII::ASCII.Classification.containsHexDigit(source)
     }
 }
 
@@ -261,57 +261,79 @@ extension INCITS_4_1986.ASCII where Source: StringProtocol {
 
     @inlinable
     public var isAllWhitespace: Bool {
-        ASCII.Classification.isAllWhitespace(source.utf8)
+        ASCII::ASCII.Classification.isAllWhitespace(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable
     public var isAllDigits: Bool {
-        ASCII.Classification.isAllDigits(source.utf8)
+        ASCII::ASCII.Classification.isAllDigits(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable
     public var isAllLetters: Bool {
-        ASCII.Classification.isAllLetters(source.utf8)
+        ASCII::ASCII.Classification.isAllLetters(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable
     public var isAllAlphanumeric: Bool {
-        ASCII.Classification.isAllAlphanumeric(source.utf8)
+        ASCII::ASCII.Classification.isAllAlphanumeric(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable
     public var isAllControl: Bool {
-        ASCII.Classification.isAllControl(source.utf8)
+        ASCII::ASCII.Classification.isAllControl(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable
     public var isAllVisible: Bool {
-        ASCII.Classification.isAllVisible(source.utf8)
+        ASCII::ASCII.Classification.isAllVisible(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable
     public var isAllPrintable: Bool {
-        ASCII.Classification.isAllPrintable(source.utf8)
+        ASCII::ASCII.Classification.isAllPrintable(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable
     public var isAllLowercase: Bool {
-        ASCII.Classification.isAllLowercase(source.utf8)
+        ASCII::ASCII.Classification.isAllLowercase(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable
     public var isAllUppercase: Bool {
-        ASCII.Classification.isAllUppercase(source.utf8)
+        ASCII::ASCII.Classification.isAllUppercase(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable
     public var containsNonASCII: Bool {
-        ASCII.Classification.containsNonASCII(source.utf8)
+        ASCII::ASCII.Classification.containsNonASCII(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable
     public var containsHexDigit: Bool {
-        ASCII.Classification.containsHexDigit(source.utf8)
+        ASCII::ASCII.Classification.containsHexDigit(
+            source.utf8.lazy.map { (byte: UInt8) -> ASCII::ASCII.Code in .init(byte) }
+        )
     }
 
     @inlinable

@@ -14,14 +14,14 @@ extension INCITS_4_1986 {
             }
 
             @Test func `converting a code array to upper case transforms letters only`() {
-                let codes = [ASCII.ASCII.Code](ascii: "hello!")!
-                let expected = [ASCII.ASCII.Code](ascii: "HELLO!")!
+                let codes = [ASCII::ASCII.Code](ascii: "hello!")!
+                let expected = [ASCII::ASCII.Code](ascii: "HELLO!")!
                 #expect(INCITS_4_1986.convert(codes, to: .upper) == expected)
             }
 
             @Test func `converting a code array to lower case transforms letters only`() {
-                let codes = [ASCII.ASCII.Code](ascii: "HELLO!")!
-                let expected = [ASCII.ASCII.Code](ascii: "hello!")!
+                let codes = [ASCII::ASCII.Code](ascii: "HELLO!")!
+                let expected = [ASCII::ASCII.Code](ascii: "hello!")!
                 #expect(INCITS_4_1986.convert(codes, to: .lower) == expected)
             }
         }
